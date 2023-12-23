@@ -1,12 +1,10 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, library_private_types_in_public_api, iterable_contains_unrelated_type, use_build_context_synchronously
-
-import 'dart:io';
+// ignore_for_file: library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurant_reservation_final/Services/firebase_storage_service.dart';
+import 'package:restaurant_reservation_final/Services/restaurant_service.dart';
 import 'package:restaurant_reservation_final/Utils/branch_collection_utils.dart';
-import 'package:restaurant_reservation_final/Utils/restaurant_collection_utils.dart';
 import 'package:restaurant_reservation_final/Screens/auth_service.dart';
 import 'package:restaurant_reservation_final/models/restaurant.dart';
 import 'package:restaurant_reservation_final/user/restaurant_details.dart';
@@ -20,14 +18,15 @@ class UserRestaurantsList extends StatefulWidget {
 
 class _UserRestaurantsListState extends State<UserRestaurantsList> {
   BranchCollectionUtils branchCollectionUtils = BranchCollectionUtils();
-  RestaurantCollectionUtils restaurantCollectionUtils =
-      RestaurantCollectionUtils();
+  RestaurantService restaurantService = RestaurantService();
   CollectionReference restaurantsCollection =
       FirebaseFirestore.instance.collection('restaurants');
   CollectionReference branchesCollection =
       FirebaseFirestore.instance.collection('branches');
   AuthService authService = AuthService();
   FirebaseStorageService firebaseStorageService = FirebaseStorageService();
+  Restaurant? restaurant;
+  String? logoPath;
 
   @override
   void initState() {
@@ -36,17 +35,16 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
 
   Future<void> fetchData() async {
     await branchCollectionUtils.fetchBranches(null);
-    await restaurantCollectionUtils.fetchRestaurants();
+    await restaurantService.getRestaurants();
     setState(() {});
   }
 
   Future<void> getRestaurantByName(String restaurantName) async {
     var restaurant =
-        await restaurantCollectionUtils.getRestaurantByName(restaurantName);
+        await restaurantService.getRestaurantByName(restaurantName);
     this.restaurant = restaurant;
+    logoPath = restaurant.logoPath;
   }
-
-  Restaurant? restaurant;
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +123,7 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
             ),
             SizedBox(height: 8),
             branchCollectionUtils.branches.isEmpty ||
-                    restaurantCollectionUtils.restaurants.isEmpty
+                    restaurantService.restaurants.isEmpty
                 ? Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -167,8 +165,6 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
                   itemCount: branchCollectionUtils.branches.length,
                   itemBuilder: (context, index) {
                     var branch = branchCollectionUtils.branches[index];
-                    var logo = File(firebaseStorageService
-                        .getImageUrl(branch.restaurantName) as String);
                     getRestaurantByName(branch.restaurantName);
 
                     return GestureDetector(
@@ -177,7 +173,7 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => ReservyWidget(
-                              branch: branch,
+                              branch: branch, restaurant: restaurant!,
                             ),
                           ),
                         );
@@ -194,11 +190,17 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
                                   width: 2,
                                 ),
                               ),
-                              child: Image.file(
-                                logo,
-                                width: 80,
-                                height: 80,
-                              ),
+                              child: logoPath != null
+                                  ? Image.network(
+                                      logoPath!,
+                                      width: 80,
+                                      height: 80,
+                                    )
+                                  : SizedBox(
+                                      width: 80,
+                                      height: 80,
+                                      child: Text('Unavailable'),
+                                    ),
                             ),
                             SizedBox(height: 8),
                             Text(

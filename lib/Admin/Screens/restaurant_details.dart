@@ -1,7 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, library_private_types_in_public_api
 
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:restaurant_reservation_final/Admin/Screens/branches_list/branches_list.dart';
 import 'package:restaurant_reservation_final/Admin/Screens/restaurantList/restaurants_list.dart';
@@ -16,11 +14,12 @@ class RestaurantDetailsScreen extends StatefulWidget {
 }
 
 class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
-  File? logo;
+  String? logoPath;
 
   @override
   void initState() {
     super.initState();
+    logoPath = widget.restaurant.logoPath!;
   }
 
   @override
@@ -28,7 +27,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.restaurant.name,
+          widget.restaurant.name!,
           style: TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
@@ -66,9 +65,9 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                     ),
                     width: 210.0,
                     height: 210.0,
-                    child: logo != null
-                        ? Image.file(
-                            logo!,
+                    child: logoPath != null
+                        ? Image.network(
+                            logoPath!,
                             width: double.infinity,
                             height: double.infinity,
                             fit: BoxFit.cover,

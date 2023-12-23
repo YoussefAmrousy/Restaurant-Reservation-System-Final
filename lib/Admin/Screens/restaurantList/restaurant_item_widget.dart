@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:restaurant_reservation_final/Admin/Screens/restaurant_creation.dart';
 import 'package:restaurant_reservation_final/Admin/Screens/restaurant_details.dart';
 import 'package:restaurant_reservation_final/Services/firebase_storage_service.dart';
-import 'package:restaurant_reservation_final/Utils/restaurant_collection_utils.dart';
+import 'package:restaurant_reservation_final/Services/restaurant_service.dart';
 import 'package:restaurant_reservation_final/models/restaurant.dart';
 
 class RestaurantItem extends StatefulWidget {
@@ -19,13 +19,12 @@ class RestaurantItem extends StatefulWidget {
 class _RestaurantItemState extends State<RestaurantItem> {
   CollectionReference restaurantsCollection =
       FirebaseFirestore.instance.collection('restaurants');
-  RestaurantCollectionUtils restaurantCollectionUtils =
-      RestaurantCollectionUtils();
+  RestaurantService restaurantService = RestaurantService();
   FirebaseStorageService firebaseStorageService = FirebaseStorageService();
   String? logoPath;
 
   Future<void> initializeData() async {
-    await restaurantCollectionUtils.fetchRestaurants();
+    await restaurantService.getRestaurants();
   }
 
   Future<void> deleteRestaurant(String name) async {
@@ -39,16 +38,32 @@ class _RestaurantItemState extends State<RestaurantItem> {
   }
 
   Future<void> getLogoPath() async {
-    logoPath = await firebaseStorageService.getImageUrl(widget.restaurant.name);
+    logoPath = await firebaseStorageService.getImageUrl(widget.restaurant.name!);
   }
 
   @override
   Widget build(BuildContext context) {
-    getLogoPath();
+    return FutureBuilder<void>(
+      future: getLogoPath(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (logoPath != null) {
+            return buildCard();
+          } else {
+            return CircularProgressIndicator();
+          }
+        } else {
+          return CircularProgressIndicator();
+        }
+      },
+    );
+  }
+
+  Widget buildCard() {
     return Dismissible(
-      key: Key(widget.restaurant.name),
+      key: Key(widget.restaurant.name!),
       onDismissed: (direction) {
-        deleteRestaurant(widget.restaurant.name);
+        deleteRestaurant(widget.restaurant.name!);
       },
       background: Container(
         color: Colors.red,
@@ -81,7 +96,7 @@ class _RestaurantItemState extends State<RestaurantItem> {
               backgroundImage: Image.network(logoPath!).image,
             ),
             title: Text(
-              widget.restaurant.name,
+              widget.restaurant.name!,
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             trailing: IconButton(
@@ -95,7 +110,7 @@ class _RestaurantItemState extends State<RestaurantItem> {
                     ),
                   ),
                 );
-                await restaurantCollectionUtils.fetchRestaurants();
+                await restaurantService.getRestaurants();
                 setState(() {});
               },
             ),

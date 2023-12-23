@@ -1,19 +1,18 @@
-// ignore_for_file: library_private_types_in_public_api, prefer_const_constructors, use_build_context_synchronously
+// ignore_for_file: library_private_types_in_public_api, prefer_const_constructors, use_build_context_synchronously, must_be_immutable
 
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:restaurant_reservation_final/Admin/Screens/restaurantList/restaurants_list.dart';
 import 'package:restaurant_reservation_final/Services/firebase_storage_service.dart';
+import 'package:restaurant_reservation_final/Services/restaurant_service.dart';
 import 'package:restaurant_reservation_final/enums/cuisine_enum.dart';
 import 'package:restaurant_reservation_final/models/restaurant.dart';
 import 'package:restaurant_reservation_final/shared/Widgets/form_error_widget.dart';
 
 class RestaurantCreationScreen extends StatefulWidget {
-  const RestaurantCreationScreen({super.key, this.restaurant});
-  final Restaurant? restaurant;
+  RestaurantCreationScreen({super.key, this.restaurant});
+  Restaurant? restaurant;
 
   @override
   _RestaurantCreationScreenState createState() =>
@@ -28,13 +27,12 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
   final socialMediaController = TextEditingController();
   final websiteController = TextEditingController();
   Cuisine? selectedCuisine = Cuisine.selectCuisine;
-  File? logo;
-  File? menu;
+  String? logoPath;
+  String? menuPath;
   final picker = ImagePicker();
   List<Cuisine> cuisineList = Cuisine.values;
 
-  CollectionReference restaurantsCollection =
-      FirebaseFirestore.instance.collection('restaurants');
+  RestaurantService restaurantService = RestaurantService();
   FirebaseStorageService firebaseStorageService = FirebaseStorageService();
 
   @override
@@ -45,7 +43,8 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
 
   initRestaurant() {
     if (widget.restaurant != null) {
-      restaurantNameController.text = widget.restaurant!.name;
+      logoPath = widget.restaurant!.logoPath!;
+      restaurantNameController.text = widget.restaurant!.name!;
       selectedCuisine = Cuisine.values
           .firstWhere((element) => element.value == widget.restaurant!.cuisine);
     }
@@ -59,31 +58,20 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
       return;
     }
 
-    var file = File(pickedFile.path);
     setState(() {
-      logo = file;
+      logoPath = pickedFile.path;
     });
   }
 
-  Future<String?> getMenu() async {
+  Future<void> getMenu() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-    if (pickedFile == null) {
-      return null;
-    }
-
-    var file = File(pickedFile.path);
-    var storageReference = FirebaseStorage.instance
-        .ref()
-        .child('images/${DateTime.now().millisecondsSinceEpoch}.jpg');
+    if (pickedFile == null) return;
 
     setState(() {
-      menu = file;
+      menuPath = pickedFile.path;
     });
-
-    await storageReference.putFile(file);
-    return await storageReference.getDownloadURL();
   }
 
   @override
@@ -124,9 +112,14 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
     }
 
     bool validateForm() {
-      if (logo == null ||
+      if (logoPath == null ||
+          menuPath == null ||
+          websiteController.text.trim().isEmpty ||
+          socialMediaController.text.trim().isEmpty ||
+          phoneController.text.trim().isEmpty ||
           restaurantNameController.text.trim().isEmpty ||
           selectedCuisine == Cuisine.selectCuisine ||
+          phoneController.text.length != 11 ||
           !formKey.currentState!.validate()) {
         return false;
       } else {
@@ -135,43 +128,35 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
     }
 
     Future<void> submitRestaurant() async {
+      final restaurant = Restaurant(
+        name: restaurantNameController.text,
+        cuisine: selectedCuisine!.value,
+        phone: phoneController.text,
+        socialMedia: socialMediaController.text,
+        website: websiteController.text,
+      );
+
       if (widget.restaurant != null) {
-        final restaurantQuery = await restaurantsCollection
-            .where('name', isEqualTo: widget.restaurant!.name)
-            .get();
-        if (restaurantQuery.docs.isNotEmpty) {
-          final restaurantFound = restaurantQuery.docs.first;
-          await restaurantFound.reference.update({
-            'name': restaurantNameController.text,
-            'cuisine': selectedCuisine!.value,
-            'phone': phoneController.text,
-            'socialMedia': socialMediaController.text,
-            'website': websiteController.text,
-            'menu': menu?.path,
-          });
+        restaurant.logoPath = widget.restaurant!.logoPath;
+        restaurant.menuPath = widget.restaurant!.menuPath;
+        var restaurantUpdated =
+            await restaurantService.updateRestaurant(restaurant);
+        if (restaurantUpdated == false) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Error updating restaurant'),
+            ),
+          );
+          return;
         }
         showMyDialog();
         return;
       }
 
-      final restaurant = {
-        'name': restaurantNameController.text,
-        'cuisine': selectedCuisine!.value,
-        'phone': phoneController.text,
-        'socialMedia': socialMediaController.text,
-        'website': websiteController.text,
-        'isActive': true,
-        'menu': menu?.path,
-      };
+      var restaurantCreation = await restaurantService.addRestaurant(
+          restaurant, File(logoPath!), File(menuPath!));
 
-      firebaseStorageService.uploadImage(imageToUpload: File(logo!.path), title: restaurantNameController.text);
-
-
-      final existingRestaurant = await restaurantsCollection
-          .where('name', isEqualTo: restaurantNameController.text)
-          .get();
-
-      if (existingRestaurant.docs.isNotEmpty) {
+      if (restaurantCreation == false) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Restaurant already exists'),
@@ -180,7 +165,6 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
         return;
       }
 
-      restaurantsCollection.add(restaurant);
       showMyDialog();
       formKey.currentState!.reset();
     }
@@ -233,16 +217,16 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
                                     ),
                                     width: 200.0,
                                     height: 200.0,
-                                    child: logo != null
+                                    child: logoPath != null
                                         ? Image.file(
-                                            logo!,
+                                            File(logoPath!),
                                             width: double.infinity,
                                             height: double.infinity,
                                             fit: BoxFit.cover,
                                           )
                                         : Center(
                                             child: Text(
-                                              'Logo Here',
+                                              'Logo',
                                               style: TextStyle(
                                                 fontSize: 18.0,
                                                 fontWeight: FontWeight.bold,
@@ -283,9 +267,9 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
                                     ),
                                     width: 200.0,
                                     height: 200.0,
-                                    child: menu != null
+                                    child: menuPath != null
                                         ? Image.file(
-                                            menu!,
+                                            File(menuPath!),
                                             width: double.infinity,
                                             height: double.infinity,
                                             fit: BoxFit.cover,

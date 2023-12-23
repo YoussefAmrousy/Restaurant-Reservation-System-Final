@@ -34,7 +34,7 @@ class _BranchCreationScreenState extends State<BranchCreationScreen> {
   void initState() {
     super.initState();
     if (widget.restaurant != null) {
-      restaurantNameController.text = widget.restaurant!.name;
+      restaurantNameController.text = widget.restaurant!.name!;
     }
   }
 

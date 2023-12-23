@@ -1,45 +1,57 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Restaurant {
-  final String name;
-  final String cuisine;
-  final String? phone;
-  final String? socialMedia;
-  final String? website;
-  final bool isActive;
-  final String? menu;
+  String? name;
+  String? cuisine;
+  String? phone;
+  String? socialMedia;
+  String? website;
+  String? logoPath;
+  String? menuPath;
 
   Restaurant({
-    required this.name,
-    required this.cuisine,
-    required this.isActive,
-    required this.menu,
+    this.name,
+    this.cuisine,
+    this.menuPath,
     this.phone,
     this.socialMedia,
     this.website,
+    this.logoPath
   });
+
+   Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'cuisine': cuisine,
+      'phone': phone,
+      'socialMedia': socialMedia,
+      'website': website,
+      'logoPath': logoPath,
+      'menuPath': menuPath,
+    };
+  }
 
   factory Restaurant.fromMap(Map<String, dynamic> map) {
     return Restaurant(
       name: map['name'],
       cuisine: map['cuisine'],
-      isActive: map['isActive'],
       phone: map['phone'],
       socialMedia: map['socialMedia'],
       website: map['website'],
-      menu: map['menu'],
+      menuPath: map['menuPath'],
+      logoPath: map['logoPath'],
     );
   }
 
-  factory Restaurant.fromFireStore(DocumentSnapshot doc) {
+  factory Restaurant.fromSnapshot(DocumentSnapshot doc) {
     return Restaurant(
       name: doc['name'],
       cuisine: doc['cuisine'],
-      isActive: doc['isActive'],
       phone: doc['phone'],
       socialMedia: doc['socialMedia'],
       website: doc['website'],
-      menu: doc['menu'],
+      menuPath: doc['menuPath'],
+      logoPath: doc['logoPath'],
     );
   }
 }

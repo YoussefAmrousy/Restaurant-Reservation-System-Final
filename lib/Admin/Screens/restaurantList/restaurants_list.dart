@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurant_reservation_final/Admin/Screens/restaurantList/restaurant_item_widget.dart';
 import 'package:restaurant_reservation_final/Admin/Screens/restaurant_creation.dart';
-import 'package:restaurant_reservation_final/Utils/restaurant_collection_utils.dart';
 import 'package:restaurant_reservation_final/Screens/auth_service.dart';
+import 'package:restaurant_reservation_final/Services/restaurant_service.dart';
 
 class RestaurtantsListScreen extends StatefulWidget {
   const RestaurtantsListScreen({super.key});
@@ -15,8 +15,7 @@ class RestaurtantsListScreen extends StatefulWidget {
 }
 
 class _RestaurtantsListState extends State<RestaurtantsListScreen> {
-  RestaurantCollectionUtils restaurantCollectionUtils =
-      RestaurantCollectionUtils();
+  RestaurantService restaurantService = RestaurantService();
   CollectionReference restaurantsCollection =
       FirebaseFirestore.instance.collection('restaurants');
 
@@ -27,7 +26,7 @@ class _RestaurtantsListState extends State<RestaurtantsListScreen> {
   }
 
   Future<void> initializeData() async {
-    await restaurantCollectionUtils.fetchRestaurants();
+    await restaurantService.getRestaurants();
     setState(() {});
   }
 
@@ -73,7 +72,7 @@ class _RestaurtantsListState extends State<RestaurtantsListScreen> {
                 ),
               );
 
-              await restaurantCollectionUtils.fetchRestaurants();
+              await restaurantService.getRestaurants();
               setState(() {});
             },
           ),
@@ -82,7 +81,7 @@ class _RestaurtantsListState extends State<RestaurtantsListScreen> {
       ),
       body: Column(
         children: <Widget>[
-          restaurantCollectionUtils.restaurants.isEmpty
+          restaurantService.restaurants.isEmpty
               ? Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -106,10 +105,10 @@ class _RestaurtantsListState extends State<RestaurtantsListScreen> {
               : Expanded(
                   child: ListView.builder(
                     shrinkWrap: true,
-                    itemCount: restaurantCollectionUtils.restaurants.length,
+                    itemCount: restaurantService.restaurants.length,
                     itemBuilder: (context, index) {
                       final restaurant =
-                          restaurantCollectionUtils.restaurants[index];
+                          restaurantService.restaurants[index];
                       return RestaurantItem(
                         restaurant: restaurant,
                       );

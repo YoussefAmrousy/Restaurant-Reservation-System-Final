@@ -1,22 +1,22 @@
 // ignore_for_file: library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables, must_be_immutable
 
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:restaurant_reservation_final/Utils/restaurant_collection_utils.dart';
 import 'package:restaurant_reservation_final/Maps/map_screen.dart';
+import 'package:restaurant_reservation_final/Services/restaurant_service.dart';
 import 'package:restaurant_reservation_final/models/branch.dart';
 import 'package:restaurant_reservation_final/models/restaurant.dart';
 import 'reservy_model.dart';
 export 'reservy_model.dart';
 
 class ReservyWidget extends StatefulWidget {
-  ReservyWidget({super.key, required this.branch});
+  ReservyWidget({super.key, required this.branch, required this.restaurant});
   Branch branch;
+  Restaurant restaurant;
 
   @override
   _ReservyWidgetState createState() => _ReservyWidgetState();
@@ -29,21 +29,20 @@ class _ReservyWidgetState extends State<ReservyWidget>
   final scaffoldKey = GlobalKey<ScaffoldState>();
   DateTime now = DateTime.now();
   String? selectedTime;
-  RestaurantCollectionUtils? restaurantCollectionUtils;
-  Restaurant? restaurant;
-  File? menu;
+  RestaurantService restaurantService = RestaurantService();
+  String? menuPath;
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => ReservyModel());
-    getRestaurantByName();
 
     _model.tabBarController = TabController(
       vsync: this,
       length: 3,
       initialIndex: 1,
     )..addListener(() => setState(() {}));
+    menuPath = widget.restaurant.menuPath;
   }
 
   @override
@@ -66,14 +65,6 @@ class _ReservyWidgetState extends State<ReservyWidget>
         _model.selectedDate = pickedDate;
       });
     }
-  }
-
-  Future<Restaurant?> getRestaurantByName() async {
-    restaurantCollectionUtils = RestaurantCollectionUtils();
-    restaurant = await restaurantCollectionUtils!
-        .getRestaurantByName(widget.branch.restaurantName);
-    menu = File(restaurant!.menu!);
-    return restaurant;
   }
 
   @override
@@ -132,8 +123,8 @@ class _ReservyWidgetState extends State<ReservyWidget>
                         borderRadius: BorderRadius.circular(8),
                         child: Image.asset(
                           'assets/restaurant.jpeg',
-                          width: 450,
-                          height: 300,
+                          width: screenWidth * 0.4,
+                          height: screenHeight * 0.2,
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -491,26 +482,31 @@ class _ReservyWidgetState extends State<ReservyWidget>
                                           ),
                                         ), // Large image
                                         SizedBox(
-                                          width: 320,
-                                          height: 600,
-                                          child: Image.asset(
-                                            restaurant?.menu ??
-                                                "assets/menus.jpeg",
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
+                                            width: 320,
+                                            height: 600,
+                                            child: menuPath != null
+                                                ? Image.network(
+                                                    menuPath!,
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                : Text('Menu Unavilable')),
                                       ],
                                     ),
                                   );
                                 },
                               );
                             },
-                            child: SizedBox(
-                              width: 50,
-                              height: 50,
-                              child: Image.asset(
-                                  restaurant?.menu ?? "assets/menus.jpeg"),
-                            ),
+                            child: menuPath != null
+                                ? SizedBox(
+                                    width: 50,
+                                    height: 50,
+                                    child: Image.network(menuPath!),
+                                  )
+                                : SizedBox(
+                                    width: 50,
+                                    height: 50,
+                                    child: Text('Menu Unavilable'),
+                                  ),
                           ),
                           Container(
                             padding: EdgeInsets.all(16.0),
