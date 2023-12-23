@@ -1,0 +1,185 @@
+// ignore_for_file: prefer_const_constructors_in_immutables, prefer_const_constructors, library_private_types_in_public_api, avoid_print
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:restaurant_reservation_final/Screens/login_screen.dart';
+import 'package:restaurant_reservation_final/Admin/Screens/admin_navbar.dart';
+import 'package:restaurant_reservation_final/Screens/auth_service.dart';
+import 'package:restaurant_reservation_final/user/user_navigation_bar.dart';
+
+class RegisterScreen extends StatefulWidget {
+  RegisterScreen({super.key});
+  final coolGrey = const Color.fromARGB(255, 169, 169, 169);
+  @override
+  _RegisterScreenState createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
+  AuthService authService = AuthService();
+  final _formKey = GlobalKey<FormState>();
+  final coolGrey = const Color.fromARGB(255, 169, 169, 169);
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  void submit() async {
+    User? user = await authService.registerWithEmailAndPassword(
+        _emailController.text, _passwordController.text);
+    if (user != null) {
+      if (_emailController.text.contains('admin')) {
+        _navigateToRoleSpecificScreen('admin');
+      } else if (_emailController.text.contains('@reservy')) {
+        _navigateToRoleSpecificScreen('restaurant');
+      } else {
+        _navigateToRoleSpecificScreen('user');
+      }
+    } else {
+      print('Registration failed. Please try again.');
+    }
+  }
+
+  void _navigateToRoleSpecificScreen(String role) {
+    switch (role) {
+      case 'admin':
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => AdminNavigationBar()),
+        );
+        break;
+      case 'restaurant':
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => UserNavigationBar()),
+        );
+        break;
+      default:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => UserNavigationBar()),
+        );
+        break;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Get Started'),
+        automaticallyImplyLeading: false,
+      ),
+      body: Container(
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 320,
+                    height: 60,
+                    child: TextFormField(
+                      decoration: const InputDecoration(
+                        hintText: 'Full Name',
+                        prefixIcon: Icon(Icons.person),
+                      ),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter your name';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: 320,
+                    height: 60,
+                    child: TextFormField(
+                      controller: _emailController,
+                      decoration: const InputDecoration(
+                        hintText: 'Email',
+                        prefixIcon: Icon(Icons.email),
+                      ),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter your email';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: 320,
+                    height: 60,
+                    child: TextFormField(
+                      decoration: const InputDecoration(
+                        hintText: 'Mobile Number',
+                        prefixIcon: Icon(Icons.phone),
+                      ),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter your mobile number';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: 320,
+                    height: 100,
+                    child: TextFormField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        hintText: 'Password',
+                        helperText: 'Minimum length is 5 charcters',
+                        prefixIcon: Icon(Icons.lock),
+                      ),
+                      validator: (value) {
+                        if (value!.isEmpty || value.length < 5) {}
+                        return 'Invalid Password';
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    width: 250,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(coolGrey)),
+                      onPressed: () {
+                        submit();
+                      },
+                      child: const Text(
+                        'Register',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 80,
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginScreen(),
+                  ),
+                );
+              },
+              child: const Text('Already have an account?'),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
