@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
 class Reservation {
   final String username;
   final String restaurant;
   final DateTime date;
-  final TimeOfDay time;
+  final String time;
   final String branch;
 
   Reservation(
@@ -21,7 +20,7 @@ class Reservation {
         username: data['username'],
         restaurant: data['restaurant'],
         date: data['date'].toDate(),
-        time: TimeOfDay.fromDateTime(data['time'].toDate()),
+        time: data['time'],
         branch: data['branch']);
   }
 
@@ -35,5 +34,3 @@ class Reservation {
     };
   }
 }
-
-

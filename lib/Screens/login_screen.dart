@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_constructors_in_immutables, library_private_types_in_public_api, avoid_print
+// ignore_for_file: prefer_const_constructors, prefer_const_constructors_in_immutables, library_private_types_in_public_api, avoid_print, use_build_context_synchronously
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +6,8 @@ import 'package:restaurant_reservation_final/Restaurant/restaurant_navigation_ba
 import 'package:restaurant_reservation_final/Screens/register_screen.dart';
 import 'package:restaurant_reservation_final/Admin/Screens/admin_navbar.dart';
 import 'package:restaurant_reservation_final/Services/auth_service.dart';
+import 'package:restaurant_reservation_final/Services/reservations_service.dart';
+import 'package:restaurant_reservation_final/Services/shared_preference_service.dart';
 import 'package:restaurant_reservation_final/user/user_navigation_bar.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -18,8 +20,17 @@ class _LoginPageState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  SharedPreferenceService sharedPreferenceService = SharedPreferenceService();
+  ReservationsService reservationsService = ReservationsService();
 
   final coolGrey = const Color.fromARGB(255, 169, 169, 169);
+  String? restaurant;
+
+  Future<String> getRestaurantNameFromLocalStorage() async {
+    var restaurantNameStored =
+        await sharedPreferenceService.getStringFromLocalStorage('restaurant');
+    return restaurantNameStored!;
+  }
 
   submit() async {
     final form = _formKey.currentState;
@@ -32,14 +43,15 @@ class _LoginPageState extends State<LoginScreen> {
       if (userRole == 'admin') {
         _navigateToRoleSpecificScreen('admin');
       } else if (userRole == 'restaurant') {
-        _navigateToRoleSpecificScreen('restaurant');
+        restaurant = await getRestaurantNameFromLocalStorage();
+        await _navigateToRoleSpecificScreen('restaurant', restaurant);
       } else {
         _navigateToRoleSpecificScreen('user');
       }
-        }
+    }
   }
 
-  void _navigateToRoleSpecificScreen(String role) {
+  Future<void> _navigateToRoleSpecificScreen(String role, [String? restaurant]) async {
     switch (role) {
       case 'admin':
         Navigator.pushReplacement(
@@ -50,7 +62,7 @@ class _LoginPageState extends State<LoginScreen> {
       case 'restaurant':
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => RestaurantNavigationBar()),
+          MaterialPageRoute(builder: (context) => RestaurantNavigationBar(restaurant: restaurant,)),
         );
         break;
       default:
@@ -107,8 +119,8 @@ class _LoginPageState extends State<LoginScreen> {
                   SizedBox(
                     width: 250,
                     child: ElevatedButton(
-                      onPressed: () {
-                        submit();
+                      onPressed: () async {
+                        await submit();
                       },
                       style: ButtonStyle(
                         backgroundColor:

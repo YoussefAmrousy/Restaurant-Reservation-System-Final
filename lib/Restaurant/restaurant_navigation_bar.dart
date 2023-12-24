@@ -1,11 +1,12 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, library_private_types_in_public_api
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, library_private_types_in_public_api, must_be_immutable
 
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:restaurant_reservation_final/Restaurant/restaurant_reservations.dart';
 
 class RestaurantNavigationBar extends StatefulWidget {
-  const RestaurantNavigationBar({super.key});
+  RestaurantNavigationBar({super.key, this.restaurant});
+  String? restaurant;
 
   @override
   _UserNavigationBarState createState() => _UserNavigationBarState();
@@ -14,9 +15,15 @@ class RestaurantNavigationBar extends StatefulWidget {
 class _UserNavigationBarState extends State<RestaurantNavigationBar> {
   int selectedIndex = 0;
 
-  final List<Widget> pages = [
-    ReservationsWidget(),
-  ];
+  late List<Widget> pages;
+
+  @override
+  void initState() {
+    super.initState();
+    pages = [
+      ReservationsWidget(restaurant: widget.restaurant!),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
