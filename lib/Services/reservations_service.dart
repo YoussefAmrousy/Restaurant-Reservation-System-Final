@@ -16,8 +16,12 @@ class ReservationsService {
     return reservations;
   }
 
-  Future<List<Reservation>> getReservationsByRestaurant(String restaurant) async {
-    final reservationQuery = await reservationsCollection.where('restaurant', isEqualTo: restaurant).get();
+  Future<List<Reservation>> getReservationsByRestaurant(
+      String restaurant) async {
+    reservations.clear();
+    final reservationQuery = await reservationsCollection
+        .where('restaurant', isEqualTo: restaurant)
+        .get();
     if (reservationQuery.docs.isNotEmpty) {
       for (var doc in reservationQuery.docs) {
         reservations.add(Reservation.fromSnapshot(doc));
@@ -27,7 +31,9 @@ class ReservationsService {
   }
 
   Future<List<Reservation>> getReservationsByUser(String username) async {
-    final reservationQuery = await reservationsCollection.where('username', isEqualTo: username).get();
+    final reservationQuery = await reservationsCollection
+        .where('username', isEqualTo: username)
+        .get();
     if (reservationQuery.docs.isNotEmpty) {
       for (var doc in reservationQuery.docs) {
         reservations.add(Reservation.fromSnapshot(doc));
@@ -43,6 +49,4 @@ class ReservationsService {
   Future<void> deleteReservation(String id) async {
     await reservationsCollection.doc(id).delete();
   }
-
-  
 }
