@@ -8,7 +8,7 @@ import 'package:restaurant_reservation_final/Admin/Screens/branch_creation.dart'
 import 'package:restaurant_reservation_final/Admin/Screens/branches_list/branch_dialog_details.dart';
 import 'package:restaurant_reservation_final/Admin/Screens/branches_list/branch_item_widget.dart';
 import 'package:restaurant_reservation_final/Admin/Screens/restaurant_details.dart';
-import 'package:restaurant_reservation_final/Utils/branch_collection_utils.dart';
+import 'package:restaurant_reservation_final/Services/branch_service.dart';
 import 'package:restaurant_reservation_final/models/branch.dart';
 import 'package:restaurant_reservation_final/models/restaurant.dart';
 
@@ -21,9 +21,9 @@ class BranchesListScreen extends StatefulWidget {
 }
 
 class _BranchesListState extends State<BranchesListScreen> {
-  BranchCollectionUtils branchCollectionUtils = BranchCollectionUtils();
   CollectionReference branchesCollection =
       FirebaseFirestore.instance.collection('branches');
+    BranchService branchService = BranchService();
 
   @override
   void initState() {
@@ -32,7 +32,7 @@ class _BranchesListState extends State<BranchesListScreen> {
   }
 
   Future<void> initializeData() async {
-    await branchCollectionUtils.fetchBranches(widget.restaurant.name);
+    await branchService.getBranchesByRestaurant(widget.restaurant.name!);
     setState(() {});
   }
 
@@ -105,7 +105,8 @@ class _BranchesListState extends State<BranchesListScreen> {
                 ),
               );
 
-              await branchCollectionUtils.fetchBranches(widget.restaurant.name);
+              await branchService
+                  .getBranchesByRestaurant(widget.restaurant.name!);
               setState(() {});
             },
           ),
@@ -113,7 +114,7 @@ class _BranchesListState extends State<BranchesListScreen> {
       ),
       body: Column(
         children: [
-          branchCollectionUtils.branches.isEmpty
+          branchService.branches.isEmpty
               ? Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -136,9 +137,9 @@ class _BranchesListState extends State<BranchesListScreen> {
                 )
               : ListView.builder(
                   shrinkWrap: true,
-                  itemCount: branchCollectionUtils.branches.length,
+                  itemCount: branchService.branches.length,
                   itemBuilder: (context, index) {
-                    final branch = branchCollectionUtils.branches[index];
+                    final branch = branchService.branches[index];
                     return GestureDetector(
                       onTap: () => _showBranchDetailsDialog(context, branch),
                       child: BranchItem(

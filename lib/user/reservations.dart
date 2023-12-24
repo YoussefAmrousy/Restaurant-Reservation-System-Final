@@ -6,7 +6,7 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:restaurant_reservation_final/Utils/reservations_collection_utils.dart';
+import 'package:restaurant_reservation_final/Services/reservations_service.dart';
 import 'package:restaurant_reservation_final/models/reservation.dart';
 import 'package:restaurant_reservation_final/user/user_reservation_model.dart';
 
@@ -41,15 +41,14 @@ class _UserReservationsWidgetState extends State<UserReservationsWidget> {
       String userId = user.uid;
       return userId;
     } else {
-      return ''; // or throw an exception or handle it in your way
+      return '';
     }
   }
 
   Future<void> loadUserReservations() async {
-    // Replace 'currentUserId' with the actual ID of the authenticated user
+    ReservationsService reservationsService = ReservationsService();
     final List<Reservation> userReservations =
-        await getUserReservations(getCurrentUserId());
-    // Handle the user reservations as needed in your model or UI
+        await reservationsService.getReservationsByUser(getCurrentUserId());
     _model.setUserReservations(userReservations);
   }
 

@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurant_reservation_final/Screens/login_screen.dart';
 import 'package:restaurant_reservation_final/Admin/Screens/admin_navbar.dart';
-import 'package:restaurant_reservation_final/Screens/auth_service.dart';
+import 'package:restaurant_reservation_final/Services/auth_service.dart';
 import 'package:restaurant_reservation_final/user/user_navigation_bar.dart';
 
 class RegisterScreen extends StatefulWidget {

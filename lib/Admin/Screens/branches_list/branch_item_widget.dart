@@ -2,7 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:restaurant_reservation_final/Utils/branch_collection_utils.dart';
+import 'package:restaurant_reservation_final/Services/branch_service.dart';
 import 'package:restaurant_reservation_final/models/branch.dart';
 
 class BranchItem extends StatefulWidget {
@@ -16,10 +16,10 @@ class BranchItem extends StatefulWidget {
 class _BranchtItemState extends State<BranchItem> {
   CollectionReference branchesCollection =
       FirebaseFirestore.instance.collection('branches');
-  BranchCollectionUtils branchesCollectionUtils = BranchCollectionUtils();
+  BranchService branchService = BranchService();
 
   Future<void> initializeData() async {
-    await branchesCollectionUtils.fetchBranches(widget.branch.restaurantName);
+    await branchService.getBranchesByRestaurant(widget.branch.restaurantName);
   }
 
   @override

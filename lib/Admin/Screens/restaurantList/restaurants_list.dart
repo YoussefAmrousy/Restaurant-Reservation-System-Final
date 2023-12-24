@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurant_reservation_final/Admin/Screens/restaurantList/restaurant_item_widget.dart';
 import 'package:restaurant_reservation_final/Admin/Screens/restaurant_creation.dart';
-import 'package:restaurant_reservation_final/Screens/auth_service.dart';
+import 'package:restaurant_reservation_final/Services/auth_service.dart';
 import 'package:restaurant_reservation_final/Services/restaurant_service.dart';
 
 class RestaurtantsListScreen extends StatefulWidget {

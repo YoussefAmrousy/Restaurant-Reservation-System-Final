@@ -11,6 +11,7 @@ class RestaurantService {
   FirebaseStorageService firebaseStorageService = FirebaseStorageService();
 
   Future<List<Restaurant>> getRestaurants() async {
+    restaurants.clear();
     final restaurantQuery = await restaurantsCollection.get();
     if (restaurantQuery.docs.isNotEmpty) {
       for (var doc in restaurantQuery.docs) {
@@ -71,6 +72,7 @@ class RestaurantService {
         await restaurantsCollection.where('name', isEqualTo: name).get();
     if (restaurantQuery.docs.isEmpty) return;
     final restaurantFound = restaurantQuery.docs.first;
+    restaurants.remove(Restaurant.fromSnapshot(restaurantFound));
     await restaurantFound.reference.delete();
   }
 

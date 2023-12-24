@@ -2,10 +2,10 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:restaurant_reservation_final/Services/branch_service.dart';
 import 'package:restaurant_reservation_final/Services/firebase_storage_service.dart';
 import 'package:restaurant_reservation_final/Services/restaurant_service.dart';
-import 'package:restaurant_reservation_final/Utils/branch_collection_utils.dart';
-import 'package:restaurant_reservation_final/Screens/auth_service.dart';
+import 'package:restaurant_reservation_final/Services/auth_service.dart';
 import 'package:restaurant_reservation_final/models/restaurant.dart';
 import 'package:restaurant_reservation_final/user/restaurant_details.dart';
 
@@ -17,7 +17,7 @@ class UserRestaurantsList extends StatefulWidget {
 }
 
 class _UserRestaurantsListState extends State<UserRestaurantsList> {
-  BranchCollectionUtils branchCollectionUtils = BranchCollectionUtils();
+  BranchService branchService = BranchService();
   RestaurantService restaurantService = RestaurantService();
   CollectionReference restaurantsCollection =
       FirebaseFirestore.instance.collection('restaurants');
@@ -27,28 +27,40 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
   FirebaseStorageService firebaseStorageService = FirebaseStorageService();
   Restaurant? restaurant;
   String? logoPath;
+  TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    getBranches();
+    getRestaurants();
   }
 
-  Future<void> fetchData() async {
-    await branchCollectionUtils.fetchBranches(null);
-    await restaurantService.getRestaurants();
-    setState(() {});
+  Future<void> getBranches() async {
+    var branches = await branchService.getBranches();
+    setState(() {
+      branchService.branches = branches;
+    });
+  }
+
+  Future<void> getRestaurants() async {
+    var restaurants = await restaurantService.getRestaurants();
+    setState(() {
+      restaurantService.restaurants = restaurants;
+    });
   }
 
   Future<void> getRestaurantByName(String restaurantName) async {
     var restaurant =
         await restaurantService.getRestaurantByName(restaurantName);
-    this.restaurant = restaurant;
-    logoPath = restaurant.logoPath;
+    setState(() {
+      this.restaurant = restaurant;
+      logoPath = restaurant.logoPath;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    fetchData();
     return Scaffold(
       backgroundColor: Color.fromRGBO(236, 235, 235, 1),
       body: Container(
@@ -114,6 +126,17 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
                 ),
               ),
               child: TextField(
+                controller: searchController,
+                onChanged: (value) {
+                  setState(() {
+                    if (value.isEmpty) getBranches();
+                    branchService.branches = branchService.branches
+                        .where((branch) => branch.restaurantName
+                            .toLowerCase()
+                            .contains(value.toLowerCase()))
+                        .toList();
+                  });
+                },
                 decoration: InputDecoration(
                   hintText: "I'm looking for..",
                   border: InputBorder.none,
@@ -122,7 +145,7 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
               ),
             ),
             SizedBox(height: 8),
-            branchCollectionUtils.branches.isEmpty ||
+            branchService.branches.isEmpty ||
                     restaurantService.restaurants.isEmpty
                 ? Center(
                     child: Column(
@@ -162,9 +185,9 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
                 height: 150,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: branchCollectionUtils.branches.length,
+                  itemCount: branchService.branches.length,
                   itemBuilder: (context, index) {
-                    var branch = branchCollectionUtils.branches[index];
+                    var branch = branchService.branches[index];
                     getRestaurantByName(branch.restaurantName);
 
                     return GestureDetector(
@@ -173,7 +196,8 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => ReservyWidget(
-                              branch: branch, restaurant: restaurant!,
+                              branch: branch,
+                              restaurant: restaurant!,
                             ),
                           ),
                         );

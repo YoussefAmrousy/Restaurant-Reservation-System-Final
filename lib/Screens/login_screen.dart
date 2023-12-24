@@ -2,9 +2,10 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:restaurant_reservation_final/Restaurant/restaurant_navigation_bar.dart';
 import 'package:restaurant_reservation_final/Screens/register_screen.dart';
 import 'package:restaurant_reservation_final/Admin/Screens/admin_navbar.dart';
-import 'package:restaurant_reservation_final/Screens/auth_service.dart';
+import 'package:restaurant_reservation_final/Services/auth_service.dart';
 import 'package:restaurant_reservation_final/user/user_navigation_bar.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -27,18 +28,15 @@ class _LoginPageState extends State<LoginScreen> {
       form.save();
       User? user = await authService.signInWithEmailAndPassword(
           _emailController.text, _passwordController.text);
-      if (user != null) {
-        if (_emailController.text.contains('admin')) {
-          _navigateToRoleSpecificScreen('admin');
-        } else if (_emailController.text.contains('@reservy')) {
-          _navigateToRoleSpecificScreen('restaurant');
-        } else {
-          _navigateToRoleSpecificScreen('user');
-        }
+      String? userRole = await authService.getUserRole(user!.uid);
+      if (userRole == 'admin') {
+        _navigateToRoleSpecificScreen('admin');
+      } else if (userRole == 'restaurant') {
+        _navigateToRoleSpecificScreen('restaurant');
       } else {
-        print('Login failed. Please try again.');
+        _navigateToRoleSpecificScreen('user');
       }
-    }
+        }
   }
 
   void _navigateToRoleSpecificScreen(String role) {
@@ -52,7 +50,7 @@ class _LoginPageState extends State<LoginScreen> {
       case 'restaurant':
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => UserNavigationBar()),
+          MaterialPageRoute(builder: (context) => RestaurantNavigationBar()),
         );
         break;
       default:
