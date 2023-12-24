@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:restaurant_reservation_final/Restaurant/reservations.dart';
+import 'package:restaurant_reservation_final/Restaurant/restaurant_reservations.dart';
 
 class RestaurantNavigationBar extends StatefulWidget {
   const RestaurantNavigationBar({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutterflow_ui/flutterflow_ui.dart' show FlutterFlowModel;
 import 'package:flutter/material.dart';
-import 'package:restaurant_reservation_final/Restaurant/reservations.dart';
+import 'package:restaurant_reservation_final/Restaurant/restaurant_reservations.dart';
 
 class ReservationsModel extends FlutterFlowModel<ReservationsWidget> {
   final unfocusNode = FocusNode();
