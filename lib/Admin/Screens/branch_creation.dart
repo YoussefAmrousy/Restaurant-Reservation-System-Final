@@ -2,9 +2,13 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:restaurant_reservation_final/Admin/Screens/branches_list/branches_list.dart';
+import 'package:restaurant_reservation_final/Maps/map_screen.dart';
 import 'package:restaurant_reservation_final/models/branch.dart';
 import 'package:restaurant_reservation_final/models/restaurant.dart';
+import 'package:restaurant_reservation_final/providers/location_provider.dart';
 import 'package:restaurant_reservation_final/shared/Widgets/form_error_widget.dart';
 
 class BranchCreationScreen extends StatefulWidget {
@@ -24,6 +28,7 @@ class _BranchCreationScreenState extends State<BranchCreationScreen> {
   final addressController = TextEditingController();
   final phoneController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  LocationProvider? locationProvider;
 
   CollectionReference branchesCollection =
       FirebaseFirestore.instance.collection('branches');
@@ -54,6 +59,7 @@ class _BranchCreationScreenState extends State<BranchCreationScreen> {
   }
 
   submitBranch() async {
+    LatLng? selectedLocation = locationProvider?.selectedLocation;
     final branch = {
       'name': branchNameController.text.trim(),
       'restaurant': restaurantNameController.text.trim(),
@@ -61,6 +67,8 @@ class _BranchCreationScreenState extends State<BranchCreationScreen> {
       'city': cityController.text.trim(),
       'address': addressController.text.trim(),
       'phone': phoneController.text.trim(),
+      'longitude': selectedLocation?.longitude,
+      'latitude': selectedLocation?.latitude,
     };
 
     final exisitingBranch = await branchesCollection
@@ -96,6 +104,7 @@ class _BranchCreationScreenState extends State<BranchCreationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    locationProvider = Provider.of<LocationProvider>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -189,6 +198,14 @@ class _BranchCreationScreenState extends State<BranchCreationScreen> {
                               border: OutlineInputBorder(),
                             ),
                             controller: phoneController),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        SizedBox(
+                          height: 150,
+                          child: MapScreen(
+                            allowMarkerSelection: true,),
+                        ),
                         SizedBox(
                           height: 20,
                         ),
