@@ -188,7 +188,12 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
                   itemCount: branchService.branches.length,
                   itemBuilder: (context, index) {
                     var branch = branchService.branches[index];
-                    getRestaurantByName(branch.restaurantName);
+                    restaurant = restaurantService.restaurants.firstWhere(
+                      (restaurant) {
+                        return restaurant.name == branch.restaurantName;
+                      },
+                    );
+                    logoPath = restaurant!.logoPath;
 
                     return GestureDetector(
                       onTap: () {
