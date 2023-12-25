@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:restaurant_reservation_final/Screens/login_screen.dart';
 import 'package:restaurant_reservation_final/Admin/Screens/admin_navbar.dart';
 import 'package:restaurant_reservation_final/Services/auth_service.dart';
+import 'package:restaurant_reservation_final/models/user_data.dart';
 import 'package:restaurant_reservation_final/user/user_navigation_bar.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -18,11 +19,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
   AuthService authService = AuthService();
   final _formKey = GlobalKey<FormState>();
   final coolGrey = const Color.fromARGB(255, 169, 169, 169);
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   void submit() async {
+    UserData userData = UserData(
+      username: _usernameController.text,
+      role: 'user',
+    );
     User? user = await authService.registerWithEmailAndPassword(
-        _emailController.text, _passwordController.text);
+        _emailController.text, _passwordController.text, userData);
     if (user != null) {
       if (_emailController.text.contains('admin')) {
         _navigateToRoleSpecificScreen('admin');
@@ -80,6 +86,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     width: 320,
                     height: 60,
                     child: TextFormField(
+                      controller: _usernameController,
                       decoration: const InputDecoration(
                         hintText: 'Full Name',
                         prefixIcon: Icon(Icons.person),

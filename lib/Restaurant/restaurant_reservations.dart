@@ -211,7 +211,7 @@ class _ReservationsWidgetState extends State<ReservationsWidget> {
                                       ),
                                 ),
                                 Text(
-                                  '5 Guests Table',
+                                  '${reservation.guests} guests table',
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(
