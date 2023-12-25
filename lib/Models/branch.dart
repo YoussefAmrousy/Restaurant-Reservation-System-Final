@@ -7,6 +7,8 @@ class Branch {
   final String city;
   final String? address;
   final String phone;
+  final double? longitude;
+  final double? latitude;
 
   Branch({
     this.name,
@@ -15,6 +17,8 @@ class Branch {
     required this.city,
     required this.phone,
     this.address,
+    this.longitude,
+    this.latitude,
   });
 
   factory Branch.fromMap(Map<String, dynamic> map) {
@@ -25,6 +29,8 @@ class Branch {
       phone: map['phone'] ?? '',
       restaurantName: map['restaurant'] ?? '',
       address: map['address'] ?? '',
+      longitude: map['longitude'] ?? 0.0,
+      latitude: map['latitude'] ?? 0.0,
     );
   }
 
@@ -37,6 +43,8 @@ class Branch {
       phone: data['phone'],
       restaurantName: data['restaurant'],
       address: data['address'],
+      longitude: data['longitude'],
+      latitude: data['latitude'],
     );
   }
 
@@ -48,6 +56,8 @@ class Branch {
       'phone': phone,
       'restaurant': restaurantName,
       'address': address,
+      'longitude': longitude,
+      'latitude': latitude,
     };
   }
 }

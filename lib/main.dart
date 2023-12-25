@@ -2,8 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 import 'package:restaurant_reservation_final/Screens/login_screen.dart';
 import 'package:restaurant_reservation_final/Admin/Screens/restaurantList/restaurants_list.dart';
+import 'package:restaurant_reservation_final/providers/location_provider.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -11,7 +13,12 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => LocationProvider(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

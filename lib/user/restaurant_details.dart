@@ -6,6 +6,7 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart' as maps;
 import 'package:restaurant_reservation_final/Maps/map_screen.dart';
 import 'package:restaurant_reservation_final/Services/restaurant_service.dart';
 import 'package:restaurant_reservation_final/models/branch.dart';
@@ -31,6 +32,7 @@ class _ReservyWidgetState extends State<ReservyWidget>
   String? selectedTime;
   RestaurantService restaurantService = RestaurantService();
   String? menuPath;
+  maps.LatLng? selectedLocation;
 
   @override
   void initState() {
@@ -43,6 +45,10 @@ class _ReservyWidgetState extends State<ReservyWidget>
       initialIndex: 1,
     )..addListener(() => setState(() {}));
     menuPath = widget.restaurant.menuPath;
+    if (widget.branch.latitude != null && widget.branch.longitude != null) {
+      selectedLocation =
+          maps.LatLng(widget.branch.latitude!, widget.branch.longitude!);
+    }
   }
 
   @override
@@ -585,8 +591,14 @@ class _ReservyWidgetState extends State<ReservyWidget>
                                     ),
                                     SizedBox(
                                       width: 250,
-                                      height: 150, // Increased map height
-                                      child: MapScreen(),
+                                      height: 150,
+                                      child: selectedLocation != null
+                                          ? MapScreen(
+                                              selectedLocation:
+                                                  selectedLocation,
+                                              allowMarkerSelection: false,
+                                            )
+                                          : Text('No Location'),
                                     ),
                                   ],
                                 ),

@@ -1,29 +1,23 @@
-// ignore_for_file: unused_element, avoid_print
+// ignore_for_file: use_build_context_synchronously, prefer_const_constructors
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MapUtil {
-  void saveLocation(LatLng location) async {
-    await FirebaseFirestore.instance.collection('locations').add({
-      'latitude': location.latitude,
-      'longitude': location.longitude,
-    });
-  }
-
-  Future<List<LatLng>> getLocations() async {
-    try {
-      QuerySnapshot snapshot =
-          await FirebaseFirestore.instance.collection('locations').get();
-      return snapshot.docs.map((doc) {
-        double latitude = doc['latitude'] ?? 0.0;
-        double longitude = doc['longitude'] ?? 0.0;
-        return LatLng(latitude, longitude);
-      }).toList();
-    } catch (e) {
-      print('Error fetching locations: $e');
-      return [];
+  openGoogleMapsNavigation(BuildContext context, LatLng destination) async {
+    String googleMapsUrl =
+        'https://www.google.com/maps/dir/?api=1&destination=${destination.latitude},${destination.longitude}'
+        '&travelmode=driving';
+    Uri googleMapsUri = Uri.parse(googleMapsUrl);
+    if (await canLaunchUrl(googleMapsUri)) {
+      await launchUrl(googleMapsUri);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Could not launch Google Maps.'),
+        ),
+      );
     }
   }
-
 }
