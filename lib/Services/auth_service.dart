@@ -3,11 +3,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:restaurant_reservation_final/Services/shared_preference_service.dart';
+import 'package:restaurant_reservation_final/models/user_data.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  CollectionReference userRoles =
-      FirebaseFirestore.instance.collection('userRoles');
+  CollectionReference userDataCollection =
+      FirebaseFirestore.instance.collection('userData');
   SharedPreferenceService sharedPreferenceService = SharedPreferenceService();
 
   Future<User?> signInWithEmailAndPassword(
@@ -30,7 +31,7 @@ class AuthService {
   }
 
   Future<User?> registerWithEmailAndPassword(String email, String password,
-      [String? type, String? restaurant]) async {
+      UserData userData) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -38,13 +39,20 @@ class AuthService {
       );
       User? user = result.user;
 
-      if (type == 'restaurant') {
-        await addUserRole(user!.uid, type ?? "restaurant", restaurant);
+      UserData newUser = UserData(
+        userId: user!.uid,
+        username: userData.username,
+        role: userData.role,
+      );
+
+      if (userData.role == 'restaurant') {
+        newUser.restaurant = userData.restaurant;
+        await addUserData(newUser);
 
         sharedPreferenceService.saveStringToLocalStorage(
-            'restaurant', restaurant!);
+            'restaurant', userData.restaurant!);
       } else {
-        await addUserRole(user!.uid, type ?? "user");
+        await addUserData(newUser);
       }
       print(user);
       return user;
@@ -54,15 +62,15 @@ class AuthService {
     }
   }
 
-  Future<void> addUserRole(String userId, String role,
-      [String? restaurant]) async {
+  Future<void> addUserData(UserData userData) async {
     try {
-      final userRole = {
-        'userId': userId,
-        'role': role,
-        'restaurant': restaurant ?? '',
+      final user = {
+        'username': userData.username,
+        'userId': userData.userId,
+        'role': userData.role,
+        'restaurant': userData.restaurant ?? '',
       };
-      await userRoles.add(userRole);
+      await userDataCollection.add(user);
     } catch (error) {
       print('Error adding user role: $error');
       return;
@@ -72,7 +80,7 @@ class AuthService {
   Future<String?> getUserRole(String userId) async {
     try {
       final userRoleQuery =
-          await userRoles.where('userId', isEqualTo: userId).get();
+          await userDataCollection.where('userId', isEqualTo: userId).get();
       if (userRoleQuery.docs.isNotEmpty) {
         return userRoleQuery.docs.first.get('role');
       }
@@ -81,6 +89,14 @@ class AuthService {
       print('Error getting user role: $error');
       return null;
     }
+  }
+
+  Future<UserData> getUserData(String userId) async {
+      final userDataQuery =
+          await userDataCollection.where('userId', isEqualTo: userId).get();
+      if (userDataQuery.docs.isEmpty) return UserData();
+      var user = userDataQuery.docs.first;
+      return UserData.fromSnapshot(user);
   }
 
   Future<void> signOut() async {
@@ -94,7 +110,7 @@ class AuthService {
 
   getUserRestaurant(String uid) async {
     try {
-      final userRoleQuery = userRoles.where('userId', isEqualTo: uid).get();
+      final userRoleQuery = userDataCollection.where('userId', isEqualTo: uid).get();
       return await userRoleQuery
           .then((value) => value.docs.first.get('restaurant'));
     } catch (error) {
