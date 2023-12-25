@@ -1,6 +1,5 @@
 // ignore_for_file: library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurant_reservation_final/Services/branch_service.dart';
 import 'package:restaurant_reservation_final/Services/firebase_storage_service.dart';
@@ -19,10 +18,6 @@ class UserRestaurantsList extends StatefulWidget {
 class _UserRestaurantsListState extends State<UserRestaurantsList> {
   BranchService branchService = BranchService();
   RestaurantService restaurantService = RestaurantService();
-  CollectionReference restaurantsCollection =
-      FirebaseFirestore.instance.collection('restaurants');
-  CollectionReference branchesCollection =
-      FirebaseFirestore.instance.collection('branches');
   AuthService authService = AuthService();
   FirebaseStorageService firebaseStorageService = FirebaseStorageService();
   Restaurant? restaurant;
@@ -47,15 +42,6 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
     var restaurants = await restaurantService.getRestaurants();
     setState(() {
       restaurantService.restaurants = restaurants;
-    });
-  }
-
-  Future<void> getRestaurantByName(String restaurantName) async {
-    var restaurant =
-        await restaurantService.getRestaurantByName(restaurantName);
-    setState(() {
-      this.restaurant = restaurant;
-      logoPath = restaurant.logoPath;
     });
   }
 
