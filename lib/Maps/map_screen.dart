@@ -37,9 +37,9 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     final locationProvider =
         Provider.of<LocationProvider>(context, listen: false);
-    return Scaffold(
-      body: LayoutBuilder(
-        builder: (context, constraints) => GoogleMap(
+    return Stack(
+      children: [
+        GoogleMap(
           myLocationButtonEnabled: false,
           zoomControlsEnabled: false,
           onMapCreated: (controller) {
@@ -81,17 +81,21 @@ class _MapScreenState extends State<MapScreen> {
           markers: _selectedMarker != null ? {_selectedMarker!} : {},
           mapType: MapType.normal,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (_selectedMarker != null) {
-            mapUtil.openGoogleMapsNavigation(
-                context, _selectedMarker!.position);
-          }
-        },
-        mini: true,
-        child: Icon(Icons.directions, color: Colors.white),
-      ),
+        Positioned(
+          bottom: 16.0,
+          right: 16.0,
+          child: FloatingActionButton(
+            onPressed: () {
+              if (_selectedMarker != null) {
+                mapUtil.openGoogleMapsNavigation(
+                    context, _selectedMarker!.position);
+              }
+            },
+            mini: true,
+            child: Icon(Icons.directions, color: Colors.white),
+          ),
+        ),
+      ],
     );
   }
 }

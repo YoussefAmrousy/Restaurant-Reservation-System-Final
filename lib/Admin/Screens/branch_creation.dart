@@ -204,7 +204,8 @@ class _BranchCreationScreenState extends State<BranchCreationScreen> {
                         SizedBox(
                           height: 150,
                           child: MapScreen(
-                            allowMarkerSelection: true,),
+                            allowMarkerSelection: true,
+                          ),
                         ),
                         SizedBox(
                           height: 20,

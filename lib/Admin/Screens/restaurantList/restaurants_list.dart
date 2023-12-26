@@ -25,6 +25,11 @@ class _RestaurtantsListState extends State<RestaurtantsListScreen> {
     initializeData();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   Future<void> initializeData() async {
     await restaurantService.getRestaurants();
     setState(() {});

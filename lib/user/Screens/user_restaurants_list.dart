@@ -6,7 +6,7 @@ import 'package:restaurant_reservation_final/Services/firebase_storage_service.d
 import 'package:restaurant_reservation_final/Services/restaurant_service.dart';
 import 'package:restaurant_reservation_final/Services/auth_service.dart';
 import 'package:restaurant_reservation_final/models/restaurant.dart';
-import 'package:restaurant_reservation_final/user/restaurant_details.dart';
+import 'package:restaurant_reservation_final/user/Screens/restaurant_details.dart';
 
 class UserRestaurantsList extends StatefulWidget {
   const UserRestaurantsList({super.key});

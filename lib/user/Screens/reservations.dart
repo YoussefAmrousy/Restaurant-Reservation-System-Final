@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:restaurant_reservation_final/Services/reservations_service.dart';
 import 'package:restaurant_reservation_final/models/reservation.dart';
-import 'package:restaurant_reservation_final/user/user_reservation_model.dart';
+import 'package:restaurant_reservation_final/user/models/user_reservation_model.dart';
 
 class UserReservationsWidget extends StatefulWidget {
   const UserReservationsWidget({super.key});
