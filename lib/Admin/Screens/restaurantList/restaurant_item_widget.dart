@@ -24,7 +24,7 @@ class _RestaurantItemState extends State<RestaurantItem> {
   String? logoPath;
 
   Future<void> initializeData() async {
-    await restaurantService.getRestaurants();
+    await restaurantService.getAllRestaurants();
   }
 
   Future<void> deleteRestaurant(String name) async {
@@ -110,7 +110,7 @@ class _RestaurantItemState extends State<RestaurantItem> {
                     ),
                   ),
                 );
-                await restaurantService.getRestaurants();
+                await restaurantService.getAllRestaurants();
                 setState(() {});
               },
             ),

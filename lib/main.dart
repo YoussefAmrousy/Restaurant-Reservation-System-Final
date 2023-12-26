@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:restaurant_reservation_final/Screens/login_screen.dart';
 import 'package:restaurant_reservation_final/Admin/Screens/restaurantList/restaurants_list.dart';
 import 'package:restaurant_reservation_final/providers/location_provider.dart';
+import 'package:restaurant_reservation_final/shared/Widgets/restaurant_provider.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -14,8 +15,15 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => LocationProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<LocationProvider>(
+          create: (context) => LocationProvider(),
+        ),
+        ChangeNotifierProvider<RestaurantProvider>(
+          create: (context) => RestaurantProvider(),
+        ),
+      ],
       child: MyApp(),
     ),
   );

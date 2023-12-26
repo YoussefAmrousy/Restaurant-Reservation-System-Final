@@ -31,7 +31,7 @@ class _RestaurtantsListState extends State<RestaurtantsListScreen> {
   }
 
   Future<void> initializeData() async {
-    await restaurantService.getRestaurants();
+    await restaurantService.getAllRestaurants();
     setState(() {});
   }
 
@@ -77,7 +77,7 @@ class _RestaurtantsListState extends State<RestaurtantsListScreen> {
                 ),
               );
 
-              await restaurantService.getRestaurants();
+              await restaurantService.getAllRestaurants();
               setState(() {});
             },
           ),

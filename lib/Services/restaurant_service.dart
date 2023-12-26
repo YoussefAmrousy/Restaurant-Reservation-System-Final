@@ -10,7 +10,7 @@ class RestaurantService {
   List<Restaurant> restaurants = [];
   FirebaseStorageService firebaseStorageService = FirebaseStorageService();
 
-  Future<List<Restaurant>> getRestaurants() async {
+  Future<List<Restaurant>> getAllRestaurants() async {
     restaurants.clear();
     final restaurantQuery = await restaurantsCollection.get();
     if (restaurantQuery.docs.isNotEmpty) {
