@@ -6,9 +6,11 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:restaurant_reservation_final/Services/auth_service.dart';
 import 'package:restaurant_reservation_final/Services/reservations_service.dart';
 import 'package:restaurant_reservation_final/models/reservation.dart';
 import 'package:restaurant_reservation_final/user/models/user_reservation_model.dart';
+
 
 class UserReservationsWidget extends StatefulWidget {
   const UserReservationsWidget({super.key});
@@ -19,13 +21,26 @@ class UserReservationsWidget extends StatefulWidget {
 
 class _UserReservationsWidgetState extends State<UserReservationsWidget> {
   late UserReservationsModel _model;
-
+  ReservationsService reservationsService = ReservationsService();
+  AuthService authService = AuthService();
+  List<Reservation>? reservations = [];
+  User user = FirebaseAuth.instance.currentUser!;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => UserReservationsModel());
+    String userId = user.uid;
+    getReservations(userId);
+  }
+
+  getReservations(String userId) async {
+    final reservationsQuery =
+        await reservationsService.getReservationsByUserId(userId);
+    setState(() {
+      reservations = reservationsQuery;
+    });
   }
 
   @override
@@ -75,7 +90,14 @@ class _UserReservationsWidgetState extends State<UserReservationsWidget> {
           child: AppBar(
             backgroundColor: Color(0xFFE7AF2F),
             automaticallyImplyLeading: false,
-            actions: [],
+            actions: [
+              IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
             title: Text(
               'My Reservations',
               style: FlutterFlowTheme.of(context).displaySmall.override(
@@ -99,144 +121,152 @@ class _UserReservationsWidgetState extends State<UserReservationsWidget> {
               SizedBox(
                 height: 10,
               ),
-              Align(
-                alignment: AlignmentDirectional(0, 0),
-                child: FlipCard(
-                  fill: Fill.fillBack,
-                  direction: FlipDirection.HORIZONTAL,
-                  speed: 400,
-                  front: Container(
-                    width: 379,
-                    height: 188,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Color(0xC1E7AF2F), Color(0x51E7AF2F)],
-                        stops: [0, 1],
-                        begin: AlignmentDirectional(0, -1),
-                        end: AlignmentDirectional(0, 1),
-                      ),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(12),
-                          child: Text(
-                            'Tuesday 22, Jan',
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'Poppins',
-                                  color: Color(0xFFFCFAF9),
-                                  fontWeight: FontWeight.bold,
-                                ),
+              ListView.builder(
+                itemCount: reservations?.length,
+                itemBuilder: ((context, index) {
+                  final reservation = reservations?[index];
+                  return Align(
+                    alignment: AlignmentDirectional(0, 0),
+                    child: FlipCard(
+                      fill: Fill.fillBack,
+                      direction: FlipDirection.HORIZONTAL,
+                      speed: 400,
+                      front: Container(
+                        width: 379,
+                        height: 188,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Color(0xC1E7AF2F), Color(0x51E7AF2F)],
+                            stops: [0, 1],
+                            begin: AlignmentDirectional(0, -1),
+                            end: AlignmentDirectional(0, 1),
                           ),
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 12),
-                          child: Text(
-                            'Papa John\'s',
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFFFCFAF9),
-                                ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Align(
-                            alignment: Alignment.bottomRight,
-                            child: Padding(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
                               padding: EdgeInsets.all(12),
+                              child: Center(
+                                child: Text(
+                                  reservation!.date.toString(),
+                                  style: FlutterFlowTheme.of(context)
+                                      .bodyMedium
+                                      .override(
+                                        fontFamily: 'Poppins',
+                                        color: Color(0xFFFCFAF9),
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 12),
                               child: Text(
-                                'Tap for the QR Code',
-                                textAlign: TextAlign.right,
+                                reservation.restaurant,
                                 style: FlutterFlowTheme.of(context)
                                     .bodyMedium
                                     .override(
                                       fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.w900,
+                                      fontWeight: FontWeight.bold,
                                       color: Color(0xFFFCFAF9),
                                     ),
                               ),
                             ),
-                          ),
+                            Expanded(
+                              child: Align(
+                                alignment: Alignment.bottomRight,
+                                child: Padding(
+                                  padding: EdgeInsets.all(12),
+                                  child: Text(
+                                    'Tap for the QR Code',
+                                    textAlign: TextAlign.right,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'Poppins',
+                                          fontWeight: FontWeight.w900,
+                                          color: Color(0xFFFCFAF9),
+                                        ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                  back: Container(
-                    width: 379,
-                    height: 183,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Color(0xC1E7AF2F), Color(0x51E7AF2F)],
-                        stops: [0, 1],
-                        begin: AlignmentDirectional(0, -1),
-                        end: AlignmentDirectional(0, 1),
                       ),
-                      borderRadius: BorderRadius.circular(12),
+                      back: Container(
+                        width: 379,
+                        height: 183,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Color(0xC1E7AF2F), Color(0x51E7AF2F)],
+                            stops: [0, 1],
+                            begin: AlignmentDirectional(0, -1),
+                            end: AlignmentDirectional(0, 1),
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Align(
+                              alignment: AlignmentDirectional(0, -1),
+                              child: Text(
+                                'Tuesday 22, Jan',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'Poppins',
+                                      color: Color(0xFFFCFAF9),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                              ),
+                            ),
+                            Align(
+                              alignment: AlignmentDirectional(0, 0),
+                              child: Text(
+                                '8:30 PM',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'Poppins',
+                                      color: Color(0xFFFCFAF9),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                              ),
+                            ),
+                            Align(
+                              alignment: AlignmentDirectional(0, 0),
+                              child: Text(
+                                '5 Guests Table',
+                                style: FlutterFlowTheme.of(context)
+                                    .bodyMedium
+                                    .override(
+                                      fontFamily: 'Poppins',
+                                      color: Color(0xFFFCFAF9),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                              ),
+                            ),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: SvgPicture.asset(
+                                'assets/qr_code.svg',
+                                width: 97,
+                                height: 92,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Align(
-                          alignment: AlignmentDirectional(0, -1),
-                          child: Text(
-                            'Tuesday 22, Jan',
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'Poppins',
-                                  color: Color(0xFFFCFAF9),
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                        ),
-                        Align(
-                          alignment: AlignmentDirectional(0, 0),
-                          child: Text(
-                            '8:30 PM',
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'Poppins',
-                                  color: Color(0xFFFCFAF9),
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                        ),
-                        Align(
-                          alignment: AlignmentDirectional(0, 0),
-                          child: Text(
-                            '5 Guests Table',
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
-                                  fontFamily: 'Poppins',
-                                  color: Color(0xFFFCFAF9),
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                        ),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: SvgPicture.asset(
-                            'assets/qr_code.svg',
-                            width: 97,
-                            height: 92,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                  );
+                }),
               ),
             ],
           ),

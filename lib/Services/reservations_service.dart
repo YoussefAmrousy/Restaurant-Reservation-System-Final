@@ -42,6 +42,21 @@ class ReservationsService {
     return reservations;
   }
 
+  Future<List<Reservation>> getReservationsByUserId(String userId) async {
+    final reservationQuery =
+        await reservationsCollection.where('userId', isEqualTo: userId).get();
+
+    final List<Reservation> reservations = [];
+
+    if (reservationQuery.docs.isNotEmpty) {
+      for (var doc in reservationQuery.docs) {
+        reservations.add(Reservation.fromSnapshot(doc));
+      }
+    }
+
+    return reservations;
+  }
+
   Future<void> addReservation(Reservation reservation) async {
     await reservationsCollection.add(reservation.toJson());
   }
