@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:restaurant_reservation_final/user/reservations.dart';
-import 'package:restaurant_reservation_final/user/user_restaurants_list.dart';
+import 'package:restaurant_reservation_final/user/Screens/reservations.dart';
+import 'package:restaurant_reservation_final/user/Screens/user_restaurants_list.dart';
 
 
 class UserNavigationBar extends StatefulWidget {

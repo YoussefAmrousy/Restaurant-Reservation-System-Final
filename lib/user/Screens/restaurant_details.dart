@@ -11,8 +11,8 @@ import 'package:restaurant_reservation_final/Maps/map_screen.dart';
 import 'package:restaurant_reservation_final/Services/restaurant_service.dart';
 import 'package:restaurant_reservation_final/models/branch.dart';
 import 'package:restaurant_reservation_final/models/restaurant.dart';
-import 'reservy_model.dart';
-export 'reservy_model.dart';
+import '../models/reservy_model.dart';
+export '../models/reservy_model.dart';
 
 class ReservyWidget extends StatefulWidget {
   ReservyWidget({super.key, required this.branch, required this.restaurant});
@@ -296,7 +296,7 @@ class _ReservyWidgetState extends State<ReservyWidget>
                                     style:
                                         FlutterFlowTheme.of(context).titleLarge,
                                   ),
-                                  count: _model.countControllerValue ??= 0,
+                                  count: _model.countControllerValue,
                                   updateCount: (count) => setState(() =>
                                       _model.countControllerValue = count),
                                   stepSize: 1,

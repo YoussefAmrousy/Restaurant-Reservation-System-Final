@@ -1,12 +1,12 @@
-// ignore_for_file: prefer_const_constructors_in_immutables, prefer_const_constructors, library_private_types_in_public_api, avoid_print
+// ignore_for_file: prefer_const_constructors_in_immutables, prefer_const_constructors, library_private_types_in_public_api, avoid_print, use_build_context_synchronously
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:restaurant_reservation_final/Screens/login_screen.dart';
-import 'package:restaurant_reservation_final/Admin/Screens/admin_navbar.dart';
 import 'package:restaurant_reservation_final/Services/auth_service.dart';
 import 'package:restaurant_reservation_final/models/user_data.dart';
-import 'package:restaurant_reservation_final/user/user_navigation_bar.dart';
+import 'package:restaurant_reservation_final/user/Screens/user_navigation_bar.dart';
 
 class RegisterScreen extends StatefulWidget {
   RegisterScreen({super.key});
@@ -22,6 +22,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
   void submit() async {
     UserData userData = UserData(
       username: _usernameController.text,
@@ -30,38 +31,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     User? user = await authService.registerWithEmailAndPassword(
         _emailController.text, _passwordController.text, userData);
     if (user != null) {
-      if (_emailController.text.contains('admin')) {
-        _navigateToRoleSpecificScreen('admin');
-      } else if (_emailController.text.contains('@reservy')) {
-        _navigateToRoleSpecificScreen('restaurant');
-      } else {
-        _navigateToRoleSpecificScreen('user');
-      }
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => UserNavigationBar()),
+      );
     } else {
       print('Registration failed. Please try again.');
-    }
-  }
-
-  void _navigateToRoleSpecificScreen(String role) {
-    switch (role) {
-      case 'admin':
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => AdminNavigationBar()),
-        );
-        break;
-      case 'restaurant':
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => UserNavigationBar()),
-        );
-        break;
-      default:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => UserNavigationBar()),
-        );
-        break;
     }
   }
 
@@ -120,6 +95,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     width: 320,
                     height: 60,
                     child: TextFormField(
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      maxLength: 11,
                       decoration: const InputDecoration(
                         hintText: 'Mobile Number',
                         prefixIcon: Icon(Icons.phone),
@@ -140,7 +119,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       obscureText: true,
                       decoration: const InputDecoration(
                         hintText: 'Password',
-                        helperText: 'Minimum length is 5 charcters',
+                        helperText: 'Minimum length is 6 charcters',
                         prefixIcon: Icon(Icons.lock),
                       ),
                       validator: (value) {

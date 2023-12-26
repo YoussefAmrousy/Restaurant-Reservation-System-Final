@@ -8,7 +8,7 @@ import 'package:restaurant_reservation_final/Admin/Screens/admin_navbar.dart';
 import 'package:restaurant_reservation_final/Services/auth_service.dart';
 import 'package:restaurant_reservation_final/Services/reservations_service.dart';
 import 'package:restaurant_reservation_final/Services/shared_preference_service.dart';
-import 'package:restaurant_reservation_final/user/user_navigation_bar.dart';
+import 'package:restaurant_reservation_final/user/Screens/user_navigation_bar.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({super.key});
@@ -39,7 +39,16 @@ class _LoginPageState extends State<LoginScreen> {
       form.save();
       User? user = await authService.signInWithEmailAndPassword(
           _emailController.text, _passwordController.text);
-      String? userRole = await authService.getUserRole(user!.uid);
+      if (user == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Invalid credentials'),
+          ),
+        );
+        return;
+      }
+      String? userRole = await authService.getUserRole(user.uid);
+      userRole ??= 'user';
       if (userRole == 'admin') {
         _navigateToRoleSpecificScreen('admin');
       } else if (userRole == 'restaurant') {
@@ -51,7 +60,8 @@ class _LoginPageState extends State<LoginScreen> {
     }
   }
 
-  Future<void> _navigateToRoleSpecificScreen(String role, [String? restaurant]) async {
+  Future<void> _navigateToRoleSpecificScreen(String role,
+      [String? restaurant]) async {
     switch (role) {
       case 'admin':
         Navigator.pushReplacement(
@@ -62,7 +72,10 @@ class _LoginPageState extends State<LoginScreen> {
       case 'restaurant':
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => RestaurantNavigationBar(restaurant: restaurant,)),
+          MaterialPageRoute(
+              builder: (context) => RestaurantNavigationBar(
+                    restaurant: restaurant,
+                  )),
         );
         break;
       default:
@@ -111,7 +124,6 @@ class _LoginPageState extends State<LoginScreen> {
                       obscureText: true,
                       decoration: const InputDecoration(
                         hintText: 'Password',
-                        helperText: 'Minimum length is 5 charcters',
                         prefixIcon: Icon(Icons.lock),
                       ),
                     ),
