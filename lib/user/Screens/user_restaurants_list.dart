@@ -29,6 +29,7 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
   void initState() {
     super.initState();
     getBranches();
+    getAllRestaurants();
   }
 
   Future<void> getBranches() async {
@@ -38,10 +39,16 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
     });
   }
 
+  Future<void> getAllRestaurants() async {
+    var restaurants = await restaurantService.getAllRestaurants();
+    setState(() {
+      restaurantService.restaurants = restaurants;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(236, 235, 235, 1),
       body: Container(
         decoration: BoxDecoration(
           boxShadow: [

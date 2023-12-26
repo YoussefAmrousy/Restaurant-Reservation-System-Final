@@ -39,85 +39,87 @@ class _RestaurantsListRowState extends State<RestaurantsListRow> {
     List<Restaurant> restaurants =
         Provider.of<RestaurantProvider>(context).restaurants;
     print(restaurants);
-    return Column(children: [
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            widget.title,
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              widget.title,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),
-      ),
-      SizedBox(
-        height: 150,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: widget.branches.length,
-          itemBuilder: (context, index) {
-            var branch = widget.branches[index];
-            restaurantFilter = restaurants.firstWhere(
-              (restaurant) {
-                return restaurant.name == branch.restaurantName;
-              },
-            );
-            logoPath = restaurantFilter!.logoPath;
+        SizedBox(
+          height: 150,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: widget.branches.length,
+            itemBuilder: (context, index) {
+              var branch = widget.branches[index];
+              // restaurantFilter = restaurantService.restaurants.firstWhere(
+              //   (restaurant) {
+              //     return restaurant.name == 'Sizzler';
+              //   },
+              // );
+              // logoPath = restaurantFilter!.logoPath;
 
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ReservyWidget(
-                      branch: branch,
-                      restaurant: restaurantFilter!,
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ReservyWidget(
+                        branch: branch,
+                        restaurant: restaurantFilter!,
+                      ),
                     ),
-                  ),
-                );
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: Color(0xFFe7af2f),
-                          width: 2,
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: Color(0xFFe7af2f),
+                            width: 2,
+                          ),
+                        ),
+                        child: logoPath != null
+                            ? Image.network(
+                                logoPath!,
+                                width: 80,
+                                height: 80,
+                              )
+                            : SizedBox(
+                                width: 80,
+                                height: 80,
+                                child: Text('Unavailable'),
+                              ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        branch.restaurantName,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      child: logoPath != null
-                          ? Image.network(
-                              logoPath!,
-                              width: 80,
-                              height: 80,
-                            )
-                          : SizedBox(
-                              width: 80,
-                              height: 80,
-                              child: Text('Unavailable'),
-                            ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      branch.restaurantName,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
-      ),
-    ]);
+      ],
+    );
   }
 }
