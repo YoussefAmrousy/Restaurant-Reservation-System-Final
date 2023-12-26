@@ -2,6 +2,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:restaurant_reservation_final/Screens/login_screen.dart';
 import 'package:restaurant_reservation_final/Admin/Screens/admin_navbar.dart';
 import 'package:restaurant_reservation_final/Services/auth_service.dart';
@@ -22,7 +23,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  
+
   void submit() async {
     UserData userData = UserData(
       username: _usernameController.text,
@@ -95,6 +96,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     width: 320,
                     height: 60,
                     child: TextFormField(
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      maxLength: 11,
                       decoration: const InputDecoration(
                         hintText: 'Mobile Number',
                         prefixIcon: Icon(Icons.phone),
