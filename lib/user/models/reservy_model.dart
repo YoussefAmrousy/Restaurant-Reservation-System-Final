@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:restaurant_reservation_final/Services/auth_service.dart';
 import 'package:restaurant_reservation_final/Services/reservations_service.dart';
 import 'package:restaurant_reservation_final/models/reservation.dart';
-import 'package:restaurant_reservation_final/user/Screens/reservations.dart';
 import 'package:restaurant_reservation_final/user/Screens/restaurant_details.dart';
+import 'package:restaurant_reservation_final/user/Screens/user_navigation_bar.dart';
 
 class ReservyModel extends FlutterFlowModel<ReservyWidget> {
   final unfocusNode = FocusNode();
@@ -85,10 +85,13 @@ class ReservyModel extends FlutterFlowModel<ReservyWidget> {
 
     await reservationsService.addReservation(reservation).then((value) => {
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => UserReservationsWidget(),
-              ))
+            context,
+            MaterialPageRoute(
+              builder: (context) => UserNavigationBar(
+                selectedIndex: 1,
+              ),
+            ),
+          )
         });
   }
 
