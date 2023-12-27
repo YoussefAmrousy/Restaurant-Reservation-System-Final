@@ -1,13 +1,13 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, library_private_types_in_public_api
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, library_private_types_in_public_api, must_be_immutable
 
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:restaurant_reservation_final/user/Screens/reservations.dart';
 import 'package:restaurant_reservation_final/user/Screens/user_restaurants_list.dart';
 
-
 class UserNavigationBar extends StatefulWidget {
-  const UserNavigationBar({super.key});
+  UserNavigationBar({super.key, required this.selectedIndex});
+  int selectedIndex;
 
   @override
   _UserNavigationBarState createState() => _UserNavigationBarState();
@@ -15,7 +15,6 @@ class UserNavigationBar extends StatefulWidget {
 
 class _UserNavigationBarState extends State<UserNavigationBar> {
   int selectedIndex = 0;
-
   final List<Widget> pages = [
     UserRestaurantsList(),
     UserReservationsWidget(),
@@ -24,7 +23,7 @@ class _UserNavigationBarState extends State<UserNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: pages[selectedIndex],
+      body: pages[widget.selectedIndex],
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
         child: GNav(
@@ -43,12 +42,12 @@ class _UserNavigationBarState extends State<UserNavigationBar> {
               icon: Icons.calendar_today,
               text: 'Reservations',
             ),
-            GButton(icon: Icons.person, text: 'Profile')
+            // GButton(icon: Icons.person, text: 'Profile')
           ],
-          selectedIndex: selectedIndex,
+          selectedIndex: widget.selectedIndex,
           onTabChange: (index) {
             setState(() {
-              selectedIndex = index;
+              widget.selectedIndex = index;
             });
           },
         ),
@@ -56,4 +55,3 @@ class _UserNavigationBarState extends State<UserNavigationBar> {
     );
   }
 }
-

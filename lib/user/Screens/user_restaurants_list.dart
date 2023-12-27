@@ -48,7 +48,6 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(236, 235, 235, 1),
       body: Container(
         decoration: BoxDecoration(
           boxShadow: [
@@ -80,24 +79,6 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
               automaticallyImplyLeading: false,
               backgroundColor: Color.fromRGBO(236, 235, 235, 0),
               elevation: 0,
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/restaurants');
-                  },
-                  icon: Icon(
-                    Icons.notifications,
-                    color: Colors.black,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.person,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
             ),
             SizedBox(height: 8),
             Container(

@@ -43,7 +43,7 @@ class _UserNavigationBarState extends State<RestaurantNavigationBar> {
               icon: Icons.home,
               text: 'Home',
             ),
-            GButton(icon: Icons.person, text: 'Profile')
+            // GButton(icon: Icons.person, text: 'Profile')
           ],
           selectedIndex: selectedIndex,
           onTabChange: (index) {

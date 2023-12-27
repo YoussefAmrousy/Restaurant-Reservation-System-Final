@@ -8,9 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:restaurant_reservation_final/Services/auth_service.dart';
 import 'package:restaurant_reservation_final/Services/reservations_service.dart';
+import 'package:restaurant_reservation_final/Utils/reservations_collection_utils.dart';
 import 'package:restaurant_reservation_final/models/reservation.dart';
 import 'package:restaurant_reservation_final/user/models/user_reservation_model.dart';
-
 
 class UserReservationsWidget extends StatefulWidget {
   const UserReservationsWidget({super.key});
@@ -26,6 +26,8 @@ class _UserReservationsWidgetState extends State<UserReservationsWidget> {
   List<Reservation>? reservations = [];
   User user = FirebaseAuth.instance.currentUser!;
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  ReservationsCollectionUtils reservationsCollectionUtils =
+      ReservationsCollectionUtils();
 
   @override
   void initState() {
@@ -48,23 +50,6 @@ class _UserReservationsWidgetState extends State<UserReservationsWidget> {
     _model.dispose();
 
     super.dispose();
-  }
-
-  String getCurrentUserId() {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      String userId = user.uid;
-      return userId;
-    } else {
-      return '';
-    }
-  }
-
-  Future<void> loadUserReservations() async {
-    ReservationsService reservationsService = ReservationsService();
-    final List<Reservation> userReservations =
-        await reservationsService.getReservationsByUser(getCurrentUserId());
-    _model.setUserReservations(userReservations);
   }
 
   @override
@@ -90,22 +75,16 @@ class _UserReservationsWidgetState extends State<UserReservationsWidget> {
           child: AppBar(
             backgroundColor: Color(0xFFE7AF2F),
             automaticallyImplyLeading: false,
-            actions: [
-              IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+            title: Center(
+              child: Text(
+                'My Reservations',
+                style: FlutterFlowTheme.of(context).displaySmall.override(
+                      fontFamily: 'Poppins',
+                      color: FlutterFlowTheme.of(context).secondaryText,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
-            ],
-            title: Text(
-              'My Reservations',
-              style: FlutterFlowTheme.of(context).displaySmall.override(
-                    fontFamily: 'Poppins',
-                    color: FlutterFlowTheme.of(context).secondaryText,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
             ),
             elevation: 12,
             iconTheme: IconThemeData(
@@ -121,152 +100,161 @@ class _UserReservationsWidgetState extends State<UserReservationsWidget> {
               SizedBox(
                 height: 10,
               ),
-              ListView.builder(
-                itemCount: reservations?.length,
-                itemBuilder: ((context, index) {
-                  final reservation = reservations?[index];
-                  return Align(
-                    alignment: AlignmentDirectional(0, 0),
-                    child: FlipCard(
-                      fill: Fill.fillBack,
-                      direction: FlipDirection.HORIZONTAL,
-                      speed: 400,
-                      front: Container(
-                        width: 379,
-                        height: 188,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [Color(0xC1E7AF2F), Color(0x51E7AF2F)],
-                            stops: [0, 1],
-                            begin: AlignmentDirectional(0, -1),
-                            end: AlignmentDirectional(0, 1),
-                          ),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(12),
-                              child: Center(
-                                child: Text(
-                                  reservation!.date.toString(),
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'Poppins',
-                                        color: Color(0xFFFCFAF9),
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: reservations?.length,
+                  itemBuilder: ((context, index) {
+                    final reservation = reservations?[index];
+                    String formattedDate =
+                        "${reservation?.date.day} ${reservationsCollectionUtils.getMonthAbbreviation(reservation!.date.month)} ${reservation.date.year}";
+                    return Align(
+                      alignment: AlignmentDirectional(0, 0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FlipCard(
+                          fill: Fill.fillBack,
+                          direction: FlipDirection.HORIZONTAL,
+                          speed: 400,
+                          front: Container(
+                            width: 379,
+                            height: 188,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [Color(0xC1E7AF2F), Color(0x51E7AF2F)],
+                                stops: [0, 1],
+                                begin: AlignmentDirectional(0, -1),
+                                end: AlignmentDirectional(0, 1),
                               ),
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 12),
-                              child: Text(
-                                reservation.restaurant,
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.bold,
-                                      color: Color(0xFFFCFAF9),
-                                    ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Align(
-                                alignment: Alignment.bottomRight,
-                                child: Padding(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
                                   padding: EdgeInsets.all(12),
+                                  child: Center(
+                                    child: Text(
+                                      formattedDate,
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            fontFamily: 'Poppins',
+                                            color: Color(0xFFFCFAF9),
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(12),
+                                  child: Center(
+                                    child: Text(
+                                      reservation.restaurant,
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodyMedium
+                                          .override(
+                                            fontFamily: 'Poppins',
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xFFFCFAF9),
+                                          ),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(12),
+                                      child: Text(
+                                        'Tap for the QR Code',
+                                        textAlign: TextAlign.right,
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily: 'Poppins',
+                                              fontWeight: FontWeight.w900,
+                                              color: Color(0xFFFCFAF9),
+                                            ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          back: Container(
+                            width: 379,
+                            height: 183,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [Color(0xC1E7AF2F), Color(0x51E7AF2F)],
+                                stops: [0, 1],
+                                begin: AlignmentDirectional(0, -1),
+                                end: AlignmentDirectional(0, 1),
+                              ),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Align(
+                                  alignment: AlignmentDirectional(0, -1),
                                   child: Text(
-                                    'Tap for the QR Code',
-                                    textAlign: TextAlign.right,
+                                    formattedDate,
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
                                           fontFamily: 'Poppins',
-                                          fontWeight: FontWeight.w900,
                                           color: Color(0xFFFCFAF9),
+                                          fontWeight: FontWeight.bold,
                                         ),
                                   ),
                                 ),
-                              ),
+                                Align(
+                                  alignment: AlignmentDirectional(0, 0),
+                                  child: Text(
+                                    reservation.time,
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'Poppins',
+                                          color: Color(0xFFFCFAF9),
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: AlignmentDirectional(0, 0),
+                                  child: Text(
+                                    '${reservation.guests} Guests Table',
+                                    style: FlutterFlowTheme.of(context)
+                                        .bodyMedium
+                                        .override(
+                                          fontFamily: 'Poppins',
+                                          color: Color(0xFFFCFAF9),
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                                ),
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: SvgPicture.asset(
+                                    'assets/qr_code.svg',
+                                    width: 97,
+                                    height: 92,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                      back: Container(
-                        width: 379,
-                        height: 183,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [Color(0xC1E7AF2F), Color(0x51E7AF2F)],
-                            stops: [0, 1],
-                            begin: AlignmentDirectional(0, -1),
-                            end: AlignmentDirectional(0, 1),
                           ),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Align(
-                              alignment: AlignmentDirectional(0, -1),
-                              child: Text(
-                                'Tuesday 22, Jan',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: 'Poppins',
-                                      color: Color(0xFFFCFAF9),
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                              ),
-                            ),
-                            Align(
-                              alignment: AlignmentDirectional(0, 0),
-                              child: Text(
-                                '8:30 PM',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: 'Poppins',
-                                      color: Color(0xFFFCFAF9),
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                              ),
-                            ),
-                            Align(
-                              alignment: AlignmentDirectional(0, 0),
-                              child: Text(
-                                '5 Guests Table',
-                                style: FlutterFlowTheme.of(context)
-                                    .bodyMedium
-                                    .override(
-                                      fontFamily: 'Poppins',
-                                      color: Color(0xFFFCFAF9),
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                              ),
-                            ),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: SvgPicture.asset(
-                                'assets/qr_code.svg',
-                                width: 97,
-                                height: 92,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ],
                         ),
                       ),
-                    ),
-                  );
-                }),
+                    );
+                  }),
+                ),
               ),
             ],
           ),

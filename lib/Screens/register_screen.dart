@@ -33,7 +33,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (user != null) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => UserNavigationBar()),
+        MaterialPageRoute(builder: (context) => UserNavigationBar(selectedIndex: 0,)),
       );
     } else {
       print('Registration failed. Please try again.');
