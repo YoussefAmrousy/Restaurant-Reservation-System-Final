@@ -84,7 +84,7 @@ class _LoginPageState extends State<LoginScreen> {
       default:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => UserNavigationBar()),
+          MaterialPageRoute(builder: (context) => UserNavigationBar(selectedIndex: 0,)),
         );
         break;
     }

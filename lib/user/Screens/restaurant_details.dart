@@ -97,7 +97,7 @@ class _ReservyWidgetState extends State<ReservyWidget>
                     fontWeight: FontWeight.bold,
                   ),
             ),
-            backgroundColor: Color(0xFFFF8313),
+            backgroundColor: Color(0xFFE7AF2F),
             automaticallyImplyLeading: true,
             actions: [],
             centerTitle: true,
@@ -116,8 +116,8 @@ class _ReservyWidgetState extends State<ReservyWidget>
                 height: 10,
               ),
               Container(
-                width: screenWidth * 0.4,
-                height: screenHeight * 0.2,
+                width: screenWidth * 0.5,
+                height: screenHeight * 0.3,
                 decoration: BoxDecoration(
                   color: FlutterFlowTheme.of(context).secondaryBackground,
                 ),
@@ -129,8 +129,8 @@ class _ReservyWidgetState extends State<ReservyWidget>
                         borderRadius: BorderRadius.circular(8),
                         child: Image.asset(
                           'assets/restaurant.jpeg',
-                          width: screenWidth * 0.4,
-                          height: screenHeight * 0.2,
+                          width: screenWidth * 0.5,
+                          height: screenHeight * 0.3,
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -138,7 +138,7 @@ class _ReservyWidgetState extends State<ReservyWidget>
                     Align(
                       alignment: AlignmentDirectional(0, 1.03),
                       child: Container(
-                        width: 391,
+                        width: screenWidth * 0.5,
                         height: 41,
                         decoration: BoxDecoration(
                           color: Color(0x40000000),
@@ -191,7 +191,7 @@ class _ReservyWidgetState extends State<ReservyWidget>
               ),
               Container(
                 width: 401,
-                height: 430,
+                height: 460,
                 decoration: BoxDecoration(
                   color: FlutterFlowTheme.of(context).secondaryBackground,
                 ),
@@ -356,6 +356,9 @@ class _ReservyWidgetState extends State<ReservyWidget>
                               Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
+                                  SizedBox(
+                                    width: 16,
+                                  ),
                                   Align(
                                     alignment: AlignmentDirectional(-1, 0),
                                     child: FFButtonWidget(
@@ -368,12 +371,12 @@ class _ReservyWidgetState extends State<ReservyWidget>
                                         iconPadding:
                                             EdgeInsetsDirectional.fromSTEB(
                                                 0, 0, 0, 0),
-                                        color: Color(0xFFFCFAF9),
+                                        color: Color(0xFFE7AF2F),
                                         textStyle: FlutterFlowTheme.of(context)
                                             .titleSmall
                                             .override(
                                               fontFamily: 'Poppins',
-                                              color: Color(0xFF313131),
+                                              color: Color(0xFFECEBEB),
                                               fontSize: 14,
                                             ),
                                         elevation: 3,
@@ -442,7 +445,7 @@ class _ReservyWidgetState extends State<ReservyWidget>
                               ),
                               SizedBox(
                                 width: 250,
-                                child: ElevatedButton(
+                                child: FFButtonWidget(
                                   onPressed: () {
                                     final isValid = _model.validateForm();
                                     if (isValid) {
@@ -458,11 +461,27 @@ class _ReservyWidgetState extends State<ReservyWidget>
                                       );
                                     }
                                   },
-                                  child: Text(
-                                    'Reserve Now!',
-                                    style: TextStyle(
-                                      color: Color(0xFFECEBEB),
+                                  text: 'Reserve Now',
+                                  options: FFButtonOptions(
+                                    height: 40,
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        24, 0, 24, 0),
+                                    iconPadding: EdgeInsetsDirectional.fromSTEB(
+                                        0, 0, 0, 0),
+                                    color: Color(0xFFE7AF2F),
+                                    textStyle: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .override(
+                                          fontFamily: 'Poppins',
+                                          color: Color(0xFFECEBEB),
+                                          fontSize: 14,
+                                        ),
+                                    elevation: 3,
+                                    borderSide: BorderSide(
+                                      color: Colors.transparent,
+                                      width: 1,
                                     ),
+                                    borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
                               ),
