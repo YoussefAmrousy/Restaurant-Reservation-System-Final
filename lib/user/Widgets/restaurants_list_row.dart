@@ -1,21 +1,25 @@
 // ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, must_be_immutable
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:restaurant_reservation_final/Services/auth_service.dart';
 import 'package:restaurant_reservation_final/Services/firebase_storage_service.dart';
 import 'package:restaurant_reservation_final/Services/restaurant_service.dart';
 import 'package:restaurant_reservation_final/models/branch.dart';
 import 'package:restaurant_reservation_final/models/restaurant.dart';
-import 'package:restaurant_reservation_final/shared/Widgets/restaurant_provider.dart';
 import 'package:restaurant_reservation_final/user/Screens/restaurant_details.dart';
 
 class RestaurantsListRow extends StatefulWidget {
   RestaurantsListRow(
-      {super.key, required this.title, this.cuisine, required this.branches});
+      {super.key,
+      required this.title,
+      this.cuisine,
+      required this.branches,
+      required this.restaurants});
   String title;
   String? cuisine;
   List<Branch> branches;
+  List<Restaurant> restaurants;
+  //       Provider.of<RestaurantProvider>(context).restaurants;
 
   @override
   _RestaurantsListRowState createState() => _RestaurantsListRowState();
@@ -31,14 +35,10 @@ class _RestaurantsListRowState extends State<RestaurantsListRow> {
   @override
   void initState() {
     super.initState();
-    Provider.of<RestaurantProvider>(context, listen: false).fetchRestaurants();
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Restaurant> restaurants =
-        Provider.of<RestaurantProvider>(context).restaurants;
-    print(restaurants);
     return Column(
       children: [
         Padding(
@@ -61,12 +61,13 @@ class _RestaurantsListRowState extends State<RestaurantsListRow> {
             itemCount: widget.branches.length,
             itemBuilder: (context, index) {
               var branch = widget.branches[index];
-              // restaurantFilter = restaurantService.restaurants.firstWhere(
-              //   (restaurant) {
-              //     return restaurant.name == 'Sizzler';
-              //   },
-              // );
-              // logoPath = restaurantFilter!.logoPath;
+              restaurantFilter = widget.restaurants.firstWhere(
+                (restaurant) {
+                  return restaurant.name == branch.restaurantName;
+                },
+                orElse: () => Restaurant(),
+              );
+              logoPath = restaurantFilter!.logoPath;
 
               return GestureDetector(
                 onTap: () {

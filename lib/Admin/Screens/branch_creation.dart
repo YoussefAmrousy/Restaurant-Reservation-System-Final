@@ -69,6 +69,7 @@ class _BranchCreationScreenState extends State<BranchCreationScreen> {
       'phone': phoneController.text.trim(),
       'longitude': selectedLocation?.longitude,
       'latitude': selectedLocation?.latitude,
+      'cuisine': widget.restaurant?.cuisine,
     };
 
     final exisitingBranch = await branchesCollection

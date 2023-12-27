@@ -7,8 +7,6 @@ import 'package:restaurant_reservation_final/Screens/register_screen.dart';
 import 'package:restaurant_reservation_final/Admin/Screens/admin_navbar.dart';
 import 'package:restaurant_reservation_final/Services/auth_service.dart';
 import 'package:restaurant_reservation_final/Services/shared_preference_service.dart';
-import 'package:restaurant_reservation_final/models/restaurant.dart';
-import 'package:restaurant_reservation_final/shared/Widgets/restaurant_provider.dart';
 import 'package:restaurant_reservation_final/user/Screens/user_navigation_bar.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -22,11 +20,9 @@ class _LoginPageState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   SharedPreferenceService sharedPreferenceService = SharedPreferenceService();
-  RestaurantProvider restaurantProvider = RestaurantProvider();
 
   final coolGrey = const Color.fromARGB(255, 169, 169, 169);
   String? restaurant;
-  List<Restaurant> restaurants = [];
 
   Future<String> getRestaurantNameFromLocalStorage() async {
     var restaurantNameStored =
@@ -57,7 +53,7 @@ class _LoginPageState extends State<LoginScreen> {
         restaurant = await getRestaurantNameFromLocalStorage();
         await _navigateToRoleSpecificScreen('restaurant', restaurant);
       } else {
-        await restaurantProvider.fetchRestaurants();
+        // await restaurantProvider.fetchRestaurants();
         _navigateToRoleSpecificScreen('user');
       }
     }
