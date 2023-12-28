@@ -8,6 +8,8 @@ class Restaurant {
   String? website;
   String? logoPath;
   String? menuPath;
+  double? rating;
+  int? ratingCount;
 
   Restaurant({
     this.name,
@@ -16,10 +18,12 @@ class Restaurant {
     this.phone,
     this.socialMedia,
     this.website,
-    this.logoPath
+    this.logoPath,
+    this.rating = 0,
+    this.ratingCount = 0
   });
 
-   Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson() {
     return {
       'name': name,
       'cuisine': cuisine,
@@ -28,6 +32,8 @@ class Restaurant {
       'website': website,
       'logoPath': logoPath,
       'menuPath': menuPath,
+      'rating': rating,
+      'ratingCount': ratingCount
     };
   }
 
@@ -40,6 +46,8 @@ class Restaurant {
       website: map['website'],
       menuPath: map['menuPath'],
       logoPath: map['logoPath'],
+      rating: map['rating'] ?? 0,
+      ratingCount: map['ratingCount'] ?? 0
     );
   }
 
@@ -52,6 +60,8 @@ class Restaurant {
       website: doc['website'],
       menuPath: doc['menuPath'],
       logoPath: doc['logoPath'],
+      rating: doc['rating'] ?? 0,
+      ratingCount: doc['ratingCount'] ?? 0
     );
   }
 }

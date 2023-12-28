@@ -115,7 +115,7 @@ class _ReservationsWidgetState extends State<ReservationsWidget> {
                     itemBuilder: (context, index) {
                       var reservation = reservationsService.reservations[index];
                       String formattedDate =
-                          "${reservation.date.day} ${reservationsCollectionUtils.getMonthAbbreviation(reservation.date.month)} ${reservation.date.year}";
+                          "${reservation.date?.day} ${reservationsCollectionUtils.getMonthAbbreviation(reservation.date!.month)} ${reservation.date!.year}";
                       return Align(
                         alignment: AlignmentDirectional(0, 0),
                         child: FlipCard(
@@ -150,7 +150,7 @@ class _ReservationsWidgetState extends State<ReservationsWidget> {
                                     child: Padding(
                                       padding: EdgeInsets.all(4),
                                       child: Text(
-                                        reservation.username,
+                                        reservation.username!,
                                         style: FlutterFlowTheme.of(context)
                                             .bodyMedium
                                             .override(
@@ -201,7 +201,7 @@ class _ReservationsWidgetState extends State<ReservationsWidget> {
                                   ),
                                 ),
                                 Text(
-                                  reservation.time,
+                                  reservation.time!,
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(

@@ -150,6 +150,7 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
         phone: phoneController.text,
         socialMedia: socialMediaController.text,
         website: websiteController.text,
+        rating: 0
       );
 
       if (widget.restaurant != null) {

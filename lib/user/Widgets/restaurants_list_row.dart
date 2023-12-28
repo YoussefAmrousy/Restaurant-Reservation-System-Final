@@ -1,41 +1,31 @@
-// ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, must_be_immutable
+// ignore_for_file: prefer_const_constructors_in_immutables, library_private_types_in_public_api, prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:restaurant_reservation_final/Services/auth_service.dart';
-import 'package:restaurant_reservation_final/Services/firebase_storage_service.dart';
-import 'package:restaurant_reservation_final/Services/restaurant_service.dart';
 import 'package:restaurant_reservation_final/models/branch.dart';
 import 'package:restaurant_reservation_final/models/restaurant.dart';
 import 'package:restaurant_reservation_final/user/Screens/restaurant_details.dart';
 
 class RestaurantsListRow extends StatefulWidget {
-  RestaurantsListRow(
-      {super.key,
-      required this.title,
-      this.cuisine,
-      required this.branches,
-      required this.restaurants});
-  String title;
-  String? cuisine;
-  List<Branch> branches;
-  List<Restaurant> restaurants;
-  //       Provider.of<RestaurantProvider>(context).restaurants;
+  final String title;
+  final String? cuisine;
+  final List<Branch> branches;
+  final List<Restaurant> restaurants;
+
+  RestaurantsListRow({
+    super.key,
+    required this.title,
+    this.cuisine,
+    required this.branches,
+    required this.restaurants,
+  });
 
   @override
   _RestaurantsListRowState createState() => _RestaurantsListRowState();
 }
 
 class _RestaurantsListRowState extends State<RestaurantsListRow> {
-  RestaurantService restaurantService = RestaurantService();
-  AuthService authService = AuthService();
-  FirebaseStorageService firebaseStorageService = FirebaseStorageService();
-  Restaurant? restaurantFilter;
-  String? logoPath;
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  Restaurant? _restaurantFilter;
+  String? _logoPath;
 
   @override
   Widget build(BuildContext context) {
@@ -55,19 +45,17 @@ class _RestaurantsListRowState extends State<RestaurantsListRow> {
           ),
         ),
         SizedBox(
-          height: 150,
+          height: 160,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: widget.branches.length,
             itemBuilder: (context, index) {
               var branch = widget.branches[index];
-              restaurantFilter = widget.restaurants.firstWhere(
-                (restaurant) {
-                  return restaurant.name == branch.restaurantName;
-                },
+              _restaurantFilter = widget.restaurants.firstWhere(
+                (restaurant) => restaurant.name == branch.restaurantName,
                 orElse: () => Restaurant(),
               );
-              logoPath = restaurantFilter!.logoPath;
+              _logoPath = _restaurantFilter!.logoPath;
 
               return GestureDetector(
                 onTap: () {
@@ -76,7 +64,7 @@ class _RestaurantsListRowState extends State<RestaurantsListRow> {
                     MaterialPageRoute(
                       builder: (context) => ReservyWidget(
                         branch: branch,
-                        restaurant: restaurantFilter!,
+                        restaurant: _restaurantFilter!,
                       ),
                     ),
                   );
@@ -93,9 +81,9 @@ class _RestaurantsListRowState extends State<RestaurantsListRow> {
                             width: 2,
                           ),
                         ),
-                        child: logoPath != null
+                        child: _logoPath != null
                             ? Image.network(
-                                logoPath!,
+                                _logoPath!,
                                 width: 80,
                                 height: 80,
                               )
@@ -105,13 +93,27 @@ class _RestaurantsListRowState extends State<RestaurantsListRow> {
                                 child: Text('Unavailable'),
                               ),
                       ),
-                      SizedBox(height: 8),
+                      SizedBox(height: 3),
                       Text(
                         branch.restaurantName,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
+                      ),
+                      Text(
+                        '${_restaurantFilter?.rating} ⭐',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        '3.5 km away',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),

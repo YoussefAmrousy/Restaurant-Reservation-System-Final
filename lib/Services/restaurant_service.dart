@@ -77,4 +77,23 @@ class RestaurantService {
     }
     return restaurantDeleted;
   }
+
+  rateRestaurant(String restaurant, double ratingBarValue) async {
+    var restaurantQuery =
+        await restaurantsCollection.where('name', isEqualTo: restaurant).get();
+    var res = Restaurant.fromSnapshot(restaurantQuery.docs.first);
+
+    double? rating = res.rating;
+    int? ratingCount = res.ratingCount;
+    if (rating == 0) {
+      rating = ratingBarValue;
+      ratingCount = 1;
+    } else {
+      rating = (rating! * ratingCount! + ratingBarValue) / (ratingCount + 1);
+      ratingCount++;
+    }
+
+    await restaurantQuery.docs.first.reference
+        .update({'rating': ratingBarValue, 'ratingCount': ratingCount});
+  }
 }

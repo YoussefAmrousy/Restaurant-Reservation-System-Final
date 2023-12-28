@@ -75,6 +75,7 @@ class _ReservyWidgetState extends State<ReservyWidget>
 
   @override
   Widget build(BuildContext context) {
+    print(widget.restaurant.rating);
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
@@ -89,7 +90,7 @@ class _ReservyWidgetState extends State<ReservyWidget>
           preferredSize: Size.fromHeight(50),
           child: AppBar(
             title: Text(
-              'Reservy',
+              widget.restaurant.name!,
               style: FlutterFlowTheme.of(context).displaySmall.override(
                     fontFamily: 'Poppins',
                     color: FlutterFlowTheme.of(context).secondaryText,
@@ -168,25 +169,31 @@ class _ReservyWidgetState extends State<ReservyWidget>
                   ],
                 ),
               ),
+              SizedBox(
+                height: 8,
+              ),
               Container(
                 width: 393,
                 height: 35,
                 decoration: BoxDecoration(
                   color: FlutterFlowTheme.of(context).secondaryBackground,
                 ),
-                child: RatingBar.builder(
-                  onRatingUpdate: (newValue) =>
-                      setState(() => _model.ratingBarValue = newValue),
-                  itemBuilder: (context, index) => Icon(
-                    Icons.star_rounded,
-                    color: Color(0xFF313131),
+                child: IgnorePointer(
+                  ignoring: true,
+                  child: RatingBar.builder(
+                    onRatingUpdate: (newValue) =>
+                        setState(() => _model.ratingBarValue = newValue),
+                    itemBuilder: (context, index) => Icon(
+                      Icons.star_rounded,
+                      color: Color(0xFFE7AF2F),
+                    ),
+                    direction: Axis.horizontal,
+                    initialRating: widget.restaurant.rating!,
+                    unratedColor: FlutterFlowTheme.of(context).secondaryText,
+                    itemCount: 5,
+                    itemSize: 30,
+                    glowColor: Color(0xFF313131),
                   ),
-                  direction: Axis.horizontal,
-                  initialRating: _model.ratingBarValue ??= 3,
-                  unratedColor: FlutterFlowTheme.of(context).secondaryText,
-                  itemCount: 5,
-                  itemSize: 30,
-                  glowColor: Color(0xFF313131),
                 ),
               ),
               Container(
