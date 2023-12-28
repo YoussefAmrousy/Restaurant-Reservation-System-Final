@@ -6,7 +6,10 @@ import 'package:restaurant_reservation_final/Restaurant/restaurant_navigation_ba
 import 'package:restaurant_reservation_final/Screens/register_screen.dart';
 import 'package:restaurant_reservation_final/Admin/Screens/admin_navbar.dart';
 import 'package:restaurant_reservation_final/Services/auth_service.dart';
+import 'package:restaurant_reservation_final/Services/reservations_service.dart';
 import 'package:restaurant_reservation_final/Services/shared_preference_service.dart';
+import 'package:restaurant_reservation_final/models/reservation.dart';
+import 'package:restaurant_reservation_final/user/Screens/rate_restaurant.dart';
 import 'package:restaurant_reservation_final/user/Screens/user_navigation_bar.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -20,9 +23,12 @@ class _LoginPageState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   SharedPreferenceService sharedPreferenceService = SharedPreferenceService();
+  AuthService authService = AuthService();
+  ReservationsService reservationsService = ReservationsService();
 
   final coolGrey = const Color.fromARGB(255, 169, 169, 169);
   String? restaurant;
+  Reservation? reservation;
 
   Future<String> getRestaurantNameFromLocalStorage() async {
     var restaurantNameStored =
@@ -32,11 +38,11 @@ class _LoginPageState extends State<LoginScreen> {
 
   submit() async {
     final form = _formKey.currentState;
-    AuthService authService = AuthService();
     if (form!.validate()) {
       form.save();
       User? user = await authService.signInWithEmailAndPassword(
           _emailController.text, _passwordController.text);
+
       if (user == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -45,6 +51,7 @@ class _LoginPageState extends State<LoginScreen> {
         );
         return;
       }
+
       String? userRole = await authService.getUserRole(user.uid);
       userRole ??= 'user';
       if (userRole == 'admin') {
@@ -53,7 +60,12 @@ class _LoginPageState extends State<LoginScreen> {
         restaurant = await getRestaurantNameFromLocalStorage();
         await _navigateToRoleSpecificScreen('restaurant', restaurant);
       } else {
-        // await restaurantProvider.fetchRestaurants();
+        reservation = await reservationsService.getPassedReservation();
+        if (reservation?.restaurant != null) {
+          Future.delayed(Duration.zero, () {
+            RateRestaurant.showRatingPopup(context, reservation!);
+          });
+        }
         _navigateToRoleSpecificScreen('user');
       }
     }
@@ -80,7 +92,10 @@ class _LoginPageState extends State<LoginScreen> {
       default:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => UserNavigationBar(selectedIndex: 0,)),
+          MaterialPageRoute(
+              builder: (context) => UserNavigationBar(
+                    selectedIndex: 0,
+                  )),
         );
         break;
     }

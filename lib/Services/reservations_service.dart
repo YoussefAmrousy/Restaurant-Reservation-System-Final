@@ -42,4 +42,28 @@ class ReservationsService {
   Future<void> deleteReservation(String id) async {
     await reservationsCollection.doc(id).delete();
   }
+
+  Future<Reservation?> getPassedReservation() async {
+    try {
+      DateTime date = DateTime.now();
+      var querySnapshot = await reservationsCollection
+          .where('date', isLessThan: date)
+          .where('rated', isEqualTo: false)
+          .orderBy('date', descending: true)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        return Reservation.fromSnapshot(querySnapshot.docs.first);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
+  updateReservation(Reservation reservation) {
+    reservationsCollection.doc(reservation.id).update(reservation.toJson());
+  }
 }

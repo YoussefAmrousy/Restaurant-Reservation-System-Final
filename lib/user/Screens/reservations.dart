@@ -106,7 +106,7 @@ class _UserReservationsWidgetState extends State<UserReservationsWidget> {
                   itemBuilder: ((context, index) {
                     final reservation = reservations?[index];
                     String formattedDate =
-                        "${reservation?.date.day} ${reservationsCollectionUtils.getMonthAbbreviation(reservation!.date.month)} ${reservation.date.year}";
+                        "${reservation?.date!.day} ${reservationsCollectionUtils.getMonthAbbreviation(reservation!.date!.month)} ${reservation.date!.year}";
                     return Align(
                       alignment: AlignmentDirectional(0, 0),
                       child: Padding(
@@ -150,7 +150,7 @@ class _UserReservationsWidgetState extends State<UserReservationsWidget> {
                                   padding: EdgeInsets.all(12),
                                   child: Center(
                                     child: Text(
-                                      reservation.restaurant,
+                                      reservation.restaurant!,
                                       style: FlutterFlowTheme.of(context)
                                           .bodyMedium
                                           .override(
@@ -215,7 +215,7 @@ class _UserReservationsWidgetState extends State<UserReservationsWidget> {
                                 Align(
                                   alignment: AlignmentDirectional(0, 0),
                                   child: Text(
-                                    reservation.time,
+                                    reservation.time!,
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
