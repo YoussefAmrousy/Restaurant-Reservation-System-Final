@@ -5,12 +5,13 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:restaurant_reservation_final/Admin/Screens/branch_creation.dart';
-import 'package:restaurant_reservation_final/Admin/Screens/branches_list/branch_dialog_details.dart';
-import 'package:restaurant_reservation_final/Admin/Screens/branches_list/branch_item_widget.dart';
-import 'package:restaurant_reservation_final/Admin/Screens/restaurant_details.dart';
+import 'package:restaurant_reservation_final/Admin/Screens/admin_branches_list/branch_dialog_details.dart';
+import 'package:restaurant_reservation_final/Admin/Screens/admin_branches_list/branch_item_widget.dart';
+import 'package:restaurant_reservation_final/Admin/Screens/admin_restaurant_details.dart';
 import 'package:restaurant_reservation_final/Services/branch_service.dart';
 import 'package:restaurant_reservation_final/models/branch.dart';
 import 'package:restaurant_reservation_final/models/restaurant.dart';
+import 'package:restaurant_reservation_final/shared/Widgets/not_available.dart';
 
 class BranchesListScreen extends StatefulWidget {
   BranchesListScreen({super.key, required this.restaurant});
@@ -115,26 +116,7 @@ class _BranchesListState extends State<BranchesListScreen> {
       body: Column(
         children: [
           branchService.branches.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.info,
-                        size: 50,
-                        color: Colors.grey,
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        'No branches available',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
+              ? NotAvailable(message: 'branches')
               : ListView.builder(
                   shrinkWrap: true,
                   itemCount: branchService.branches.length,

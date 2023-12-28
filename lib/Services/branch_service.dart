@@ -6,7 +6,7 @@ class BranchService {
       FirebaseFirestore.instance.collection('branches');
   List<Branch> branches = [];
 
-  Future<List<Branch>> getBranches() async {
+  Future<List<Branch>> getAllBranches() async {
     branches.clear();
     final branchQuery = await branchesCollection.get();
     if (branchQuery.docs.isNotEmpty) {
@@ -36,9 +36,5 @@ class BranchService {
 
   Future<void> deleteBranch(String id) async {
     await branchesCollection.doc(id).delete();
-  }
-
-  Future<void> updateBranch(String id, Branch branch) async {
-    await branchesCollection.doc(id).update(branch.toJson());
   }
 }

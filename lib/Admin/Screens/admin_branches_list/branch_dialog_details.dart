@@ -109,24 +109,6 @@ class BranchDetailsDialogDetails extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 15.0),
-                    SizedBox(
-                      height: 30.0,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.deepOrange,
-                        ),
-                        onPressed: () {
-                          onBranchDeleted();
-                        },
-                        child: Text(
-                          'Edit Branch',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
                   ],
                 )
               ],

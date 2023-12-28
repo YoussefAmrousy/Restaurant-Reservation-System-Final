@@ -238,13 +238,35 @@ class _UserReservationsWidgetState extends State<UserReservationsWidget> {
                                         ),
                                   ),
                                 ),
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: SvgPicture.asset(
-                                    'assets/qr_code.svg',
-                                    width: 97,
-                                    height: 92,
-                                    fit: BoxFit.cover,
+                                GestureDetector(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return Dialog(
+                                          child: Container(
+                                            width:
+                                                250,
+                                            height:
+                                                250, 
+                                            padding: EdgeInsets.all(8),
+                                            child: SvgPicture.asset(
+                                              'assets/qr_code.svg',
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: SvgPicture.asset(
+                                      'assets/qr_code.svg',
+                                      width: 97,
+                                      height: 92,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                               ],

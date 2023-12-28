@@ -3,7 +3,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:restaurant_reservation_final/Admin/Screens/restaurantList/restaurants_list.dart';
+import 'package:restaurant_reservation_final/Admin/Screens/admin_restaurant_list/admin_restaurants_list.dart';
 import 'package:restaurant_reservation_final/Services/firebase_storage_service.dart';
 import 'package:restaurant_reservation_final/Services/restaurant_service.dart';
 import 'package:restaurant_reservation_final/enums/cuisine_enum.dart';
@@ -44,6 +44,7 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
   initRestaurant() {
     if (widget.restaurant != null) {
       logoPath = widget.restaurant!.logoPath!;
+      menuPath = widget.restaurant!.menuPath!;
       restaurantNameController.text = widget.restaurant!.name!;
       selectedCuisine = Cuisine.values
           .firstWhere((element) => element.value == widget.restaurant!.cuisine);
@@ -119,7 +120,6 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
           phoneController.text.trim().isEmpty ||
           restaurantNameController.text.trim().isEmpty ||
           selectedCuisine == Cuisine.selectCuisine ||
-          phoneController.text.length != 11 ||
           !formKey.currentState!.validate()) {
         return false;
       } else {
@@ -128,6 +128,22 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
     }
 
     Future<void> submitRestaurant() async {
+      if (phoneController.text.contains(RegExp(r'[a-zA-Z]'))) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Phone number must be digits only'),
+          ),
+        );
+        return;
+      }
+      if (phoneController.text.length != 11) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Phone number must be 11 digits'),
+          ),
+        );
+        return;
+      }
       final restaurant = Restaurant(
         name: restaurantNameController.text,
         cuisine: selectedCuisine!.value,
@@ -200,11 +216,10 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
                         if (showError) FormErrorWidget(),
                         Container(
                           margin: const EdgeInsets.all(8),
-                          child: Column(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Container(
                                     margin: const EdgeInsets.all(8),
@@ -215,27 +230,35 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
                                       ),
                                       borderRadius: BorderRadius.circular(10.0),
                                     ),
-                                    width: 200.0,
+                                    width: 150.0,
                                     height: 200.0,
-                                    child: logoPath != null
-                                        ? Image.file(
-                                            File(logoPath!),
+                                    child: logoPath != null &&
+                                            widget.restaurant != null
+                                        ? Image.network(
+                                            logoPath!,
                                             width: double.infinity,
                                             height: double.infinity,
                                             fit: BoxFit.cover,
                                           )
-                                        : Center(
-                                            child: Text(
-                                              'Logo',
-                                              style: TextStyle(
-                                                fontSize: 18.0,
-                                                fontWeight: FontWeight.bold,
+                                        : logoPath != null
+                                            ? Image.file(
+                                                File(logoPath!),
+                                                width: double.infinity,
+                                                height: double.infinity,
+                                                fit: BoxFit.cover,
+                                              )
+                                            : Center(
+                                                child: Text(
+                                                  'Logo',
+                                                  style: TextStyle(
+                                                    fontSize: 18.0,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                          ),
                                   ),
                                   SizedBox(
-                                    width: 200.0,
+                                    width: 150.0,
                                     child: ElevatedButton(
                                       onPressed: () {
                                         setState(() {
@@ -243,6 +266,14 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
                                           getImage();
                                         });
                                       },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Color(0xFFE7AF2F),
+                                        elevation: 3.0,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                      ),
                                       child: const Text(
                                         'Upload Logo',
                                         style: TextStyle(
@@ -253,8 +284,8 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
                                   ),
                                 ],
                               ),
+                              SizedBox(height: 20),
                               Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Container(
                                     margin: const EdgeInsets.all(8),
@@ -265,27 +296,35 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
                                       ),
                                       borderRadius: BorderRadius.circular(10.0),
                                     ),
-                                    width: 200.0,
+                                    width: 150.0,
                                     height: 200.0,
-                                    child: menuPath != null
-                                        ? Image.file(
-                                            File(menuPath!),
+                                    child: menuPath != null &&
+                                            widget.restaurant != null
+                                        ? Image.network(
+                                            menuPath!,
                                             width: double.infinity,
                                             height: double.infinity,
                                             fit: BoxFit.cover,
                                           )
-                                        : Center(
-                                            child: Text(
-                                              'Menu Here',
-                                              style: TextStyle(
-                                                fontSize: 18.0,
-                                                fontWeight: FontWeight.bold,
+                                        : menuPath != null
+                                            ? Image.file(
+                                                File(menuPath!),
+                                                width: double.infinity,
+                                                height: double.infinity,
+                                                fit: BoxFit.cover,
+                                              )
+                                            : Center(
+                                                child: Text(
+                                                  'Menu Here',
+                                                  style: TextStyle(
+                                                    fontSize: 18.0,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                          ),
                                   ),
                                   SizedBox(
-                                    width: 200.0,
+                                    width: 150.0,
                                     child: ElevatedButton(
                                       onPressed: () {
                                         setState(() {
@@ -293,6 +332,14 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
                                           getMenu();
                                         });
                                       },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Color(0xFFE7AF2F),
+                                        elevation: 3.0,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                      ),
                                       child: const Text(
                                         'Upload Menu',
                                         style: TextStyle(
@@ -383,6 +430,13 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
                         SizedBox(
                           width: 250,
                           child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xFFE7AF2F),
+                              elevation: 3.0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
                             onPressed: () {
                               final validForm = validateForm();
 

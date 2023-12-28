@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_reservation_final/Admin/Screens/branches_list/branches_list.dart';
+import 'package:restaurant_reservation_final/Admin/Screens/admin_branches_list/branches_list.dart';
 import 'package:restaurant_reservation_final/Maps/map_screen.dart';
 import 'package:restaurant_reservation_final/models/branch.dart';
 import 'package:restaurant_reservation_final/models/restaurant.dart';
@@ -69,6 +69,7 @@ class _BranchCreationScreenState extends State<BranchCreationScreen> {
       'phone': phoneController.text.trim(),
       'longitude': selectedLocation?.longitude,
       'latitude': selectedLocation?.latitude,
+      'cuisine': widget.restaurant?.cuisine,
     };
 
     final exisitingBranch = await branchesCollection

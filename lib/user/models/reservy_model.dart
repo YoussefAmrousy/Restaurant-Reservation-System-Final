@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously, deprecated_member_use
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,6 +9,7 @@ import 'package:restaurant_reservation_final/Services/reservations_service.dart'
 import 'package:restaurant_reservation_final/models/reservation.dart';
 import 'package:restaurant_reservation_final/user/Screens/restaurant_details.dart';
 import 'package:restaurant_reservation_final/user/Screens/user_navigation_bar.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ReservyModel extends FlutterFlowModel<ReservyWidget> {
   final unfocusNode = FocusNode();
@@ -109,6 +110,15 @@ class ReservyModel extends FlutterFlowModel<ReservyWidget> {
           ),
         );
       },
+    );
+  }
+
+  void launchURL(String url) async {
+    if (!url.startsWith('http') && !url.startsWith('https')) {
+      url = 'http://$url';
+    }
+    await launch(
+      url,
     );
   }
 }

@@ -9,8 +9,9 @@ class RestaurantService {
       FirebaseFirestore.instance.collection('restaurants');
   List<Restaurant> restaurants = [];
   FirebaseStorageService firebaseStorageService = FirebaseStorageService();
+  QueryDocumentSnapshot<Object?>? restaurantDeleted;
 
-  Future<List<Restaurant>> getRestaurants() async {
+  Future<List<Restaurant>> getAllRestaurants() async {
     restaurants.clear();
     final restaurantQuery = await restaurantsCollection.get();
     if (restaurantQuery.docs.isNotEmpty) {
@@ -67,20 +68,13 @@ class RestaurantService {
     }
   }
 
-  Future<void> deleteRestaurant(String name) async {
+  Future<QueryDocumentSnapshot<Object?>?> deleteRestaurant(String name) async {
     final restaurantQuery =
         await restaurantsCollection.where('name', isEqualTo: name).get();
-    if (restaurantQuery.docs.isEmpty) return;
-    final restaurantFound = restaurantQuery.docs.first;
-    restaurants.remove(Restaurant.fromSnapshot(restaurantFound));
-    await restaurantFound.reference.delete();
-  }
-
-  Future<Restaurant> getRestaurantByName(String name) async {
-    final restaurantQuery =
-        await restaurantsCollection.where('name', isEqualTo: name).get();
-    if (restaurantQuery.docs.isEmpty) return Restaurant();
-    final restaurantFound = restaurantQuery.docs.first;
-    return Restaurant.fromSnapshot(restaurantFound);
+    if (restaurantQuery.docs.isNotEmpty) {
+      restaurantDeleted = restaurantQuery.docs.first;
+      await restaurantDeleted?.reference.delete();
+    }
+    return restaurantDeleted;
   }
 }
