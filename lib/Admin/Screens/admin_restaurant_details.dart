@@ -1,8 +1,9 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import 'package:restaurant_reservation_final/Admin/Screens/branches_list/branches_list.dart';
-import 'package:restaurant_reservation_final/Admin/Screens/restaurantList/restaurants_list.dart';
+import 'package:restaurant_reservation_final/Admin/Screens/admin_branches_list/branches_list.dart';
+import 'package:restaurant_reservation_final/Admin/Screens/admin_restaurant_list/admin_restaurants_list.dart';
+import 'package:restaurant_reservation_final/Admin/Screens/restaurant_creation.dart';
 import 'package:restaurant_reservation_final/models/restaurant.dart';
 
 class RestaurantDetailsScreen extends StatefulWidget {
@@ -44,6 +45,25 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
             ),
           ),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RestaurantCreationScreen(
+                    restaurant: widget.restaurant,
+                  ),
+                ),
+              );
+
+              setState(() {
+                logoPath = widget.restaurant.logoPath!;
+              });
+            },
+          ),
+        ],
       ),
       backgroundColor: Color.fromRGBO(236, 235, 235, 1),
       body: Column(

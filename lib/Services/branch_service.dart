@@ -37,8 +37,4 @@ class BranchService {
   Future<void> deleteBranch(String id) async {
     await branchesCollection.doc(id).delete();
   }
-
-  Future<void> updateBranch(String id, Branch branch) async {
-    await branchesCollection.doc(id).update(branch.toJson());
-  }
 }

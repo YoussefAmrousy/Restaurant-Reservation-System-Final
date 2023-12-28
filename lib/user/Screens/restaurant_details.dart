@@ -552,17 +552,44 @@ class _ReservyWidgetState extends State<ReservyWidget>
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text(
-                                              widget.branch.restaurantName,
-                                              style: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    fontFamily: 'Poppins',
-                                                    color: Color(0xFF313131),
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 18,
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.restaurant_rounded,
+                                                  color: Color(0xFFAAAAAA),
+                                                ),
+                                                SizedBox(width: 8.0),
+                                                Text(
+                                                  widget.branch.restaurantName,
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .bodyMedium
+                                                      .override(
+                                                        fontFamily: 'Poppins',
+                                                        color:
+                                                            Color(0xFF313131),
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 18,
+                                                      ),
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                IconButton(
+                                                  onPressed: () {
+                                                    if (widget.restaurant
+                                                            .socialMedia !=
+                                                        null) {
+                                                      _model.launchURL(
+                                                          'facebook.com');
+                                                    }
+                                                  },
+                                                  icon: Icon(
+                                                    FontAwesomeIcons.instagram,
                                                   ),
+                                                )
+                                              ],
                                             ),
                                             SizedBox(height: 4.0),
                                             Text(
@@ -583,6 +610,36 @@ class _ReservyWidgetState extends State<ReservyWidget>
                                         ),
                                       ],
                                     ),
+                                    SizedBox(height: 8.0),
+                                    Text(
+                                      'Cuisine: ${widget.branch.cuisine ?? ''}',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodySmall
+                                          .override(
+                                            fontFamily: 'Poppins',
+                                            color: Color(0xFFAAAAAA),
+                                            fontSize: 12,
+                                          ),
+                                    ),
+                                    Text(
+                                      'Phone: ${widget.branch.phone}',
+                                      style: FlutterFlowTheme.of(context)
+                                          .bodySmall
+                                          .override(
+                                            fontFamily: 'Poppins',
+                                            color: Color(0xFFAAAAAA),
+                                            fontSize: 12,
+                                          ),
+                                    ),
+                                    Text(
+                                        'Website: ${widget.restaurant.website}',
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodySmall
+                                            .override(
+                                              fontFamily: 'Poppins',
+                                              color: Color(0xFFAAAAAA),
+                                              fontSize: 12,
+                                            )),
                                     SizedBox(height: 15.0),
                                     Divider(
                                       thickness: 2,
