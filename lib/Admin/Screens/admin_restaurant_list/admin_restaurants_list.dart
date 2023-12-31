@@ -2,10 +2,12 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:reservy/Admin/Screens/admin_restaurant_list/restaurant_item_widget.dart';
 import 'package:reservy/Admin/Screens/restaurant_creation.dart';
 import 'package:reservy/Services/auth_service.dart';
 import 'package:reservy/Services/restaurant_service.dart';
+
 class RestaurtantsListScreen extends StatefulWidget {
   const RestaurtantsListScreen({super.key});
 
@@ -48,40 +50,48 @@ class _RestaurtantsListState extends State<RestaurtantsListScreen> {
   Widget build(BuildContext context) {
     AuthService authService = AuthService();
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color.fromRGBO(236, 235, 235, 1),
-        title: Text(
-          'Restaurants',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 25,
-          ),
-        ),
-        iconTheme: IconThemeData(color: Colors.black),
-        leading: IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () async {
-              await authService.signOut();
-              Navigator.pushNamed(context, '/login');
-            }),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () async {
-              await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => RestaurantCreationScreen(),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50),
+        child: AppBar(
+          backgroundColor: Color(0xC1E7AF2F),
+          title: Text(
+            'Restaurants',
+            style: FlutterFlowTheme.of(context).displaySmall.override(
+                  fontFamily: 'Poppins',
+                  color: FlutterFlowTheme.of(context).secondaryText,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
-              );
-
-              await restaurantService.getAllRestaurants();
-              setState(() {});
-            },
           ),
-        ],
-        automaticallyImplyLeading: false,
+          centerTitle: true,
+          iconTheme: IconThemeData(
+            color: FlutterFlowTheme.of(context).secondaryText,
+          ),
+          leading: IconButton(
+              icon: Icon(Icons.logout),
+              onPressed: () async {
+                await authService.signOut();
+                Navigator.pushNamed(context, '/login');
+              }),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RestaurantCreationScreen(),
+                  ),
+                );
+
+                await restaurantService.getAllRestaurants();
+                setState(() {});
+              },
+            ),
+          ],
+          automaticallyImplyLeading: false,
+          elevation: 12,
+        ),
       ),
       body: Column(
         children: <Widget>[
@@ -111,8 +121,7 @@ class _RestaurtantsListState extends State<RestaurtantsListScreen> {
                     shrinkWrap: true,
                     itemCount: restaurantService.restaurants.length,
                     itemBuilder: (context, index) {
-                      final restaurant =
-                          restaurantService.restaurants[index];
+                      final restaurant = restaurantService.restaurants[index];
                       return RestaurantItem(
                         restaurant: restaurant,
                       );

@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_constructors_in_immutables, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:reservy/Utils/util.dart';
 import 'package:reservy/models/branch.dart';
 
 class BranchDetailsDialogDetails extends StatelessWidget {
@@ -40,14 +41,6 @@ class BranchDetailsDialogDetails extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  branch.name!,
-                  style: TextStyle(
-                    fontSize: 40.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.deepOrange,
-                  ),
-                ),
                 SizedBox(height: 10.0),
                 Row(
                   children: [
@@ -58,7 +51,8 @@ class BranchDetailsDialogDetails extends StatelessWidget {
                         color: Colors.black87,
                       ),
                     ),
-                    Text('${branch.area}, ${branch.city}'),
+                    Text(
+                        '${Util.capitalize(branch.area)}, ${Util.capitalize(branch.city)}'),
                   ],
                 ),
                 SizedBox(height: 10.0),
@@ -71,7 +65,7 @@ class BranchDetailsDialogDetails extends StatelessWidget {
                         color: Colors.black87,
                       ),
                     ),
-                    Text(branch.address!),
+                    Text(Util.capitalize(branch.address!)),
                   ],
                 ),
                 SizedBox(height: 10.0),
