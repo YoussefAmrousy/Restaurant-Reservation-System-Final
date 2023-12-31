@@ -5,13 +5,17 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 import 'package:reservy/Admin/Screens/admin_branches_list/branch_dialog_details.dart';
 import 'package:reservy/Admin/Screens/admin_branches_list/branch_item_widget.dart';
 import 'package:reservy/Admin/Screens/admin_restaurant_details.dart';
 import 'package:reservy/Admin/Screens/branch_creation.dart';
 import 'package:reservy/Services/branch_service.dart';
+import 'package:reservy/Utils/map_util.dart';
 import 'package:reservy/models/branch.dart';
 import 'package:reservy/models/restaurant.dart';
+import 'package:reservy/providers/location_provider.dart';
 import 'package:reservy/shared/Widgets/not_available.dart';
 
 class BranchesListScreen extends StatefulWidget {
@@ -26,6 +30,8 @@ class _BranchesListState extends State<BranchesListScreen> {
   CollectionReference branchesCollection =
       FirebaseFirestore.instance.collection('branches');
   BranchService branchService = BranchService();
+  MapUtil mapUtil = MapUtil();
+  late Position _position;
 
   @override
   void initState() {
@@ -67,8 +73,16 @@ class _BranchesListState extends State<BranchesListScreen> {
     );
   }
 
+  setUserCurrentLocation() async {
+    final locationProvider =
+        Provider.of<LocationProvider>(context, listen: false);
+    _position = await mapUtil.getUserCurrentLocation();
+    locationProvider.setCurrentUserLocation(_position);
+  }
+
   @override
   Widget build(BuildContext context) {
+    setUserCurrentLocation();
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(50),
