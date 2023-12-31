@@ -6,11 +6,11 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:restaurant_reservation_final/Services/auth_service.dart';
-import 'package:restaurant_reservation_final/Services/reservations_service.dart';
-import 'package:restaurant_reservation_final/Utils/reservations_collection_utils.dart';
-import 'package:restaurant_reservation_final/models/reservation.dart';
-import 'package:restaurant_reservation_final/user/models/user_reservation_model.dart';
+import 'package:reservy/Services/auth_service.dart';
+import 'package:reservy/Services/reservations_service.dart';
+import 'package:reservy/Utils/util.dart';
+import 'package:reservy/models/reservation.dart';
+import 'package:reservy/user/models/user_reservation_model.dart';
 
 class UserReservationsWidget extends StatefulWidget {
   const UserReservationsWidget({super.key});
@@ -26,8 +26,7 @@ class _UserReservationsWidgetState extends State<UserReservationsWidget> {
   List<Reservation>? reservations = [];
   User user = FirebaseAuth.instance.currentUser!;
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  ReservationsCollectionUtils reservationsCollectionUtils =
-      ReservationsCollectionUtils();
+  Util util = Util();
 
   @override
   void initState() {
@@ -106,7 +105,7 @@ class _UserReservationsWidgetState extends State<UserReservationsWidget> {
                   itemBuilder: ((context, index) {
                     final reservation = reservations?[index];
                     String formattedDate =
-                        "${reservation?.date!.day} ${reservationsCollectionUtils.getMonthAbbreviation(reservation!.date!.month)} ${reservation.date!.year}";
+                        "${reservation?.date!.day} ${util.getMonthAbbreviation(reservation!.date!.month)} ${reservation.date!.year}";
                     return Align(
                       alignment: AlignmentDirectional(0, 0),
                       child: Padding(
@@ -245,10 +244,8 @@ class _UserReservationsWidgetState extends State<UserReservationsWidget> {
                                       builder: (BuildContext context) {
                                         return Dialog(
                                           child: Container(
-                                            width:
-                                                250,
-                                            height:
-                                                250, 
+                                            width: 250,
+                                            height: 250,
                                             padding: EdgeInsets.all(8),
                                             child: SvgPicture.asset(
                                               'assets/qr_code.svg',

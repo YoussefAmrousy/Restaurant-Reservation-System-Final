@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:restaurant_reservation_final/Admin/Screens/admin_restaurant_list/admin_restaurants_list.dart';
+import 'package:reservy/Admin/Screens/admin_restaurant_list/admin_restaurants_list.dart';
 
 class AdminNavigationBar extends StatefulWidget {
   const AdminNavigationBar({super.key});

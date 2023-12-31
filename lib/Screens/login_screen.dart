@@ -2,15 +2,15 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:restaurant_reservation_final/Restaurant/restaurant_navigation_bar.dart';
-import 'package:restaurant_reservation_final/Screens/register_screen.dart';
-import 'package:restaurant_reservation_final/Admin/Screens/admin_navbar.dart';
-import 'package:restaurant_reservation_final/Services/auth_service.dart';
-import 'package:restaurant_reservation_final/Services/reservations_service.dart';
-import 'package:restaurant_reservation_final/Services/shared_preference_service.dart';
-import 'package:restaurant_reservation_final/models/reservation.dart';
-import 'package:restaurant_reservation_final/user/Screens/rate_restaurant.dart';
-import 'package:restaurant_reservation_final/user/Screens/user_navigation_bar.dart';
+import 'package:reservy/Admin/Screens/admin_navbar.dart';
+import 'package:reservy/Restaurant/restaurant_navigation_bar.dart';
+import 'package:reservy/Screens/register_screen.dart';
+import 'package:reservy/Services/auth_service.dart';
+import 'package:reservy/Services/reservations_service.dart';
+import 'package:reservy/Services/shared_preference_service.dart';
+import 'package:reservy/models/reservation.dart';
+import 'package:reservy/user/Screens/rate_restaurant.dart';
+import 'package:reservy/user/Screens/user_navigation_bar.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({super.key});

@@ -4,8 +4,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_reservation_final/Utils/map_util.dart';
-import 'package:restaurant_reservation_final/providers/location_provider.dart';
+import 'package:reservy/Utils/map_util.dart';
+import 'package:reservy/providers/location_provider.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen(

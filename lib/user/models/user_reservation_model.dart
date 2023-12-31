@@ -2,7 +2,7 @@
 
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:restaurant_reservation_final/user/Screens/reservations.dart' show UserReservationsWidget;
+import 'package:reservy/user/Screens/user_reservations.dart';
 
 class UserReservationsModel extends FlutterFlowModel<UserReservationsWidget> {
   final unfocusNode = FocusNode();

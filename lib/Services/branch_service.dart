@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:restaurant_reservation_final/models/branch.dart';
+import 'package:reservy/models/branch.dart';
 
 class BranchService {
   CollectionReference branchesCollection =

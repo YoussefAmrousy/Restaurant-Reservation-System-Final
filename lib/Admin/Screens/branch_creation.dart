@@ -4,12 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_reservation_final/Admin/Screens/admin_branches_list/branches_list.dart';
-import 'package:restaurant_reservation_final/Maps/map_screen.dart';
-import 'package:restaurant_reservation_final/models/branch.dart';
-import 'package:restaurant_reservation_final/models/restaurant.dart';
-import 'package:restaurant_reservation_final/providers/location_provider.dart';
-import 'package:restaurant_reservation_final/shared/Widgets/form_error_widget.dart';
+import 'package:reservy/Admin/Screens/admin_branches_list/branches_list.dart';
+import 'package:reservy/Maps/map_screen.dart';
+import 'package:reservy/models/branch.dart';
+import 'package:reservy/models/restaurant.dart';
+import 'package:reservy/providers/location_provider.dart';
+import 'package:reservy/shared/Widgets/form_error_widget.dart';
 
 class BranchCreationScreen extends StatefulWidget {
   const BranchCreationScreen({super.key, this.branch, this.restaurant});

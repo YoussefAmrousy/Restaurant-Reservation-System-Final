@@ -5,11 +5,11 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:restaurant_reservation_final/Restaurant/restaurant_reservation_model.dart';
-import 'package:restaurant_reservation_final/Services/auth_service.dart';
-import 'package:restaurant_reservation_final/Services/reservations_service.dart';
-import 'package:restaurant_reservation_final/Services/shared_preference_service.dart';
-import 'package:restaurant_reservation_final/Utils/reservations_collection_utils.dart';
+import 'package:reservy/Restaurant/restaurant_reservation_model.dart';
+import 'package:reservy/Services/auth_service.dart';
+import 'package:reservy/Services/reservations_service.dart';
+import 'package:reservy/Services/shared_preference_service.dart';
+import 'package:reservy/Utils/util.dart';
 
 class ReservationsWidget extends StatefulWidget {
   ReservationsWidget({super.key, this.restaurant});
@@ -27,8 +27,7 @@ class _ReservationsWidgetState extends State<ReservationsWidget> {
   User user = FirebaseAuth.instance.currentUser!;
   String? restaurantName;
   ReservationsService reservationsService = ReservationsService();
-  ReservationsCollectionUtils reservationsCollectionUtils =
-      ReservationsCollectionUtils();
+  Util util = Util();
   SharedPreferenceService sharedPreferenceService = SharedPreferenceService();
 
   @override
@@ -115,7 +114,7 @@ class _ReservationsWidgetState extends State<ReservationsWidget> {
                     itemBuilder: (context, index) {
                       var reservation = reservationsService.reservations[index];
                       String formattedDate =
-                          "${reservation.date?.day} ${reservationsCollectionUtils.getMonthAbbreviation(reservation.date!.month)} ${reservation.date!.year}";
+                          "${reservation.date?.day} ${util.getMonthAbbreviation(reservation.date!.month)} ${reservation.date!.year}";
                       return Align(
                         alignment: AlignmentDirectional(0, 0),
                         child: FlipCard(

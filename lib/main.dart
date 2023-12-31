@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_reservation_final/Screens/login_screen.dart';
-import 'package:restaurant_reservation_final/Admin/Screens/admin_restaurant_list/admin_restaurants_list.dart';
-import 'package:restaurant_reservation_final/providers/location_provider.dart';
+import 'package:reservy/Admin/Screens/admin_restaurant_list/admin_restaurants_list.dart';
+import 'package:reservy/Screens/login_screen.dart';
+import 'package:reservy/providers/location_provider.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -19,9 +19,6 @@ Future<void> main() async {
         ChangeNotifierProvider<LocationProvider>(
           create: (context) => LocationProvider(),
         ),
-        // ChangeNotifierProvider<RestaurantProvider>(
-        //   create: (context) => RestaurantProvider(),
-        // ),
       ],
       child: MyApp(),
     ),
