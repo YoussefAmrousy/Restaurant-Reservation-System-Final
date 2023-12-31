@@ -1,9 +1,9 @@
 // ignore_for_file: prefer_const_constructors_in_immutables, library_private_types_in_public_api, prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:restaurant_reservation_final/models/branch.dart';
-import 'package:restaurant_reservation_final/models/restaurant.dart';
-import 'package:restaurant_reservation_final/user/Screens/restaurant_details.dart';
+import 'package:reservy/models/branch.dart';
+import 'package:reservy/models/restaurant.dart';
+import 'package:reservy/user/Screens/user_restaurant_details.dart';
 
 class RestaurantsListRow extends StatefulWidget {
   final String title;
@@ -24,7 +24,6 @@ class RestaurantsListRow extends StatefulWidget {
 }
 
 class _RestaurantsListRowState extends State<RestaurantsListRow> {
-  Restaurant? _restaurantFilter;
   String? _logoPath;
 
   @override
@@ -50,21 +49,22 @@ class _RestaurantsListRowState extends State<RestaurantsListRow> {
             scrollDirection: Axis.horizontal,
             itemCount: widget.branches.length,
             itemBuilder: (context, index) {
-              var branch = widget.branches[index];
-              _restaurantFilter = widget.restaurants.firstWhere(
+              final branch = widget.branches[index];
+              var restaurantFilter = widget.restaurants.firstWhere(
                 (restaurant) => restaurant.name == branch.restaurantName,
                 orElse: () => Restaurant(),
               );
-              _logoPath = _restaurantFilter!.logoPath;
+
+              _logoPath = restaurantFilter.logoPath;
 
               return GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ReservyWidget(
+                      builder: (context) => UserRestaurantDetails(
                         branch: branch,
-                        restaurant: _restaurantFilter!,
+                        restaurant: restaurantFilter,
                       ),
                     ),
                   );
@@ -102,7 +102,7 @@ class _RestaurantsListRowState extends State<RestaurantsListRow> {
                         ),
                       ),
                       Text(
-                        '${_restaurantFilter?.rating} ⭐',
+                        '${restaurantFilter.rating} ⭐',
                         style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey,

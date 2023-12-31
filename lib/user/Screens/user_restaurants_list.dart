@@ -1,14 +1,14 @@
 // ignore_for_file: library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:restaurant_reservation_final/Services/branch_service.dart';
-import 'package:restaurant_reservation_final/Services/firebase_storage_service.dart';
-import 'package:restaurant_reservation_final/Services/restaurant_service.dart';
-import 'package:restaurant_reservation_final/Services/auth_service.dart';
-import 'package:restaurant_reservation_final/models/branch.dart';
-import 'package:restaurant_reservation_final/models/restaurant.dart';
-import 'package:restaurant_reservation_final/shared/Widgets/not_available.dart';
-import 'package:restaurant_reservation_final/user/Widgets/restaurants_list_row.dart';
+import 'package:reservy/Services/auth_service.dart';
+import 'package:reservy/Services/branch_service.dart';
+import 'package:reservy/Services/firebase_storage_service.dart';
+import 'package:reservy/Services/restaurant_service.dart';
+import 'package:reservy/models/branch.dart';
+import 'package:reservy/models/restaurant.dart';
+import 'package:reservy/shared/Widgets/not_available.dart';
+import 'package:reservy/user/Widgets/restaurants_list_row.dart';
 
 class UserRestaurantsList extends StatefulWidget {
   const UserRestaurantsList({super.key});

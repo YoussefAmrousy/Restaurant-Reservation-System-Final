@@ -3,10 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:restaurant_reservation_final/Services/reservations_service.dart';
-import 'package:restaurant_reservation_final/Services/restaurant_service.dart';
-import 'package:restaurant_reservation_final/Utils/reservations_collection_utils.dart';
-import 'package:restaurant_reservation_final/models/reservation.dart';
+import 'package:reservy/Services/reservations_service.dart';
+import 'package:reservy/Services/restaurant_service.dart';
+import 'package:reservy/Utils/util.dart';
+import 'package:reservy/models/reservation.dart';
 
 class RateRestaurant extends StatefulWidget {
   RateRestaurant({super.key, required this.reservation});
@@ -112,8 +112,8 @@ class _RateRestaurantState extends State<RateRestaurant> {
   }
 
   String _formattedDate() {
-    ReservationsCollectionUtils reservationsCollectionUtils =
-        ReservationsCollectionUtils();
-    return "${widget.reservation.date!.day} ${reservationsCollectionUtils.getMonthAbbreviation(widget.reservation.date!.month)}";
+    Util util =
+        Util();
+    return "${widget.reservation.date!.day} ${util.getMonthAbbreviation(widget.reservation.date!.month)}";
   }
 }

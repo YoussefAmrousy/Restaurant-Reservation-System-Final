@@ -2,8 +2,8 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:restaurant_reservation_final/Services/shared_preference_service.dart';
-import 'package:restaurant_reservation_final/models/user_data.dart';
+import 'package:reservy/Services/shared_preference_service.dart';
+import 'package:reservy/models/user_data.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;

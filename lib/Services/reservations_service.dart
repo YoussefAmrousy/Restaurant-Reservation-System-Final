@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:restaurant_reservation_final/models/reservation.dart';
+import 'package:reservy/models/reservation.dart';
 
 class ReservationsService {
   final CollectionReference reservationsCollection =

@@ -4,14 +4,14 @@ import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:restaurant_reservation_final/Admin/Screens/branch_creation.dart';
-import 'package:restaurant_reservation_final/Admin/Screens/admin_branches_list/branch_dialog_details.dart';
-import 'package:restaurant_reservation_final/Admin/Screens/admin_branches_list/branch_item_widget.dart';
-import 'package:restaurant_reservation_final/Admin/Screens/admin_restaurant_details.dart';
-import 'package:restaurant_reservation_final/Services/branch_service.dart';
-import 'package:restaurant_reservation_final/models/branch.dart';
-import 'package:restaurant_reservation_final/models/restaurant.dart';
-import 'package:restaurant_reservation_final/shared/Widgets/not_available.dart';
+import 'package:reservy/Admin/Screens/admin_branches_list/branch_dialog_details.dart';
+import 'package:reservy/Admin/Screens/admin_branches_list/branch_item_widget.dart';
+import 'package:reservy/Admin/Screens/admin_restaurant_details.dart';
+import 'package:reservy/Admin/Screens/branch_creation.dart';
+import 'package:reservy/Services/branch_service.dart';
+import 'package:reservy/models/branch.dart';
+import 'package:reservy/models/restaurant.dart';
+import 'package:reservy/shared/Widgets/not_available.dart';
 
 class BranchesListScreen extends StatefulWidget {
   BranchesListScreen({super.key, required this.restaurant});

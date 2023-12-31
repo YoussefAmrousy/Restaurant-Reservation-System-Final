@@ -3,12 +3,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:restaurant_reservation_final/Admin/Screens/admin_restaurant_list/admin_restaurants_list.dart';
-import 'package:restaurant_reservation_final/Services/firebase_storage_service.dart';
-import 'package:restaurant_reservation_final/Services/restaurant_service.dart';
-import 'package:restaurant_reservation_final/enums/cuisine_enum.dart';
-import 'package:restaurant_reservation_final/models/restaurant.dart';
-import 'package:restaurant_reservation_final/shared/Widgets/form_error_widget.dart';
+import 'package:reservy/Admin/Screens/admin_restaurant_list/admin_restaurants_list.dart';
+import 'package:reservy/Enums/cuisine_enum.dart';
+import 'package:reservy/Services/firebase_storage_service.dart';
+import 'package:reservy/Services/restaurant_service.dart';
+import 'package:reservy/models/restaurant.dart';
+import 'package:reservy/shared/Widgets/form_error_widget.dart';
 
 class RestaurantCreationScreen extends StatefulWidget {
   RestaurantCreationScreen({super.key, this.restaurant});

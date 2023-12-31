@@ -2,8 +2,8 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:restaurant_reservation_final/Services/branch_service.dart';
-import 'package:restaurant_reservation_final/models/branch.dart';
+import 'package:reservy/Services/branch_service.dart';
+import 'package:reservy/models/branch.dart';
 
 class BranchItem extends StatefulWidget {
   BranchItem({super.key, required this.branch});

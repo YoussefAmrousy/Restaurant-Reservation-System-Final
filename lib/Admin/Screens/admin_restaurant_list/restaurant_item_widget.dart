@@ -2,12 +2,12 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:restaurant_reservation_final/Admin/Screens/restaurant_creation.dart';
-import 'package:restaurant_reservation_final/Admin/Screens/admin_restaurant_details.dart';
-import 'package:restaurant_reservation_final/Services/firebase_storage_service.dart';
-import 'package:restaurant_reservation_final/Services/restaurant_service.dart';
-import 'package:restaurant_reservation_final/Utils/util.dart';
-import 'package:restaurant_reservation_final/models/restaurant.dart';
+import 'package:reservy/Admin/Screens/admin_restaurant_details.dart';
+import 'package:reservy/Admin/Screens/restaurant_creation.dart';
+import 'package:reservy/Services/firebase_storage_service.dart';
+import 'package:reservy/Services/restaurant_service.dart';
+import 'package:reservy/Utils/util.dart';
+import 'package:reservy/models/restaurant.dart';
 
 class RestaurantItem extends StatefulWidget {
   RestaurantItem({super.key, required this.restaurant});

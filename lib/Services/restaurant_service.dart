@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:restaurant_reservation_final/Services/firebase_storage_service.dart';
-import 'package:restaurant_reservation_final/models/restaurant.dart';
+import 'package:reservy/Services/firebase_storage_service.dart';
+import 'package:reservy/models/restaurant.dart';
 
 class RestaurantService {
   CollectionReference restaurantsCollection =
