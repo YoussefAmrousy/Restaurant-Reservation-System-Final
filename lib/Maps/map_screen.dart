@@ -40,7 +40,8 @@ class _MapScreenState extends State<MapScreen> {
     return Stack(
       children: [
         GoogleMap(
-          myLocationButtonEnabled: false,
+          myLocationButtonEnabled: true,
+          myLocationEnabled: true,
           zoomControlsEnabled: false,
           onMapCreated: (controller) {
             setState(() {
@@ -75,26 +76,30 @@ class _MapScreenState extends State<MapScreen> {
             locationProvider.setSelectedLocation(selectedLocation);
           },
           initialCameraPosition: CameraPosition(
-            target: LatLng(37.7749, -122.4194),
+            target: LatLng(
+                locationProvider.currentUserLocation?.latitude ?? 0.0,
+                locationProvider.currentUserLocation?.longitude ?? 0.0),
             zoom: 12.0,
           ),
           markers: _selectedMarker != null ? {_selectedMarker!} : {},
           mapType: MapType.normal,
         ),
-        Positioned(
-          bottom: 16.0,
-          right: 16.0,
-          child: FloatingActionButton(
-            onPressed: () {
-              if (_selectedMarker != null) {
-                mapUtil.openGoogleMapsNavigation(
-                    context, _selectedMarker!.position);
-              }
-            },
-            mini: true,
-            child: Icon(Icons.directions, color: Colors.white),
-          ),
-        ),
+        widget.selectedLocation != null
+            ? Positioned(
+                bottom: 16.0,
+                right: 16.0,
+                child: FloatingActionButton(
+                  onPressed: () {
+                    if (_selectedMarker != null) {
+                      mapUtil.openGoogleMapsNavigation(
+                          context, _selectedMarker!.position);
+                    }
+                  },
+                  mini: true,
+                  child: Icon(Icons.directions, color: Colors.white),
+                ),
+              )
+            : Container(),
       ],
     );
   }
