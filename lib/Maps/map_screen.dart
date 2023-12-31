@@ -1,7 +1,10 @@
 // MapScreen.dart
-// ignore_for_file: prefer_const_constructors, library_private_types_in_public_api
+// ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, prefer_const_declarations
+
+import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:reservy/Utils/map_util.dart';
@@ -33,6 +36,15 @@ class _MapScreenState extends State<MapScreen> {
     super.dispose();
   }
 
+  Future<Position> getUserCurrentLocation() async {
+    await Geolocator.requestPermission()
+        .then((value) {})
+        .onError((error, stackTrace) async {
+      await Geolocator.requestPermission();
+    });
+    return await Geolocator.getCurrentPosition();
+  }
+
   @override
   Widget build(BuildContext context) {
     final locationProvider =
@@ -40,8 +52,13 @@ class _MapScreenState extends State<MapScreen> {
     return Stack(
       children: [
         GoogleMap(
-          myLocationButtonEnabled: false,
+          initialCameraPosition: CameraPosition(
+            target: LatLng(30.044482051923598, 31.232991437944793),
+            zoom: 12.0,
+          ),
+          myLocationButtonEnabled: true,
           zoomControlsEnabled: false,
+          compassEnabled: true,
           onMapCreated: (controller) {
             setState(() {
               _mapController = controller;
@@ -74,10 +91,6 @@ class _MapScreenState extends State<MapScreen> {
             });
             locationProvider.setSelectedLocation(selectedLocation);
           },
-          initialCameraPosition: CameraPosition(
-            target: LatLng(37.7749, -122.4194),
-            zoom: 12.0,
-          ),
           markers: _selectedMarker != null ? {_selectedMarker!} : {},
           mapType: MapType.normal,
         ),
@@ -85,14 +98,19 @@ class _MapScreenState extends State<MapScreen> {
           bottom: 16.0,
           right: 16.0,
           child: FloatingActionButton(
-            onPressed: () {
-              if (_selectedMarker != null) {
-                mapUtil.openGoogleMapsNavigation(
-                    context, _selectedMarker!.position);
-              }
+            onPressed: () async {
+              getUserCurrentLocation().then((value) async {
+                CameraPosition cameraPosition = CameraPosition(
+                  target: LatLng(value.latitude, value.longitude),
+                  zoom: 14,
+                );
+
+                _mapController?.animateCamera(
+                    CameraUpdate.newCameraPosition(cameraPosition));
+                setState(() {});
+              });
             },
-            mini: true,
-            child: Icon(Icons.directions, color: Colors.white),
+            child: Icon(Icons.local_activity),
           ),
         ),
       ],
