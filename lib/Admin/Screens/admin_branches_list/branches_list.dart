@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:reservy/Admin/Screens/admin_branches_list/branch_dialog_details.dart';
 import 'package:reservy/Admin/Screens/admin_branches_list/branch_item_widget.dart';
 import 'package:reservy/Admin/Screens/admin_restaurant_details.dart';
@@ -24,7 +25,7 @@ class BranchesListScreen extends StatefulWidget {
 class _BranchesListState extends State<BranchesListScreen> {
   CollectionReference branchesCollection =
       FirebaseFirestore.instance.collection('branches');
-    BranchService branchService = BranchService();
+  BranchService branchService = BranchService();
 
   @override
   void initState() {
@@ -69,49 +70,56 @@ class _BranchesListState extends State<BranchesListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color.fromRGBO(236, 235, 235, 1),
-        title: Text(
-          '${widget.restaurant.name} Branches',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 25,
-          ),
-        ),
-        iconTheme: IconThemeData(color: Colors.black),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => RestaurantDetailsScreen(
-                  restaurant: widget.restaurant,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50),
+        child: AppBar(
+          backgroundColor: Color(0xC1E7AF2F),
+          title: Text(
+            '${widget.restaurant.name} Branches',
+            style: FlutterFlowTheme.of(context).displaySmall.override(
+                  fontFamily: 'Poppins',
+                  color: FlutterFlowTheme.of(context).secondaryText,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
-              ),
-            ),
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () async {
-              await Navigator.push(
+          ),
+          centerTitle: true,
+          iconTheme: IconThemeData(
+            color: FlutterFlowTheme.of(context).secondaryText,
+          ),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => {
+              Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => BranchCreationScreen(
+                  builder: (context) => RestaurantDetailsScreen(
                     restaurant: widget.restaurant,
                   ),
                 ),
-              );
-
-              await branchService
-                  .getBranchesByRestaurant(widget.restaurant.name!);
-              setState(() {});
+              ),
             },
           ),
-        ],
+          actions: [
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BranchCreationScreen(
+                      restaurant: widget.restaurant,
+                    ),
+                  ),
+                );
+
+                await branchService
+                    .getBranchesByRestaurant(widget.restaurant.name!);
+                setState(() {});
+              },
+            ),
+          ],
+        ),
       ),
       body: Column(
         children: [

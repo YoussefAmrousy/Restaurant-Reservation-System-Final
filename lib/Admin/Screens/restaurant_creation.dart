@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reservy/Admin/Screens/admin_restaurant_list/admin_restaurants_list.dart';
 import 'package:reservy/Enums/cuisine_enum.dart';
@@ -48,6 +49,9 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
       restaurantNameController.text = widget.restaurant!.name!;
       selectedCuisine = Cuisine.values
           .firstWhere((element) => element.value == widget.restaurant!.cuisine);
+      phoneController.text = widget.restaurant!.phone!;
+      socialMediaController.text = widget.restaurant!.socialMedia!;
+      websiteController.text = widget.restaurant!.website!;
     }
   }
 
@@ -96,7 +100,7 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('OK'),
+              child: Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.push(
@@ -130,7 +134,7 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
     Future<void> submitRestaurant() async {
       if (phoneController.text.contains(RegExp(r'[a-zA-Z]'))) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text('Phone number must be digits only'),
           ),
         );
@@ -138,20 +142,19 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
       }
       if (phoneController.text.length != 11) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text('Phone number must be 11 digits'),
           ),
         );
         return;
       }
       final restaurant = Restaurant(
-        name: restaurantNameController.text,
-        cuisine: selectedCuisine!.value,
-        phone: phoneController.text,
-        socialMedia: socialMediaController.text,
-        website: websiteController.text,
-        rating: 0
-      );
+          name: restaurantNameController.text,
+          cuisine: selectedCuisine!.value,
+          phone: phoneController.text,
+          socialMedia: socialMediaController.text,
+          website: websiteController.text,
+          rating: 0);
 
       if (widget.restaurant != null) {
         restaurant.logoPath = widget.restaurant!.logoPath;
@@ -160,7 +163,7 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
             await restaurantService.updateRestaurant(restaurant);
         if (restaurantUpdated == false) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+            SnackBar(
               content: Text('Error updating restaurant'),
             ),
           );
@@ -175,7 +178,7 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
 
       if (restaurantCreation == false) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text('Restaurant already exists'),
           ),
         );
@@ -188,18 +191,27 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        automaticallyImplyLeading: true,
-        iconTheme: IconThemeData(color: Colors.black),
-        backgroundColor: Color.fromRGBO(236, 235, 235, 1),
-        title: Text(
-          widget.restaurant != null
-              ? 'Edit ${widget.restaurant!.name}'
-              : 'Create Restaurant',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50),
+        child: AppBar(
+          automaticallyImplyLeading: true,
+          iconTheme: IconThemeData(
+            color: FlutterFlowTheme.of(context).secondaryText,
           ),
+          backgroundColor: Color(0xC1E7AF2F),
+          title: Text(
+            widget.restaurant != null
+                ? 'Edit ${widget.restaurant!.name}'
+                : 'Create Restaurant',
+            style: FlutterFlowTheme.of(context).displaySmall.override(
+                  fontFamily: 'Poppins',
+                  color: FlutterFlowTheme.of(context).secondaryText,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          centerTitle: true,
+          elevation: 12,
         ),
       ),
       body: Column(
@@ -207,7 +219,7 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(8.0),
                 child: Center(
                   child: Form(
                     key: formKey,
@@ -216,14 +228,14 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
                       children: [
                         if (showError) FormErrorWidget(),
                         Container(
-                          margin: const EdgeInsets.all(8),
+                          margin: EdgeInsets.all(8),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Column(
                                 children: [
                                   Container(
-                                    margin: const EdgeInsets.all(8),
+                                    margin: EdgeInsets.all(8),
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                         color: Color.fromARGB(231, 66, 20, 4),
@@ -268,18 +280,22 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
                                         });
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: Color(0xFFE7AF2F),
+                                        backgroundColor: Colors.white,
                                         elevation: 3.0,
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(10.0),
                                         ),
                                       ),
-                                      child: const Text(
+                                      child: Text(
                                         'Upload Logo',
-                                        style: TextStyle(
-                                          color: Color(0xFFECEBEB),
-                                        ),
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily: 'Poppins',
+                                              color: Color(0xC1E7AF2F),
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                       ),
                                     ),
                                   ),
@@ -289,7 +305,7 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
                               Column(
                                 children: [
                                   Container(
-                                    margin: const EdgeInsets.all(8),
+                                    margin: EdgeInsets.all(8),
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                         color: Color.fromARGB(231, 66, 20, 4),
@@ -334,18 +350,22 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
                                         });
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: Color(0xFFE7AF2F),
+                                        backgroundColor: Colors.white,
                                         elevation: 3.0,
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(10.0),
                                         ),
                                       ),
-                                      child: const Text(
+                                      child: Text(
                                         'Upload Menu',
-                                        style: TextStyle(
-                                          color: Color(0xFFECEBEB),
-                                        ),
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily: 'Poppins',
+                                              color: Color(0xC1E7AF2F),
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                       ),
                                     ),
                                   ),
@@ -354,7 +374,7 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20),
                         TextField(
                           controller: restaurantNameController,
                           decoration: InputDecoration(
@@ -368,7 +388,7 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20),
                         DropdownButton<Cuisine>(
                           value: selectedCuisine,
                           onChanged: (Cuisine? newValue) {
@@ -385,7 +405,7 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
                             );
                           }).toList(),
                         ),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20),
                         TextField(
                           controller: phoneController,
                           decoration: InputDecoration(
@@ -399,7 +419,7 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20),
                         TextField(
                           controller: socialMediaController,
                           decoration: InputDecoration(
@@ -413,7 +433,7 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20),
                         TextField(
                           controller: websiteController,
                           decoration: InputDecoration(
@@ -432,7 +452,7 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
                           width: 250,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xFFE7AF2F),
+                              backgroundColor: Colors.white,
                               elevation: 3.0,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0),
@@ -453,9 +473,13 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
                               widget.restaurant != null
                                   ? 'Update Restaurant'
                                   : 'Create Restaurant',
-                              style: TextStyle(
-                                color: Color(0xFFECEBEB),
-                              ),
+                              style: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .override(
+                                    fontFamily: 'Poppins',
+                                    color: Color(0xC1E7AF2F),
+                                    fontWeight: FontWeight.bold,
+                                  ),
                             ),
                           ),
                         ),

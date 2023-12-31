@@ -1,5 +1,5 @@
 class Util {
-  String capitalize(String input) {
+  static String capitalize(String input) {
     if (input.isEmpty) {
       return input;
     }

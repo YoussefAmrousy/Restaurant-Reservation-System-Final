@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
+import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:reservy/Admin/Screens/admin_branches_list/branches_list.dart';
 import 'package:reservy/Admin/Screens/admin_restaurant_list/admin_restaurants_list.dart';
 import 'package:reservy/Admin/Screens/restaurant_creation.dart';
@@ -26,44 +27,53 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          widget.restaurant.name!,
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50),
+        child: AppBar(
+          title: Text(
+            widget.restaurant.name!,
+            style: FlutterFlowTheme.of(context).displaySmall.override(
+                  fontFamily: 'Poppins',
+                  color: FlutterFlowTheme.of(context).secondaryText,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
           ),
-        ),
-        iconTheme: IconThemeData(color: Colors.black),
-        backgroundColor: Color.fromRGBO(236, 235, 235, 1),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => RestaurtantsListScreen(),
+          centerTitle: true,
+          iconTheme: IconThemeData(
+            color: FlutterFlowTheme.of(context).secondaryText,
+          ),
+          backgroundColor: Color(0xC1E7AF2F),
+          elevation: 12,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => RestaurtantsListScreen(),
+              ),
             ),
           ),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () async {
-              await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => RestaurantCreationScreen(
-                    restaurant: widget.restaurant,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RestaurantCreationScreen(
+                      restaurant: widget.restaurant,
+                    ),
                   ),
-                ),
-              );
+                );
 
-              setState(() {
-                logoPath = widget.restaurant.logoPath!;
-              });
-            },
-          ),
-        ],
+                setState(() {
+                  logoPath = widget.restaurant.logoPath!;
+                });
+              },
+            ),
+          ],
+        ),
       ),
       backgroundColor: Color.fromRGBO(236, 235, 235, 1),
       body: Column(
@@ -208,11 +218,21 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                             ),
                           );
                         },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          elevation: 3.0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                        ),
                         child: Text(
                           'Manage Branches',
-                          style: TextStyle(
-                            color: Color(0xFFECEBEB),
-                          ),
+                          style:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'Poppins',
+                                    color: Color(0xC1E7AF2F),
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
                       ),
                     ],

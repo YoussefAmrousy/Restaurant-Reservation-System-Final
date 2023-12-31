@@ -24,7 +24,6 @@ class _RestaurantItemState extends State<RestaurantItem> {
   FirebaseStorageService firebaseStorageService = FirebaseStorageService();
   String? logoPath;
   Restaurant? deletedRestaurant;
-  Util util = Util();
 
   Future<void> initializeData() async {
     await restaurantService.getAllRestaurants();
@@ -133,7 +132,7 @@ class _RestaurantItemState extends State<RestaurantItem> {
                         ),
                         SizedBox(height: 8),
                         Text(
-                          util.capitalize(widget.restaurant.cuisine ?? ''),
+                          Util.capitalize(widget.restaurant.cuisine ?? ''),
                           style: TextStyle(
                             color: Colors.grey,
                           ),

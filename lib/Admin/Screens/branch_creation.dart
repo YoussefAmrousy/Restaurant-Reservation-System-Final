@@ -2,18 +2,17 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart' as maps;
 import 'package:provider/provider.dart';
 import 'package:reservy/Admin/Screens/admin_branches_list/branches_list.dart';
 import 'package:reservy/Maps/map_screen.dart';
-import 'package:reservy/models/branch.dart';
 import 'package:reservy/models/restaurant.dart';
 import 'package:reservy/providers/location_provider.dart';
 import 'package:reservy/shared/Widgets/form_error_widget.dart';
 
 class BranchCreationScreen extends StatefulWidget {
-  const BranchCreationScreen({super.key, this.branch, this.restaurant});
-  final Branch? branch;
+  const BranchCreationScreen({super.key, this.restaurant});
   final Restaurant? restaurant;
 
   @override
@@ -21,7 +20,6 @@ class BranchCreationScreen extends StatefulWidget {
 }
 
 class _BranchCreationScreenState extends State<BranchCreationScreen> {
-  final branchNameController = TextEditingController();
   final restaurantNameController = TextEditingController();
   final areaController = TextEditingController();
   final cityController = TextEditingController();
@@ -45,7 +43,6 @@ class _BranchCreationScreenState extends State<BranchCreationScreen> {
 
   bool validateForm() {
     if (widget.restaurant == null ||
-        branchNameController.text.trim().isEmpty ||
         restaurantNameController.text.trim().isEmpty ||
         areaController.text.trim().isEmpty ||
         cityController.text.trim().isEmpty ||
@@ -59,9 +56,8 @@ class _BranchCreationScreenState extends State<BranchCreationScreen> {
   }
 
   submitBranch() async {
-    LatLng? selectedLocation = locationProvider?.selectedLocation;
+    maps.LatLng? selectedLocation = locationProvider?.selectedLocation;
     final branch = {
-      'name': branchNameController.text.trim(),
       'restaurant': restaurantNameController.text.trim(),
       'area': areaController.text.trim(),
       'city': cityController.text.trim(),
@@ -108,31 +104,36 @@ class _BranchCreationScreenState extends State<BranchCreationScreen> {
     locationProvider = Provider.of<LocationProvider>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: Text(
-          widget.branch != null
-              ? 'Edit ${widget.branch!.name}'
-              : 'Create Branch',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50),
+        child: AppBar(
+          automaticallyImplyLeading: true,
+          iconTheme: IconThemeData(
+            color: FlutterFlowTheme.of(context).secondaryText,
+          ),
+          backgroundColor: Color(0xC1E7AF2F),
+          elevation: 12,
+          title: Text(
+            'Create Branch',
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BranchesListScreen(
+                    restaurant: widget.restaurant!,
+                  ),
+                ),
+              );
+            },
           ),
         ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => BranchesListScreen(
-                  restaurant: widget.restaurant!,
-                ),
-              ),
-            );
-          },
-        ),
-        iconTheme: IconThemeData(color: Colors.black),
-        backgroundColor: Color.fromRGBO(236, 235, 235, 1),
       ),
       body: Column(
         children: [
@@ -146,15 +147,6 @@ class _BranchCreationScreenState extends State<BranchCreationScreen> {
                     key: formKey,
                     child: Column(
                       children: [
-                        TextField(
-                            decoration: InputDecoration(
-                              labelText: 'Branch Name',
-                              border: OutlineInputBorder(),
-                            ),
-                            controller: branchNameController),
-                        SizedBox(
-                          height: 20,
-                        ),
                         TextField(
                           decoration: InputDecoration(
                             labelText: 'Restaurant Name',
@@ -219,18 +211,21 @@ class _BranchCreationScreenState extends State<BranchCreationScreen> {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 50,
-                              vertical: 10,
+                            backgroundColor: Colors.white,
+                            elevation: 3.0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
                             ),
                           ),
                           child: Text(
-                            widget.branch != null
-                                ? 'Edit Branch'
-                                : 'Create Branch',
-                            style: TextStyle(
-                              color: Color(0xFFECEBEB),
-                            ),
+                            'Create Branch',
+                            style: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .override(
+                                  fontFamily: 'Poppins',
+                                  color: Color(0xC1E7AF2F),
+                                  fontWeight: FontWeight.bold,
+                                ),
                           ),
                         ),
                       ],

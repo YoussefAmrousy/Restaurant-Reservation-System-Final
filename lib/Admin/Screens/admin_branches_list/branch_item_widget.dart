@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:reservy/Services/branch_service.dart';
+import 'package:reservy/Utils/util.dart';
 import 'package:reservy/models/branch.dart';
 
 class BranchItem extends StatefulWidget {
@@ -45,7 +46,7 @@ class _BranchtItemState extends State<BranchItem> {
       child: ListTile(
         contentPadding: EdgeInsets.all(4),
         title: Text(
-          '${widget.branch.area}, ${widget.branch.city}',
+          '${Util.capitalize(widget.branch.area)}, ${Util.capitalize(widget.branch.city)}',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
@@ -53,7 +54,9 @@ class _BranchtItemState extends State<BranchItem> {
           ),
         ),
         subtitle: Text(
-          widget.branch.address ?? '',
+          widget.branch.address == null
+              ? ''
+              : Util.capitalize(widget.branch.address!),
           style: TextStyle(
             fontSize: 14,
             color: Colors.black54,
