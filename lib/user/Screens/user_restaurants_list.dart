@@ -25,6 +25,8 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
   Restaurant? restaurant;
   String? logoPath;
   TextEditingController searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  bool _isRefreshing = false;
   List<Restaurant> italian = [];
   List<Restaurant> japanese = [];
   List<Restaurant> american = [];
@@ -37,6 +39,7 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
     super.initState();
     getBranches();
     getAllRestaurants();
+    _scrollController.addListener(_onScroll);
   }
 
   Future<void> getBranches() async {
@@ -51,6 +54,26 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
     });
   }
 
+  Future<void> refreshData() async {
+    setState(() {
+      _isRefreshing = true;
+    });
+
+    await getBranches();
+    await Future.delayed(Duration(seconds: 2));
+
+    setState(() {
+      _isRefreshing = false;
+    });
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      refreshData();
+    }
+  }
+
   Future<void> getAllRestaurants() async {
     var restaurants = await restaurantService.getAllRestaurants();
     setState(() {
@@ -61,107 +84,120 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
     });
   }
 
-  Future<void> getRestaurantsByCuisines() async {}
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.transparent,
-                spreadRadius: 0,
-                blurRadius: 0,
-                offset: Offset(0, 0),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              AppBar(
-                title: Text(
-                  'Reservy',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                leading: IconButton(
-                  icon: Icon(Icons.logout),
-                  onPressed: () async {
-                    await authService.signOut();
-                    if (mounted) {
-                      Navigator.pushNamed(context, '/login');
-                    }
-                  },
-                ),
-                automaticallyImplyLeading: false,
-                backgroundColor: Color.fromRGBO(236, 235, 235, 0),
-                elevation: 0,
-              ),
-              SizedBox(height: 8),
-              Container(
-                height: 50,
-                margin: EdgeInsets.symmetric(horizontal: 16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: Color(0xFFe7af2f),
-                    width: 2,
-                  ),
-                ),
-                child: TextField(
-                  controller: searchController,
-                  onChanged: (value) {
-                    setState(() {
-                      if (value.isEmpty) getBranches();
-                      branchService.branches = branchService.branches
-                          .where((branch) => branch.restaurantName
-                              .toLowerCase()
-                              .contains(value.toLowerCase()))
-                          .toList();
-                    });
-                  },
-                  decoration: InputDecoration(
-                    hintText: "I'm looking for..",
-                    border: InputBorder.none,
-                    prefixIcon: Icon(Icons.search),
-                  ),
+      body: _isRefreshing
+          ? Container(
+              alignment: Alignment.center,
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: Colors.black.withOpacity(0.5),
                 ),
               ),
-              SizedBox(height: 8),
-              branchService.branches.isEmpty
-                  ? NotAvailable(message: 'restaurants')
-                  : Column(
-                      children: [
-                        RestaurantsListRow(
-                          title: 'Neraby Restaurants',
-                          branches: branchService.branches,
-                          restaurants: restaurantService.restaurants,
+            )
+          : RefreshIndicator(
+              color: Colors.black.withOpacity(0.5),
+              onRefresh: refreshData,
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.transparent,
+                        spreadRadius: 0,
+                        blurRadius: 0,
+                        offset: Offset(0, 0),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      AppBar(
+                        title: Text(
+                          'Reservy',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                        RestaurantsListRow(
-                          title: 'Italian Restaurants',
-                          branches: italianBranches,
-                          restaurants: italian,
+                        leading: IconButton(
+                          icon: Icon(Icons.logout),
+                          onPressed: () async {
+                            await authService.signOut();
+                            if (mounted) {
+                              Navigator.pushNamed(context, '/login');
+                            }
+                          },
                         ),
-                        RestaurantsListRow(
-                            title: 'Japanese Restaurants',
-                            branches: japaneseBranches,
-                            restaurants: japanese),
-                        RestaurantsListRow(
-                            title: 'American Restaurants',
-                            branches: americanBranches,
-                            restaurants: american),
-                      ],
-                    )
-            ],
-          ),
-        ),
-      ),
+                        automaticallyImplyLeading: false,
+                        backgroundColor: Color.fromRGBO(236, 235, 235, 0),
+                        elevation: 0,
+                      ),
+                      SizedBox(height: 8),
+                      Container(
+                        height: 50,
+                        margin: EdgeInsets.symmetric(horizontal: 16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: Color(0xFFe7af2f),
+                            width: 2,
+                          ),
+                        ),
+                        child: TextField(
+                          controller: searchController,
+                          onChanged: (value) {
+                            setState(() {
+                              if (value.isEmpty) getBranches();
+                              branchService.branches = branchService.branches
+                                  .where((branch) => branch.restaurantName
+                                      .toLowerCase()
+                                      .contains(value.toLowerCase()))
+                                  .toList();
+                            });
+                          },
+                          decoration: InputDecoration(
+                            hintText: "I'm looking for..",
+                            border: InputBorder.none,
+                            prefixIcon: Icon(Icons.search),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      branchService.branches.isEmpty
+                          ? NotAvailable(message: 'restaurants')
+                          : Column(
+                              children: [
+                                RestaurantsListRow(
+                                  title: 'Neraby Restaurants',
+                                  branches: branchService.branches,
+                                  restaurants: restaurantService.restaurants,
+                                ),
+                                RestaurantsListRow(
+                                  title: 'Italian Restaurants',
+                                  branches: italianBranches,
+                                  restaurants: italian,
+                                ),
+                                RestaurantsListRow(
+                                    title: 'Japanese Restaurants',
+                                    branches: japaneseBranches,
+                                    restaurants: japanese),
+                                RestaurantsListRow(
+                                    title: 'American Restaurants',
+                                    branches: americanBranches,
+                                    restaurants: american),
+                              ],
+                            )
+                    ],
+                  ),
+                ),
+              ),
+            ),
     );
   }
 }
