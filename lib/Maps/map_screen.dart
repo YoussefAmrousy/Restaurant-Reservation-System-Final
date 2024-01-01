@@ -40,7 +40,7 @@ class _MapScreenState extends State<MapScreen> {
     return Stack(
       children: [
         GoogleMap(
-          myLocationButtonEnabled: true,
+          myLocationButtonEnabled: widget.selectedLocation == null,
           myLocationEnabled: true,
           zoomControlsEnabled: false,
           onMapCreated: (controller) {
@@ -89,6 +89,7 @@ class _MapScreenState extends State<MapScreen> {
                 bottom: 16.0,
                 right: 16.0,
                 child: FloatingActionButton(
+                  backgroundColor: Colors.black.withOpacity(0.5),
                   onPressed: () {
                     if (_selectedMarker != null) {
                       mapUtil.openGoogleMapsNavigation(
