@@ -2,12 +2,14 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:reservy/Admin/Screens/admin_navbar.dart';
 import 'package:reservy/Restaurant/restaurant_navigation_bar.dart';
 import 'package:reservy/Screens/register_screen.dart';
 import 'package:reservy/Services/auth_service.dart';
 import 'package:reservy/Services/reservations_service.dart';
 import 'package:reservy/Services/shared_preference_service.dart';
+import 'package:reservy/Utils/map_util.dart';
 import 'package:reservy/models/reservation.dart';
 import 'package:reservy/user/Screens/rate_restaurant.dart';
 import 'package:reservy/user/Screens/user_navigation_bar.dart';
@@ -25,6 +27,7 @@ class _LoginPageState extends State<LoginScreen> {
   SharedPreferenceService sharedPreferenceService = SharedPreferenceService();
   AuthService authService = AuthService();
   ReservationsService reservationsService = ReservationsService();
+  late Position _currentPosition;
 
   final coolGrey = const Color.fromARGB(255, 169, 169, 169);
   String? restaurant;
@@ -66,13 +69,15 @@ class _LoginPageState extends State<LoginScreen> {
             RateRestaurant.showRatingPopup(context, reservation!);
           });
         }
-        _navigateToRoleSpecificScreen('user');
+        MapUtil mapUtil = MapUtil();
+        _currentPosition = await mapUtil.getUserCurrentLocation();
+        _navigateToRoleSpecificScreen('user', null, _currentPosition);
       }
     }
   }
 
   Future<void> _navigateToRoleSpecificScreen(String role,
-      [String? restaurant]) async {
+      [String? restaurant, Position? currentUserPosition]) async {
     switch (role) {
       case 'admin':
         Navigator.pushReplacement(
@@ -95,6 +100,7 @@ class _LoginPageState extends State<LoginScreen> {
           MaterialPageRoute(
               builder: (context) => UserNavigationBar(
                     selectedIndex: 0,
+                    currentUserPosition: currentUserPosition,
                   )),
         );
         break;

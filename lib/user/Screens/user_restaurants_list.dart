@@ -1,6 +1,7 @@
-// ignore_for_file: library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously
+// ignore_for_file: library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously, must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:reservy/Services/auth_service.dart';
 import 'package:reservy/Services/branch_service.dart';
 import 'package:reservy/Services/firebase_storage_service.dart';
@@ -11,7 +12,8 @@ import 'package:reservy/shared/Widgets/not_available.dart';
 import 'package:reservy/user/Widgets/restaurants_list_row.dart';
 
 class UserRestaurantsList extends StatefulWidget {
-  const UserRestaurantsList({super.key});
+  UserRestaurantsList({super.key, required this.currentUserPosition});
+  Position currentUserPosition;
 
   @override
   _UserRestaurantsListState createState() => _UserRestaurantsListState();
@@ -31,12 +33,14 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
   List<Branch> italianBranches = [];
   List<Branch> japaneseBranches = [];
   List<Branch> americanBranches = [];
+  late Position _currentLocation;
 
   @override
   void initState() {
     super.initState();
     getBranches();
     getAllRestaurants();
+    getNearbyRestaurants();
   }
 
   Future<void> getBranches() async {
@@ -61,7 +65,27 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
     });
   }
 
-  Future<void> getRestaurantsByCuisines() async {}
+  Future<void> getNearbyRestaurants() async {
+    const double maxDistance = 99999999999999;
+    double distanceInKm = 0;
+
+    final List<Branch> nearbyBranches = branchService.branches.where((branch) {
+      distanceInKm = Geolocator.distanceBetween(
+            _currentLocation.latitude,
+            _currentLocation.longitude,
+            branch.latitude!,
+            branch.longitude!,
+          ) /
+          1000;
+
+      return distanceInKm <= maxDistance;
+    }).toList();
+    print(_currentLocation.latitude);
+
+    // setState(() {
+    //   branchService.branches = nearbyBranches;
+    // });
+  }
 
   @override
   Widget build(BuildContext context) {
