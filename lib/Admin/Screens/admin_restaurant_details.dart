@@ -32,7 +32,7 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
         preferredSize: Size.fromHeight(50),
         child: AppBar(
           title: Text(
-            widget.restaurant.name!,
+            Util.capitalize(widget.restaurant.name!),
             style: FlutterFlowTheme.of(context).displaySmall.override(
                   fontFamily: 'Poppins',
                   color: FlutterFlowTheme.of(context).secondaryText,
@@ -76,189 +76,182 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
           ],
         ),
       ),
-      backgroundColor: Color.fromRGBO(236, 235, 235, 1),
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Color.fromARGB(231, 66, 20, 4),
-                        width: 2.0,
-                      ),
-                      borderRadius: BorderRadius.circular(10.0),
+            Row(
+              children: [
+                Container(
+                  margin: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Color.fromARGB(231, 66, 20, 4),
+                      width: 2.0,
                     ),
-                    width: 190.0,
-                    height: 190.0,
-                    child: logoPath != null
-                        ? Image.network(
-                            logoPath!,
-                            width: double.infinity,
-                            height: double.infinity,
-                            fit: BoxFit.cover,
-                          )
-                        : Center(
-                            child: Text(
-                              'Logo Here',
-                              style: TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                              ),
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  width: 100.0,
+                  height: 100.0,
+                  child: logoPath != null
+                      ? Image.network(
+                          logoPath!,
+                          width: double.infinity,
+                          height: double.infinity,
+                          fit: BoxFit.cover,
+                        )
+                      : Center(
+                          child: Text(
+                            'Logo Here',
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
                             ),
-                          ),
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Name',
-                      labelStyle: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                    readOnly: true,
-                    controller:
-                        TextEditingController(text: widget.restaurant.name),
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Cuisine',
-                      labelStyle: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                    readOnly: true,
-                    controller: TextEditingController(
-                        text: Util.capitalize(widget.restaurant.cuisine!)),
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Popular Food',
-                      labelStyle: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                    readOnly: true,
-                    controller: TextEditingController(
-                        text: widget.restaurant.popularFood),
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Phone',
-                      labelStyle: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                    readOnly: true,
-                    controller:
-                        TextEditingController(text: widget.restaurant.phone),
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Social Media',
-                      labelStyle: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                    readOnly: true,
-                    controller: TextEditingController(
-                        text: widget.restaurant.socialMedia),
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Website',
-                      labelStyle: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                    readOnly: true,
-                    controller:
-                        TextEditingController(text: widget.restaurant.website),
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => BranchesListScreen(
-                                  restaurant: widget.restaurant),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          elevation: 3.0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
                           ),
                         ),
-                        child: Text(
-                          'Manage Branches',
-                          style:
-                              FlutterFlowTheme.of(context).bodyMedium.override(
-                                    fontFamily: 'Poppins',
-                                    color: Color(0xC1E7AF2F),
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                ),
+                SizedBox(width: 16.0),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        Util.capitalize(widget.restaurant.name!),
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 8.0),
+                      Text(
+                        Util.capitalize(widget.restaurant.email!),
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
-                  )
-                ],
-              ),
+                  ),
+                ),
+              ],
             ),
+            SizedBox(
+              height: 60.0,
+            ),
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Cuisine',
+                labelStyle: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
+              readOnly: true,
+              controller: TextEditingController(
+                  text: Util.capitalize(widget.restaurant.cuisine!)),
+            ),
+            SizedBox(height: 30.0),
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Popular Food',
+                labelStyle: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
+              readOnly: true,
+              controller:
+                  TextEditingController(text: widget.restaurant.popularFood),
+            ),
+            SizedBox(height: 30.0),
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Phone',
+                labelStyle: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
+              readOnly: true,
+              controller: TextEditingController(text: widget.restaurant.phone),
+            ),
+            SizedBox(height: 30.0),
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Social Media',
+                labelStyle: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
+              readOnly: true,
+              controller:
+                  TextEditingController(text: widget.restaurant.socialMedia),
+            ),
+            SizedBox(height: 30.0),
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Website',
+                labelStyle: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
+              readOnly: true,
+              controller:
+                  TextEditingController(text: widget.restaurant.website),
+            ),
+            SizedBox(height: 20.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            BranchesListScreen(restaurant: widget.restaurant),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    elevation: 3.0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  child: Text(
+                    'Manage Branches',
+                    style: FlutterFlowTheme.of(context).bodyMedium.override(
+                          fontFamily: 'Poppins',
+                          color: Color(0xC1E7AF2F),
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ),
+              ],
+            )
           ],
         ),
       ),

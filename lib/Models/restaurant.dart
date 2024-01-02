@@ -11,6 +11,7 @@ class Restaurant {
   double? rating;
   int? ratingCount;
   String? popularFood;
+  String? email;
 
   Restaurant(
       {this.name,
@@ -22,7 +23,8 @@ class Restaurant {
       this.logoPath,
       this.rating = 0,
       this.ratingCount = 0,
-      this.popularFood});
+      this.popularFood,
+      this.email});
 
   Map<String, dynamic> toJson() {
     return {
@@ -35,7 +37,8 @@ class Restaurant {
       'menuPath': menuPath,
       'rating': rating,
       'ratingCount': ratingCount,
-      'popularFood': popularFood
+      'popularFood': popularFood,
+      'email': email
     };
   }
 
@@ -50,7 +53,8 @@ class Restaurant {
         logoPath: map['logoPath'],
         rating: map['rating'] ?? 0,
         ratingCount: map['ratingCount'] ?? 0,
-        popularFood: map['popularFood']);
+        popularFood: map['popularFood'],
+        email: map['email']);
   }
 
   factory Restaurant.fromSnapshot(DocumentSnapshot doc) {
@@ -64,6 +68,7 @@ class Restaurant {
         logoPath: doc['logoPath'],
         rating: doc['rating'] ?? 0,
         ratingCount: doc['ratingCount'] ?? 0,
-        popularFood: doc['popularFood']);
+        popularFood: doc['popularFood'],
+        email: doc['email']);
   }
 }
