@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:reservy/Services/auth_service.dart';
 import 'package:reservy/Services/firebase_storage_service.dart';
 import 'package:reservy/models/restaurant.dart';
+import 'package:reservy/models/user_data.dart';
 
 class RestaurantService {
   CollectionReference restaurantsCollection =
@@ -37,6 +39,19 @@ class RestaurantService {
     final menuUrl = await firebaseStorageService.uploadImage(
         imageToUpload: menu, title: restaurant.name!, type: 'menu');
     restaurant.menuPath = menuUrl;
+
+    final email = restaurant.name!.replaceAll(' ', '').toLowerCase() +
+        '@reservy.com'.toLowerCase();
+    restaurant.email = email;
+
+    UserData userData = UserData(
+      username: restaurant.name,
+      role: 'restaurant',
+      restaurant: restaurant.name,
+    );
+
+    AuthService authService = AuthService();
+    authService.registerWithEmailAndPassword(email, "reservy2024", userData);
 
     Map<String, dynamic> restaurantData = restaurant.toJson();
 

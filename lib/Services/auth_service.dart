@@ -30,8 +30,8 @@ class AuthService {
     }
   }
 
-  Future<User?> registerWithEmailAndPassword(String email, String password,
-      UserData userData) async {
+  Future<User?> registerWithEmailAndPassword(
+      String email, String password, UserData userData) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -44,17 +44,7 @@ class AuthService {
         username: userData.username,
         role: userData.role,
       );
-
-      if (userData.role == 'restaurant') {
-        newUser.restaurant = userData.restaurant;
-        await addUserData(newUser);
-
-        sharedPreferenceService.saveStringToLocalStorage(
-            'restaurant', userData.restaurant!);
-      } else {
-        await addUserData(newUser);
-      }
-      print(user);
+      await addUserData(newUser);
       return user;
     } catch (error) {
       print('Error registering: $error');
@@ -92,11 +82,11 @@ class AuthService {
   }
 
   Future<UserData> getUserData(String userId) async {
-      final userDataQuery =
-          await userDataCollection.where('userId', isEqualTo: userId).get();
-      if (userDataQuery.docs.isEmpty) return UserData();
-      var user = userDataQuery.docs.first;
-      return UserData.fromSnapshot(user);
+    final userDataQuery =
+        await userDataCollection.where('userId', isEqualTo: userId).get();
+    if (userDataQuery.docs.isEmpty) return UserData();
+    var user = userDataQuery.docs.first;
+    return UserData.fromSnapshot(user);
   }
 
   Future<void> signOut() async {
@@ -110,7 +100,8 @@ class AuthService {
 
   getUserRestaurant(String uid) async {
     try {
-      final userRoleQuery = userDataCollection.where('userId', isEqualTo: uid).get();
+      final userRoleQuery =
+          userDataCollection.where('userId', isEqualTo: uid).get();
       return await userRoleQuery
           .then((value) => value.docs.first.get('restaurant'));
     } catch (error) {
