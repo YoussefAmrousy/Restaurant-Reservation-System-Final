@@ -19,11 +19,23 @@ class _RestaurtantsListState extends State<RestaurtantsListScreen> {
   RestaurantService restaurantService = RestaurantService();
   CollectionReference restaurantsCollection =
       FirebaseFirestore.instance.collection('restaurants');
+  bool _isRefreshing = false;
 
   @override
   void initState() {
     super.initState();
+    loadDataProgressBar();
     initializeData();
+  }
+
+  loadDataProgressBar() async {
+    setState(() {
+      _isRefreshing = true;
+    });
+    await Future.delayed(Duration(seconds: 3));
+    setState(() {
+      _isRefreshing = false;
+    });
   }
 
   @override
@@ -93,43 +105,53 @@ class _RestaurtantsListState extends State<RestaurtantsListScreen> {
           elevation: 12,
         ),
       ),
-      body: Column(
-        children: <Widget>[
-          restaurantService.restaurants.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.info,
-                        size: 50,
-                        color: Colors.grey,
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        'No restaurants available',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.grey,
+      body: _isRefreshing
+          ? Container(
+              alignment: Alignment.center,
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: Colors.black.withOpacity(0.5),
+                ),
+              ),
+            )
+          : Column(
+              children: <Widget>[
+                restaurantService.restaurants.isEmpty
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.info,
+                              size: 50,
+                              color: Colors.grey,
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              'No restaurants available',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : Expanded(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: restaurantService.restaurants.length,
+                          itemBuilder: (context, index) {
+                            final restaurant =
+                                restaurantService.restaurants[index];
+                            return RestaurantItem(
+                              restaurant: restaurant,
+                            );
+                          },
                         ),
                       ),
-                    ],
-                  ),
-                )
-              : Expanded(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: restaurantService.restaurants.length,
-                    itemBuilder: (context, index) {
-                      final restaurant = restaurantService.restaurants[index];
-                      return RestaurantItem(
-                        restaurant: restaurant,
-                      );
-                    },
-                  ),
-                ),
-        ],
-      ),
+              ],
+            ),
     );
   }
 }

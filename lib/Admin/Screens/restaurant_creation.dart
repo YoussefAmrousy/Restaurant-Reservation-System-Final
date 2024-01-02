@@ -27,11 +27,12 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
   final phoneController = TextEditingController();
   final socialMediaController = TextEditingController();
   final websiteController = TextEditingController();
+  final popularFoodController = TextEditingController();
   Cuisine? selectedCuisine = Cuisine.selectCuisine;
   String? logoPath;
   String? menuPath;
-  final picker = ImagePicker();
   List<Cuisine> cuisineList = Cuisine.values;
+  final picker = ImagePicker();
 
   RestaurantService restaurantService = RestaurantService();
   FirebaseStorageService firebaseStorageService = FirebaseStorageService();
@@ -44,19 +45,20 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
 
   initRestaurant() {
     if (widget.restaurant != null) {
-      logoPath = widget.restaurant!.logoPath!;
-      menuPath = widget.restaurant!.menuPath!;
+      logoPath = widget.restaurant!.logoPath;
+      menuPath = widget.restaurant!.menuPath;
       restaurantNameController.text = widget.restaurant!.name!;
-      selectedCuisine = Cuisine.values
-          .firstWhere((element) => element.value == widget.restaurant!.cuisine);
+      selectedCuisine = Cuisine.values.firstWhere((element) =>
+          element.value.toLowerCase() ==
+          widget.restaurant!.cuisine!.toLowerCase());
       phoneController.text = widget.restaurant!.phone!;
       socialMediaController.text = widget.restaurant!.socialMedia!;
       websiteController.text = widget.restaurant!.website!;
+      popularFoodController.text = widget.restaurant!.popularFood!;
     }
   }
 
   Future<void> getImage() async {
-    final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile == null) {
@@ -69,7 +71,6 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
   }
 
   Future<void> getMenu() async {
-    final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile == null) return;
@@ -124,6 +125,7 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
           phoneController.text.trim().isEmpty ||
           restaurantNameController.text.trim().isEmpty ||
           selectedCuisine == Cuisine.selectCuisine ||
+          popularFoodController.text.trim().isEmpty ||
           !formKey.currentState!.validate()) {
         return false;
       } else {
@@ -154,7 +156,9 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
           phone: phoneController.text,
           socialMedia: socialMediaController.text,
           website: websiteController.text,
-          rating: 0);
+          rating: 0,
+          ratingCount: 0,
+          popularFood: popularFoodController.text);
 
       if (widget.restaurant != null) {
         restaurant.logoPath = widget.restaurant!.logoPath;
@@ -404,6 +408,20 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
                               child: Text(cuisine.name),
                             );
                           }).toList(),
+                        ),
+                        SizedBox(height: 20),
+                        TextField(
+                          controller: popularFoodController,
+                          decoration: InputDecoration(
+                            labelText: 'Popular Food',
+                            labelStyle: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
                         ),
                         SizedBox(height: 20),
                         TextField(

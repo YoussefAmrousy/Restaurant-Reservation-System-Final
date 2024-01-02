@@ -44,19 +44,15 @@ class _RestaurantItemState extends State<RestaurantItem> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<void>(
-      future: getLogoPath(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (logoPath != null) {
-            return buildCard();
-          } else {
-            return CircularProgressIndicator();
+        future: getLogoPath(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (logoPath != null) {
+              return buildCard();
+            }
           }
-        } else {
-          return CircularProgressIndicator();
-        }
-      },
-    );
+          return Container();
+        });
   }
 
   Widget buildCard() {

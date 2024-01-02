@@ -44,7 +44,7 @@ class _RestaurantsListRowState extends State<RestaurantsListRow> {
           ),
         ),
         SizedBox(
-          height: 160,
+          height: 178,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: widget.branches.length,
@@ -100,6 +100,13 @@ class _RestaurantsListRowState extends State<RestaurantsListRow> {
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
+                      ),
+                      Text(
+                        'Popular with ${restaurantFilter.popularFood}',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.orangeAccent,
+                            fontWeight: FontWeight.w500),
                       ),
                       Text(
                         '${restaurantFilter.rating} ⭐',
