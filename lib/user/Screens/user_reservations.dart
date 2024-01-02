@@ -68,28 +68,19 @@ class _UserReservationsWidgetState extends State<UserReservationsWidget> {
           : FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(50),
-          child: AppBar(
-            backgroundColor: Color(0xFFE7AF2F),
-            automaticallyImplyLeading: false,
-            title: Center(
-              child: Text(
-                'My Reservations',
-                style: FlutterFlowTheme.of(context).displaySmall.override(
-                      fontFamily: 'Poppins',
-                      color: FlutterFlowTheme.of(context).secondaryText,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-            ),
-            elevation: 12,
-            iconTheme: IconThemeData(
-              color: FlutterFlowTheme.of(context).secondaryText,
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: Text(
+            'My Reservations',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
             ),
           ),
+          automaticallyImplyLeading: false,
+          backgroundColor: Color.fromRGBO(236, 235, 235, 0),
+          elevation: 0,
         ),
         body: SafeArea(
           top: true,
@@ -263,6 +254,25 @@ class _UserReservationsWidgetState extends State<UserReservationsWidget> {
                                       width: 97,
                                       height: 92,
                                       fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(8),
+                                      child: Text(
+                                        'Tap on QR Code for easier scanning',
+                                        textAlign: TextAlign.right,
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyMedium
+                                            .override(
+                                              fontFamily: 'Poppins',
+                                              fontWeight: FontWeight.w900,
+                                              color: Color(0xFFFCFAF9),
+                                            ),
+                                      ),
                                     ),
                                   ),
                                 ),

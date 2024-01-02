@@ -10,18 +10,19 @@ class Restaurant {
   String? menuPath;
   double? rating;
   int? ratingCount;
+  String? popularFood;
 
-  Restaurant({
-    this.name,
-    this.cuisine,
-    this.menuPath,
-    this.phone,
-    this.socialMedia,
-    this.website,
-    this.logoPath,
-    this.rating = 0,
-    this.ratingCount = 0
-  });
+  Restaurant(
+      {this.name,
+      this.cuisine,
+      this.menuPath,
+      this.phone,
+      this.socialMedia,
+      this.website,
+      this.logoPath,
+      this.rating = 0,
+      this.ratingCount = 0,
+      this.popularFood});
 
   Map<String, dynamic> toJson() {
     return {
@@ -33,35 +34,36 @@ class Restaurant {
       'logoPath': logoPath,
       'menuPath': menuPath,
       'rating': rating,
-      'ratingCount': ratingCount
+      'ratingCount': ratingCount,
+      'popularFood': popularFood
     };
   }
 
   factory Restaurant.fromMap(Map<String, dynamic> map) {
     return Restaurant(
-      name: map['name'],
-      cuisine: map['cuisine'],
-      phone: map['phone'],
-      socialMedia: map['socialMedia'],
-      website: map['website'],
-      menuPath: map['menuPath'],
-      logoPath: map['logoPath'],
-      rating: map['rating'] ?? 0,
-      ratingCount: map['ratingCount'] ?? 0
-    );
+        name: map['name'],
+        cuisine: map['cuisine'],
+        phone: map['phone'],
+        socialMedia: map['socialMedia'],
+        website: map['website'],
+        menuPath: map['menuPath'],
+        logoPath: map['logoPath'],
+        rating: map['rating'] ?? 0,
+        ratingCount: map['ratingCount'] ?? 0,
+        popularFood: map['popularFood']);
   }
 
   factory Restaurant.fromSnapshot(DocumentSnapshot doc) {
     return Restaurant(
-      name: doc['name'],
-      cuisine: doc['cuisine'],
-      phone: doc['phone'],
-      socialMedia: doc['socialMedia'],
-      website: doc['website'],
-      menuPath: doc['menuPath'],
-      logoPath: doc['logoPath'],
-      rating: doc['rating'] ?? 0,
-      ratingCount: doc['ratingCount'] ?? 0
-    );
+        name: doc['name'],
+        cuisine: doc['cuisine'],
+        phone: doc['phone'],
+        socialMedia: doc['socialMedia'],
+        website: doc['website'],
+        menuPath: doc['menuPath'],
+        logoPath: doc['logoPath'],
+        rating: doc['rating'] ?? 0,
+        ratingCount: doc['ratingCount'] ?? 0,
+        popularFood: doc['popularFood']);
   }
 }

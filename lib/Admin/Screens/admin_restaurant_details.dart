@@ -5,6 +5,7 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:reservy/Admin/Screens/admin_branches_list/branches_list.dart';
 import 'package:reservy/Admin/Screens/admin_restaurant_list/admin_restaurants_list.dart';
 import 'package:reservy/Admin/Screens/restaurant_creation.dart';
+import 'package:reservy/Utils/util.dart';
 import 'package:reservy/models/restaurant.dart';
 
 class RestaurantDetailsScreen extends StatefulWidget {
@@ -76,10 +77,10 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
         ),
       ),
       backgroundColor: Color.fromRGBO(236, 235, 235, 1),
-      body: Column(
-        children: [
-          SingleChildScrollView(
-            child: Padding(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
               padding: const EdgeInsets.all(5.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -93,8 +94,8 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                       ),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    width: 210.0,
-                    height: 210.0,
+                    width: 190.0,
+                    height: 190.0,
                     child: logoPath != null
                         ? Image.network(
                             logoPath!,
@@ -145,8 +146,26 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                       ),
                     ),
                     readOnly: true,
-                    controller:
-                        TextEditingController(text: widget.restaurant.cuisine),
+                    controller: TextEditingController(
+                        text: Util.capitalize(widget.restaurant.cuisine!)),
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Popular Food',
+                      labelStyle: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                    readOnly: true,
+                    controller: TextEditingController(
+                        text: widget.restaurant.popularFood),
                   ),
                   SizedBox(
                     height: 20.0,
@@ -240,8 +259,8 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
