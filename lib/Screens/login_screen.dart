@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_constructors_in_immutables, library_private_types_in_public_api, avoid_print, use_build_context_synchronously
 
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:reservy/Admin/Screens/admin_navbar.dart';
@@ -36,7 +37,34 @@ class _LoginPageState extends State<LoginScreen> {
     return restaurantNameStored!;
   }
 
+  Future<bool> _checkInternetAndShowPopup() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('No Internet Connection'),
+          content: Text('Please check your network connection.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   submit() async {
+    if (await _checkInternetAndShowPopup() == false) {
+      return;
+    }
     final form = _formKey.currentState;
     if (form!.validate()) {
       form.save();
@@ -69,6 +97,18 @@ class _LoginPageState extends State<LoginScreen> {
         _navigateToRoleSpecificScreen('user');
       }
     }
+  }
+
+  navigateToReigsterScreen() async {
+    if (await _checkInternetAndShowPopup() == false) {
+      return;
+    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RegisterScreen(),
+      ),
+    );
   }
 
   Future<void> _navigateToRoleSpecificScreen(String role,
@@ -169,12 +209,7 @@ class _LoginPageState extends State<LoginScreen> {
             ),
             InkWell(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => RegisterScreen(),
-                  ),
-                );
+                navigateToReigsterScreen();
               },
               child: const Text("Create an account"),
             ),
