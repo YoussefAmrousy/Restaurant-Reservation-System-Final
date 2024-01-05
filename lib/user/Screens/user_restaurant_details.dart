@@ -88,19 +88,19 @@ class _ReservyWidgetState extends State<UserRestaurantDetails>
             mainAxisSize: MainAxisSize.max,
             children: [
               SizedBox(
-                height: 10,
+                height: 0.8,
               ),
               RestaurantDetailsHeaderWidget(branch: widget.branch),
               SizedBox(
-                height: 8,
+                height: 6,
               ),
               RestaurantRatingWidget(
                 model: _model,
                 restaurant: widget.restaurant,
               ),
               Container(
-                width: 401,
-                height: 460,
+                width: 460,
+                height: 480,
                 decoration: BoxDecoration(
                   color: FlutterFlowTheme.of(context).secondaryBackground,
                 ),

@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 
 class Util {
@@ -52,5 +54,18 @@ class Util {
     }
     distance = distance / 1000;
     return '${distance.round()} km';
+  }
+
+  static IconData getSocialMediaIcon(String socialMedia) {
+    if (socialMedia.contains('facebook.com')) {
+      return FontAwesomeIcons.facebook;
+    } else if (socialMedia.contains('twitter.com') ||
+        socialMedia.contains('x.com')) {
+      return FontAwesomeIcons.twitter;
+    } else if (socialMedia.contains('instagram.com')) {
+      return FontAwesomeIcons.instagram;
+    } else {
+      return FontAwesomeIcons.globe;
+    }
   }
 }

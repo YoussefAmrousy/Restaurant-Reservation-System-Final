@@ -210,30 +210,37 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
                                             restaurantService.restaurants,
                                         currentLocation: currentLocation!,
                                       ),
-                                      RestaurantsListRow(
-                                        title: 'Italian Restaurants',
-                                        branches: italianBranches,
-                                        restaurants: italian,
-                                        currentLocation: currentLocation!,
-                                      ),
-                                      RestaurantsListRow(
-                                          title: 'Japanese Restaurants',
-                                          branches: japaneseBranches,
-                                          restaurants: japanese,
-                                          currentLocation: currentLocation!,
-                                      ),
-                                      RestaurantsListRow(
-                                          title: 'American Restaurants',
-                                          branches: americanBranches,
-                                          restaurants: american,
-                                          currentLocation: currentLocation!,
-                                      ),
+                                      italianBranches.isEmpty
+                                          ? Container()
+                                          : RestaurantsListRow(
+                                              title: 'Italian Restaurants',
+                                              branches: italianBranches,
+                                              restaurants: italian,
+                                              currentLocation: currentLocation!,
+                                            ),
+                                      japaneseBranches.isEmpty
+                                          ? Container()
+                                          : RestaurantsListRow(
+                                              title: 'Japanese Restaurants',
+                                              branches: japaneseBranches,
+                                              restaurants: japanese,
+                                              currentLocation: currentLocation!,
+                                            ),
+                                      americanBranches.isEmpty
+                                          ? Container()
+                                          : RestaurantsListRow(
+                                              title: 'American Restaurants',
+                                              branches: americanBranches,
+                                              restaurants: american,
+                                              currentLocation: currentLocation!,
+                                            ),
                                     ],
                                   )
                           ],
                         ),
                       ),
-                    )),
+                    ),
+                  ),
           ),
         ],
       ),

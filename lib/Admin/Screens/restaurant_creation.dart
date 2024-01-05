@@ -426,6 +426,7 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
                         SizedBox(height: 20),
                         TextField(
                           controller: phoneController,
+                          keyboardType: TextInputType.phone,
                           decoration: InputDecoration(
                             labelText: 'Phone',
                             labelStyle: TextStyle(

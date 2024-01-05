@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as googlemaps;
 import 'package:reservy/Maps/map_screen.dart';
+import 'package:reservy/Utils/util.dart';
 import 'package:reservy/models/branch.dart';
 import 'package:reservy/models/restaurant.dart';
 import 'package:reservy/user/models/reservy_model.dart';
@@ -86,22 +86,10 @@ class _RestaurantDetailsTabWidgetState
                             },
                             icon: widget.restaurant.socialMedia == null
                                 ? Container()
-                                : widget.restaurant.socialMedia!
-                                        .contains('instagram')
-                                    ? Icon(
-                                        FontAwesomeIcons.instagram,
-                                      )
-                                    : widget.restaurant.socialMedia!
-                                            .contains('facebook')
-                                        ? Icon(
-                                            FontAwesomeIcons.facebook,
-                                          )
-                                        : widget.restaurant.socialMedia!
-                                                .contains('twitter')
-                                            ? Icon(
-                                                FontAwesomeIcons.twitter,
-                                              )
-                                            : Container(),
+                                : Icon(
+                                    Util.getSocialMediaIcon(
+                                        widget.restaurant.socialMedia!),
+                                  ),
                           )
                         ],
                       ),
@@ -118,8 +106,18 @@ class _RestaurantDetailsTabWidgetState
                       fontSize: 12,
                     ),
               ),
+              widget.restaurant.popularFood!.isNotEmpty
+                  ? Text(
+                      'Popular with ${widget.restaurant.popularFood ?? ''}',
+                      style: FlutterFlowTheme.of(context).bodySmall.override(
+                          fontFamily: 'Poppins',
+                          color: Colors.orangeAccent,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold),
+                    )
+                  : Container(),
               Text(
-                'Cuisine: ${widget.branch.cuisine ?? ''}',
+                '${Util.capitalize(widget.branch.cuisine ?? '')} Cuisine',
                 style: FlutterFlowTheme.of(context).bodySmall.override(
                       fontFamily: 'Poppins',
                       color: Color(0xFFAAAAAA),
@@ -127,14 +125,18 @@ class _RestaurantDetailsTabWidgetState
                     ),
               ),
               Text(
-                'Phone: ${widget.branch.phone}',
+                widget.branch.phone.isNotEmpty
+                    ? widget.branch.phone
+                    : widget.restaurant.phone!.isNotEmpty
+                        ? widget.restaurant.phone!
+                        : '',
                 style: FlutterFlowTheme.of(context).bodySmall.override(
                       fontFamily: 'Poppins',
                       color: Color(0xFFAAAAAA),
                       fontSize: 12,
                     ),
               ),
-              Text('Website: ${widget.restaurant.website}',
+              Text(Util.capitalize(widget.restaurant.website ?? ''),
                   style: FlutterFlowTheme.of(context).bodySmall.override(
                         fontFamily: 'Poppins',
                         color: Color(0xFFAAAAAA),

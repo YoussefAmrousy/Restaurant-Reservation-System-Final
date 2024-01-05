@@ -64,7 +64,7 @@ class _RestaurantCardState extends State<RestaurantCard> {
                       width: 80,
                       height: 80,
                     )
-                  : const SizedBox(
+                  : SizedBox(
                       width: 80,
                       height: 80,
                       child: Text('Unavailable'),

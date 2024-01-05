@@ -28,6 +28,9 @@ class _BookingTabWidgetState extends State<BookingTabWidget> {
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: [
+        SizedBox(
+          height: 50,
+        ),
         Row(
           mainAxisSize: MainAxisSize.max,
           children: [

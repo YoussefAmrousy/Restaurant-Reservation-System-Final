@@ -186,6 +186,7 @@ class _BranchCreationScreenState extends State<BranchCreationScreen> {
                           height: 20,
                         ),
                         TextField(
+                            keyboardType: TextInputType.phone,
                             decoration: InputDecoration(
                               labelText: 'Phone',
                               border: OutlineInputBorder(),
