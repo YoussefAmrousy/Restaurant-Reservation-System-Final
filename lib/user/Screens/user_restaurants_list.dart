@@ -5,7 +5,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:reservy/Services/auth_service.dart';
 import 'package:reservy/Services/branch_service.dart';
-import 'package:reservy/Services/firebase_storage_service.dart';
 import 'package:reservy/Services/restaurant_service.dart';
 import 'package:reservy/Utils/map_util.dart';
 import 'package:reservy/models/branch.dart';
@@ -25,9 +24,6 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
   BranchService branchService = BranchService();
   RestaurantService restaurantService = RestaurantService();
   AuthService authService = AuthService();
-  FirebaseStorageService firebaseStorageService = FirebaseStorageService();
-  Restaurant? restaurant;
-  String? logoPath;
   TextEditingController searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   bool _isRefreshing = false;
@@ -37,6 +33,7 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
   List<Branch> italianBranches = [];
   List<Branch> japaneseBranches = [];
   List<Branch> americanBranches = [];
+  Position? currentLocation;
 
   @override
   void initState() {
@@ -107,10 +104,11 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
     LocationProvider locationProvider =
         Provider.of<LocationProvider>(context, listen: false);
     MapUtil mapUtil = MapUtil();
-    Position? location = locationProvider.currentUserLocation ??
-        await mapUtil.getUserCurrentLocation();
+    currentLocation = locationProvider.currentUserLocation ??
+        await mapUtil.getCurrentLocation();
 
-    List<Branch> nearbyBranches = branchService.getNearbyBranches(location);
+    List<Branch> nearbyBranches =
+        branchService.getNearbyBranches(currentLocation!);
 
     setState(() {
       branchService.nearbyBranches = nearbyBranches;
@@ -210,26 +208,39 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
                                         branches: branchService.nearbyBranches,
                                         restaurants:
                                             restaurantService.restaurants,
+                                        currentLocation: currentLocation!,
                                       ),
-                                      RestaurantsListRow(
-                                        title: 'Italian Restaurants',
-                                        branches: italianBranches,
-                                        restaurants: italian,
-                                      ),
-                                      RestaurantsListRow(
-                                          title: 'Japanese Restaurants',
-                                          branches: japaneseBranches,
-                                          restaurants: japanese),
-                                      RestaurantsListRow(
-                                          title: 'American Restaurants',
-                                          branches: americanBranches,
-                                          restaurants: american),
+                                      italianBranches.isEmpty
+                                          ? Container()
+                                          : RestaurantsListRow(
+                                              title: 'Italian Restaurants',
+                                              branches: italianBranches,
+                                              restaurants: italian,
+                                              currentLocation: currentLocation!,
+                                            ),
+                                      japaneseBranches.isEmpty
+                                          ? Container()
+                                          : RestaurantsListRow(
+                                              title: 'Japanese Restaurants',
+                                              branches: japaneseBranches,
+                                              restaurants: japanese,
+                                              currentLocation: currentLocation!,
+                                            ),
+                                      americanBranches.isEmpty
+                                          ? Container()
+                                          : RestaurantsListRow(
+                                              title: 'American Restaurants',
+                                              branches: americanBranches,
+                                              restaurants: american,
+                                              currentLocation: currentLocation!,
+                                            ),
                                     ],
                                   )
                           ],
                         ),
                       ),
-                    )),
+                    ),
+                  ),
           ),
         ],
       ),

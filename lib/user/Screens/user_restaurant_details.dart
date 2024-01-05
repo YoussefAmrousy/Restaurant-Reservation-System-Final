@@ -2,11 +2,11 @@
 
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:reservy/models/branch.dart';
 import 'package:reservy/models/restaurant.dart';
 import 'package:reservy/user/Widgets/booking_tab_widget.dart';
 import 'package:reservy/user/Widgets/menu_tab_widget.dart';
+import 'package:reservy/user/Widgets/restaurant_rating_widget.dart';
 import 'package:reservy/user/Widgets/restaurant_details__tab_widget.dart';
 import 'package:reservy/user/Widgets/restaurant_details_header_widget.dart';
 import '../models/reservy_model.dart';
@@ -70,7 +70,11 @@ class _ReservyWidgetState extends State<UserRestaurantDetails>
                   ),
             ),
             backgroundColor: Color(0xFFE7AF2F),
-            automaticallyImplyLeading: true,
+            automaticallyImplyLeading: false,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () => Navigator.pop(context),
+            ),
             centerTitle: true,
             iconTheme: IconThemeData(
               color: FlutterFlowTheme.of(context).secondaryText,
@@ -84,39 +88,19 @@ class _ReservyWidgetState extends State<UserRestaurantDetails>
             mainAxisSize: MainAxisSize.max,
             children: [
               SizedBox(
-                height: 10,
+                height: 0.8,
               ),
               RestaurantDetailsHeaderWidget(branch: widget.branch),
               SizedBox(
-                height: 8,
+                height: 6,
+              ),
+              RestaurantRatingWidget(
+                model: _model,
+                restaurant: widget.restaurant,
               ),
               Container(
-                width: 393,
-                height: 35,
-                decoration: BoxDecoration(
-                  color: FlutterFlowTheme.of(context).secondaryBackground,
-                ),
-                child: IgnorePointer(
-                  ignoring: true,
-                  child: RatingBar.builder(
-                    onRatingUpdate: (newValue) =>
-                        setState(() => _model.ratingBarValue = newValue),
-                    itemBuilder: (context, index) => Icon(
-                      Icons.star_rounded,
-                      color: Color(0xFFE7AF2F),
-                    ),
-                    direction: Axis.horizontal,
-                    initialRating: widget.restaurant.rating!,
-                    unratedColor: FlutterFlowTheme.of(context).secondaryText,
-                    itemCount: 5,
-                    itemSize: 30,
-                    glowColor: Color(0xFF313131),
-                  ),
-                ),
-              ),
-              Container(
-                width: 401,
-                height: 460,
+                width: 460,
+                height: 480,
                 decoration: BoxDecoration(
                   color: FlutterFlowTheme.of(context).secondaryBackground,
                 ),

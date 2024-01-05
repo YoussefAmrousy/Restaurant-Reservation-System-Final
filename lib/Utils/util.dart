@@ -1,3 +1,7 @@
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:geolocator/geolocator.dart';
+
 class Util {
   static String capitalize(String input) {
     if (input.isEmpty) {
@@ -6,7 +10,7 @@ class Util {
     return input[0].toUpperCase() + input.substring(1);
   }
 
-  String getMonthAbbreviation(int month) {
+  static String getMonthAbbreviation(int month) {
     switch (month) {
       case 1:
         return 'Janurary';
@@ -34,6 +38,34 @@ class Util {
         return 'December';
       default:
         return '';
+    }
+  }
+
+  static String getDistanceToBranch(
+      Position currentLocation, double branchLatitdue, double branchLongitude) {
+    double distance = Geolocator.distanceBetween(
+      currentLocation.latitude,
+      currentLocation.longitude,
+      branchLatitdue,
+      branchLongitude,
+    );
+    if (distance < 1000) {
+      return '${distance.round()} m';
+    }
+    distance = distance / 1000;
+    return '${distance.round()} km';
+  }
+
+  static IconData getSocialMediaIcon(String socialMedia) {
+    if (socialMedia.contains('facebook.com')) {
+      return FontAwesomeIcons.facebook;
+    } else if (socialMedia.contains('twitter.com') ||
+        socialMedia.contains('x.com')) {
+      return FontAwesomeIcons.twitter;
+    } else if (socialMedia.contains('instagram.com')) {
+      return FontAwesomeIcons.instagram;
+    } else {
+      return FontAwesomeIcons.globe;
     }
   }
 }

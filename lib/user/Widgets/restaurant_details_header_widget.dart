@@ -13,7 +13,7 @@ class RestaurantDetailsHeaderWidget extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return Container(
-      width: screenWidth * 0.5,
+      width: screenWidth,
       height: screenHeight * 0.3,
       decoration: BoxDecoration(
         color: FlutterFlowTheme.of(context).secondaryBackground,
@@ -23,11 +23,10 @@ class RestaurantDetailsHeaderWidget extends StatelessWidget {
           Align(
             alignment: AlignmentDirectional(0, 0),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
               child: Image.asset(
                 'assets/restaurant.jpeg',
-                width: screenWidth * 0.5,
-                height: screenHeight * 0.3,
+                width: screenWidth,
+                height: screenHeight,
                 fit: BoxFit.cover,
               ),
             ),
@@ -35,7 +34,7 @@ class RestaurantDetailsHeaderWidget extends StatelessWidget {
           Align(
             alignment: AlignmentDirectional(0, 1.03),
             child: Container(
-              width: screenWidth * 0.5,
+              width: screenWidth,
               height: 41,
               decoration: BoxDecoration(
                 color: Color(0x40000000),

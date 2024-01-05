@@ -76,7 +76,7 @@ class _BranchesListState extends State<BranchesListScreen> {
   setUserCurrentLocation() async {
     final locationProvider =
         Provider.of<LocationProvider>(context, listen: false);
-    _position = await mapUtil.getUserCurrentLocation();
+    _position = await mapUtil.getCurrentLocation();
     locationProvider.setCurrentUserLocation(_position);
   }
 

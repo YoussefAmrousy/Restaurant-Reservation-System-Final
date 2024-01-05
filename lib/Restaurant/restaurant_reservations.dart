@@ -114,7 +114,7 @@ class _ReservationsWidgetState extends State<ReservationsWidget> {
                     itemBuilder: (context, index) {
                       var reservation = reservationsService.reservations[index];
                       String formattedDate =
-                          "${reservation.date?.day} ${util.getMonthAbbreviation(reservation.date!.month)} ${reservation.date!.year}";
+                          "${reservation.date?.day} ${Util.getMonthAbbreviation(reservation.date!.month)} ${reservation.date!.year}";
                       return Align(
                         alignment: AlignmentDirectional(0, 0),
                         child: FlipCard(
