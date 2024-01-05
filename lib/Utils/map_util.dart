@@ -22,7 +22,7 @@ class MapUtil {
     }
   }
 
-    Future<Position> getUserCurrentLocation() async {
+    Future<Position> getCurrentLocation() async {
     await Geolocator.requestPermission()
         .then((value) {})
         .onError((error, stackTrace) async {

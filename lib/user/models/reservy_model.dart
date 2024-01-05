@@ -19,7 +19,7 @@ class ReservyModel extends FlutterFlowModel<UserRestaurantDetails> {
       tabBarController != null ? tabBarController!.index : 0;
 
   int countControllerValue = 0;
-  String? dropDownValue;
+  String? time;
   FormFieldController<String>? dropDownValueController;
   DateTime? selectedDate;
   CollectionReference reservationsCollection =
@@ -37,8 +37,8 @@ class ReservyModel extends FlutterFlowModel<UserRestaurantDetails> {
   }
 
   bool validateForm() {
-    if (dropDownValue == null ||
-        dropDownValue!.isEmpty ||
+    if (time == null ||
+        time!.isEmpty ||
         selectedDate == null) {
       return false;
     }
@@ -72,7 +72,7 @@ class ReservyModel extends FlutterFlowModel<UserRestaurantDetails> {
         username: userData.username!,
         restaurant: widget.branch.restaurantName,
         date: selectedDate!,
-        time: dropDownValue!,
+        time: time!,
         branch: widget.branch.address!,
         guests: countControllerValue);
 

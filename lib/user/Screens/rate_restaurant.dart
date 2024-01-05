@@ -112,8 +112,6 @@ class _RateRestaurantState extends State<RateRestaurant> {
   }
 
   String _formattedDate() {
-    Util util =
-        Util();
-    return "${widget.reservation.date!.day} ${util.getMonthAbbreviation(widget.reservation.date!.month)}";
+    return "${widget.reservation.date!.day} ${Util.getMonthAbbreviation(widget.reservation.date!.month)}";
   }
 }

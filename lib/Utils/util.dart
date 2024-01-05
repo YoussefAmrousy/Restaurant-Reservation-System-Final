@@ -1,3 +1,5 @@
+import 'package:geolocator/geolocator.dart';
+
 class Util {
   static String capitalize(String input) {
     if (input.isEmpty) {
@@ -6,7 +8,7 @@ class Util {
     return input[0].toUpperCase() + input.substring(1);
   }
 
-  String getMonthAbbreviation(int month) {
+  static String getMonthAbbreviation(int month) {
     switch (month) {
       case 1:
         return 'Janurary';
@@ -35,5 +37,20 @@ class Util {
       default:
         return '';
     }
+  }
+
+  static String getDistanceToBranch(
+      Position currentLocation, double branchLatitdue, double branchLongitude) {
+    double distance = Geolocator.distanceBetween(
+      currentLocation.latitude,
+      currentLocation.longitude,
+      branchLatitdue,
+      branchLongitude,
+    );
+    if (distance < 1000) {
+      return '${distance.round()} m';
+    }
+    distance = distance / 1000;
+    return '${distance.round()} km';
   }
 }
