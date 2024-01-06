@@ -5,7 +5,7 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:reservy/Admin/Screens/admin_branches_list/branches_list.dart';
 import 'package:reservy/Admin/Screens/admin_restaurant_list/admin_restaurants_list.dart';
 import 'package:reservy/Admin/Screens/restaurant_creation.dart';
-import 'package:reservy/Utils/util.dart';
+import 'package:reservy/shared/Utils/util.dart';
 import 'package:reservy/models/restaurant.dart';
 
 class RestaurantDetailsScreen extends StatefulWidget {
@@ -220,37 +220,34 @@ class _RestaurantDetailsScreenState extends State<RestaurantDetailsScreen> {
               controller:
                   TextEditingController(text: widget.restaurant.website),
             ),
-            SizedBox(height: 20.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            BranchesListScreen(restaurant: widget.restaurant),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    elevation: 3.0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+            SizedBox(height: 15.0),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          BranchesListScreen(restaurant: widget.restaurant),
                     ),
-                  ),
-                  child: Text(
-                    'Manage Branches',
-                    style: FlutterFlowTheme.of(context).bodyMedium.override(
-                          fontFamily: 'Poppins',
-                          color: Color(0xC1E7AF2F),
-                          fontWeight: FontWeight.bold,
-                        ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  elevation: 3.0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
                   ),
                 ),
-              ],
+                child: Text(
+                  'Manage Branches',
+                  style: FlutterFlowTheme.of(context).bodyMedium.override(
+                        fontFamily: 'Poppins',
+                        color: Color(0xC1E7AF2F),
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ),
             )
           ],
         ),

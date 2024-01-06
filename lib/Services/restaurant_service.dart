@@ -11,7 +11,7 @@ class RestaurantService {
       FirebaseFirestore.instance.collection('restaurants');
   List<Restaurant> restaurants = [];
   FirebaseStorageService firebaseStorageService = FirebaseStorageService();
-  QueryDocumentSnapshot<Object?>? restaurantDeleted;
+  final String _restaurantAccountPassword = "reservy@2024";
 
   Future<List<Restaurant>> getAllRestaurants() async {
     restaurants.clear();
@@ -51,7 +51,8 @@ class RestaurantService {
     );
 
     AuthService authService = AuthService();
-    authService.registerWithEmailAndPassword(email, "reservy2024", userData);
+    authService.registerWithEmailAndPassword(
+        email, _restaurantAccountPassword, userData);
 
     Map<String, dynamic> restaurantData = restaurant.toJson();
 
@@ -83,14 +84,12 @@ class RestaurantService {
     }
   }
 
-  Future<QueryDocumentSnapshot<Object?>?> deleteRestaurant(String name) async {
-    final restaurantQuery =
-        await restaurantsCollection.where('name', isEqualTo: name).get();
-    if (restaurantQuery.docs.isNotEmpty) {
-      restaurantDeleted = restaurantQuery.docs.first;
-      await restaurantDeleted?.reference.delete();
+  Future<DocumentSnapshot<Object?>?> deleteRestaurantById(String id) async {
+    final restaurantQuery = await restaurantsCollection.doc(id).get();
+    if (restaurantQuery.exists) {
+      await restaurantQuery.reference.delete();
     }
-    return restaurantDeleted;
+    return restaurantQuery;
   }
 
   rateRestaurant(String restaurant, double ratingBarValue) async {

@@ -1,12 +1,12 @@
 // ignore_for_file: prefer_const_constructors_in_immutables, prefer_const_constructors, library_private_types_in_public_api, avoid_print, use_build_context_synchronously
 
-import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:reservy/Screens/login_screen.dart';
 import 'package:reservy/Services/auth_service.dart';
 import 'package:reservy/models/user_data.dart';
+import 'package:reservy/shared/Utils/check_internet_connection.dart';
 import 'package:reservy/user/Screens/user_navigation_bar.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -24,32 +24,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  Future<bool> _checkInternetAndShowPopup() async {
-    var connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('No Internet Connection'),
-          content: Text('Please check your network connection.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
-      return false;
-    } else {
-      return true;
-    }
-  }
-
   void submit() async {
-    if (await _checkInternetAndShowPopup() == false) {
+    if (await CheckInternetConnection.checkInternetAndShowPopup(context) == false) {
       return;
     }
     

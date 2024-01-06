@@ -25,7 +25,7 @@ class _UserNavigationBarState extends State<UserNavigationBar> {
     return Scaffold(
       body: pages[widget.selectedIndex],
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+        padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
         child: GNav(
           backgroundColor: Colors.white,
           tabActiveBorder: Border.all(
@@ -42,7 +42,6 @@ class _UserNavigationBarState extends State<UserNavigationBar> {
               icon: Icons.calendar_today,
               text: 'Reservations',
             ),
-            // GButton(icon: Icons.person, text: 'Profile')
           ],
           selectedIndex: widget.selectedIndex,
           onTabChange: (index) {

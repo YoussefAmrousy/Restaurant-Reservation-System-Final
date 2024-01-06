@@ -4,7 +4,7 @@ import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:reservy/Utils/util.dart';
+import 'package:reservy/shared/Utils/util.dart';
 import 'package:reservy/models/reservation.dart';
 
 class ReservationCard extends StatefulWidget {

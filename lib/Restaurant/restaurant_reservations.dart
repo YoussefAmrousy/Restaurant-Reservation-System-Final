@@ -4,12 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:reservy/Restaurant/restaurant_reservation_model.dart';
 import 'package:reservy/Services/auth_service.dart';
 import 'package:reservy/Services/reservations_service.dart';
 import 'package:reservy/Services/shared_preference_service.dart';
-import 'package:reservy/Utils/util.dart';
+import 'package:reservy/shared/Utils/util.dart';
 
 class ReservationsWidget extends StatefulWidget {
   ReservationsWidget({super.key, this.restaurant});
@@ -20,20 +18,15 @@ class ReservationsWidget extends StatefulWidget {
 }
 
 class _ReservationsWidgetState extends State<ReservationsWidget> {
-  late ReservationsModel _model;
-
-  final scaffoldKey = GlobalKey<ScaffoldState>();
   AuthService authService = AuthService();
   User user = FirebaseAuth.instance.currentUser!;
   String? restaurantName;
   ReservationsService reservationsService = ReservationsService();
-  Util util = Util();
   SharedPreferenceService sharedPreferenceService = SharedPreferenceService();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => ReservationsModel());
     getReservationsByRestaurant();
     setState(() {});
   }
@@ -49,28 +42,13 @@ class _ReservationsWidgetState extends State<ReservationsWidget> {
 
   @override
   void dispose() {
-    _model.dispose();
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (isiOS) {
-      SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(
-          statusBarBrightness: Theme.of(context).brightness,
-          systemStatusBarContrastEnforced: true,
-        ),
-      );
-    }
-
     return GestureDetector(
-      onTap: () => _model.unfocusNode.canRequestFocus
-          ? FocusScope.of(context).requestFocus(_model.unfocusNode)
-          : FocusScope.of(context).unfocus(),
       child: Scaffold(
-        key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(50),

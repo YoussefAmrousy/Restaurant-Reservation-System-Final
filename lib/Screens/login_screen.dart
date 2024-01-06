@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_constructors_in_immutables, library_private_types_in_public_api, avoid_print, use_build_context_synchronously
 
-import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:reservy/Admin/Screens/admin_navbar.dart';
@@ -10,7 +9,8 @@ import 'package:reservy/Services/auth_service.dart';
 import 'package:reservy/Services/reservations_service.dart';
 import 'package:reservy/Services/shared_preference_service.dart';
 import 'package:reservy/models/reservation.dart';
-import 'package:reservy/user/Screens/rate_restaurant.dart';
+import 'package:reservy/shared/Utils/check_internet_connection.dart';
+import 'package:reservy/user/Screens/rate_restaurant_dialog.dart';
 import 'package:reservy/user/Screens/user_navigation_bar.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -37,32 +37,8 @@ class _LoginPageState extends State<LoginScreen> {
     return restaurantNameStored!;
   }
 
-  Future<bool> _checkInternetAndShowPopup() async {
-    var connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('No Internet Connection'),
-          content: Text('Please check your network connection.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
-      return false;
-    } else {
-      return true;
-    }
-  }
-
   submit() async {
-    if (await _checkInternetAndShowPopup() == false) {
+    if (await CheckInternetConnection.checkInternetAndShowPopup(context) == false) {
       return;
     }
     final form = _formKey.currentState;
@@ -83,24 +59,24 @@ class _LoginPageState extends State<LoginScreen> {
       String? userRole = await authService.getUserRole(user.uid);
       userRole ??= 'user';
       if (userRole == 'admin') {
-        _navigateToRoleSpecificScreen('admin');
+        _navigateToRoleSpecificScreen(userRole);
       } else if (userRole == 'restaurant') {
         restaurant = await getRestaurantNameFromLocalStorage();
-        await _navigateToRoleSpecificScreen('restaurant', restaurant);
+        await _navigateToRoleSpecificScreen(userRole, restaurant);
       } else {
         reservation = await reservationsService.getPassedReservation();
         if (reservation?.restaurant != null) {
           Future.delayed(Duration.zero, () {
-            RateRestaurant.showRatingPopup(context, reservation!);
+            RateRestaurantDialog.showRatingPopup(context, reservation!);
           });
         }
-        _navigateToRoleSpecificScreen('user');
+        _navigateToRoleSpecificScreen(userRole);
       }
     }
   }
 
   navigateToReigsterScreen() async {
-    if (await _checkInternetAndShowPopup() == false) {
+    if (await CheckInternetConnection.checkInternetAndShowPopup(context) == false) {
       return;
     }
     Navigator.push(

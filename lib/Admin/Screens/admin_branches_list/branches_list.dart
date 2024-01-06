@@ -12,7 +12,7 @@ import 'package:reservy/Admin/Screens/admin_branches_list/branch_item_widget.dar
 import 'package:reservy/Admin/Screens/admin_restaurant_details.dart';
 import 'package:reservy/Admin/Screens/branch_creation.dart';
 import 'package:reservy/Services/branch_service.dart';
-import 'package:reservy/Utils/map_util.dart';
+import 'package:reservy/shared/Utils/map_util.dart';
 import 'package:reservy/models/branch.dart';
 import 'package:reservy/models/restaurant.dart';
 import 'package:reservy/providers/location_provider.dart';
@@ -44,15 +44,9 @@ class _BranchesListState extends State<BranchesListScreen> {
     setState(() {});
   }
 
-  Future<void> deleteBranch(String address) async {
-    final branchQuery = await branchesCollection
-        .where('restaurant', isEqualTo: widget.restaurant.name)
-        .get();
-    if (branchQuery.docs.isNotEmpty) {
-      final branchFound = branchQuery.docs.first;
-      await branchFound.reference.delete();
-      initializeData();
-    }
+  Future<void> deleteBranch(String id) async {
+    branchService.deleteBranch(id);
+    initializeData();
   }
 
   void _showBranchDetailsDialog(BuildContext context, Branch branch) {
@@ -64,7 +58,7 @@ class _BranchesListState extends State<BranchesListScreen> {
           child: BranchDetailsDialogDetails(
               branch: branch,
               onBranchDeleted: () => {
-                    deleteBranch(branch.address!),
+                    deleteBranch(branch.id!),
                     setState(() => {}),
                     Navigator.of(context).pop()
                   }),

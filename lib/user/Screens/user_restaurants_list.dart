@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously
+// ignore_for_file: library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously, prefer_const_constructors_in_immutables
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:reservy/Services/auth_service.dart';
 import 'package:reservy/Services/branch_service.dart';
 import 'package:reservy/Services/restaurant_service.dart';
-import 'package:reservy/Utils/map_util.dart';
+import 'package:reservy/shared/Utils/map_util.dart';
 import 'package:reservy/models/branch.dart';
 import 'package:reservy/models/restaurant.dart';
 import 'package:reservy/providers/location_provider.dart';
@@ -14,7 +14,7 @@ import 'package:reservy/shared/Widgets/not_available.dart';
 import 'package:reservy/user/Widgets/restaurants_list_row.dart';
 
 class UserRestaurantsList extends StatefulWidget {
-  const UserRestaurantsList({super.key});
+  UserRestaurantsList({super.key});
 
   @override
   _UserRestaurantsListState createState() => _UserRestaurantsListState();
@@ -28,39 +28,30 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
   final ScrollController _scrollController = ScrollController();
   bool _isRefreshing = false;
   List<Restaurant> italian = [];
-  List<Restaurant> japanese = [];
+  List<Restaurant> chinese = [];
   List<Restaurant> american = [];
+  List<Restaurant> fastFood = [];
   List<Branch> italianBranches = [];
-  List<Branch> japaneseBranches = [];
+  List<Branch> chineseBranches = [];
   List<Branch> americanBranches = [];
+  List<Branch> fastFoodBranches = [];
   Position? currentLocation;
 
   @override
   void initState() {
     super.initState();
-    getBranches();
     getAllRestaurants();
     _scrollController.addListener(_onScroll);
-    loadDataProgressBar();
-    getNearbyRestaurants();
-  }
-
-  loadDataProgressBar() async {
-    setState(() {
-      _isRefreshing = true;
-    });
-    await Future.delayed(Duration(seconds: 6));
-    setState(() {
-      _isRefreshing = false;
-    });
+    refreshData();
   }
 
   Future<void> getBranches() async {
     var branches = await branchService.getAllBranches();
     branchService.branches = branches;
     italianBranches = branches.where((e) => e.cuisine == 'italian').toList();
-    japaneseBranches = branches.where((e) => e.cuisine == 'japanese').toList();
+    chineseBranches = branches.where((e) => e.cuisine == 'chinese').toList();
     americanBranches = branches.where((e) => e.cuisine == 'american').toList();
+    fastFoodBranches = branches.where((e) => e.cuisine == 'fastFood').toList();
   }
 
   Future<void> refreshData() async {
@@ -96,7 +87,8 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
       restaurantService.restaurants = restaurants;
       italian = restaurants.where((e) => e.cuisine == 'italian').toList();
       american = restaurants.where((e) => e.cuisine == 'american').toList();
-      japanese = restaurants.where((e) => e.cuisine == 'japanese').toList();
+      chinese = restaurants.where((e) => e.cuisine == 'chinese').toList();
+      fastFood = restaurants.where((e) => e.cuisine == 'fastFood').toList();
     });
   }
 
@@ -218,12 +210,12 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
                                               restaurants: italian,
                                               currentLocation: currentLocation!,
                                             ),
-                                      japaneseBranches.isEmpty
+                                      chineseBranches.isEmpty
                                           ? Container()
                                           : RestaurantsListRow(
-                                              title: 'Japanese Restaurants',
-                                              branches: japaneseBranches,
-                                              restaurants: japanese,
+                                              title: 'Chinese Restaurants',
+                                              branches: chineseBranches,
+                                              restaurants: chinese,
                                               currentLocation: currentLocation!,
                                             ),
                                       americanBranches.isEmpty
@@ -232,6 +224,14 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
                                               title: 'American Restaurants',
                                               branches: americanBranches,
                                               restaurants: american,
+                                              currentLocation: currentLocation!,
+                                            ),
+                                      fastFoodBranches.isEmpty
+                                          ? Container()
+                                          : RestaurantsListRow(
+                                              title: 'Fast Food Restaurants',
+                                              branches: fastFoodBranches,
+                                              restaurants: fastFood,
                                               currentLocation: currentLocation!,
                                             ),
                                     ],

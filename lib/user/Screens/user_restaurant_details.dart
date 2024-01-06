@@ -9,8 +9,7 @@ import 'package:reservy/user/Widgets/menu_tab_widget.dart';
 import 'package:reservy/user/Widgets/restaurant_rating_widget.dart';
 import 'package:reservy/user/Widgets/restaurant_details__tab_widget.dart';
 import 'package:reservy/user/Widgets/restaurant_details_header_widget.dart';
-import '../models/reservy_model.dart';
-export '../models/reservy_model.dart';
+import 'package:reservy/user/models/reservy_model.dart';
 
 class UserRestaurantDetails extends StatefulWidget {
   UserRestaurantDetails(

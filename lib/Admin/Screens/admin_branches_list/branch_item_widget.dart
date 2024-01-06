@@ -3,7 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:reservy/Services/branch_service.dart';
-import 'package:reservy/Utils/util.dart';
+import 'package:reservy/shared/Utils/util.dart';
 import 'package:reservy/models/branch.dart';
 
 class BranchItem extends StatefulWidget {
@@ -18,10 +18,6 @@ class _BranchtItemState extends State<BranchItem> {
   CollectionReference branchesCollection =
       FirebaseFirestore.instance.collection('branches');
   BranchService branchService = BranchService();
-
-  Future<void> initializeData() async {
-    await branchService.getBranchesByRestaurant(widget.branch.restaurantName);
-  }
 
   @override
   Widget build(BuildContext context) {

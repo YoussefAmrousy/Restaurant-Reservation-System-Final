@@ -43,6 +43,7 @@ class AuthService {
         userId: user!.uid,
         username: userData.username,
         role: userData.role,
+        email: email,
       );
       await addUserData(newUser);
       return user;
@@ -59,6 +60,7 @@ class AuthService {
         'userId': userData.userId,
         'role': userData.role,
         'restaurant': userData.restaurant ?? '',
+        'email': userData.email ?? '',
       };
       await userDataCollection.add(user);
     } catch (error) {

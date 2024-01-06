@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as googlemaps;
 import 'package:reservy/Maps/map_screen.dart';
-import 'package:reservy/Utils/util.dart';
+import 'package:reservy/shared/Utils/util.dart';
 import 'package:reservy/models/branch.dart';
 import 'package:reservy/models/restaurant.dart';
 import 'package:reservy/user/models/reservy_model.dart';
