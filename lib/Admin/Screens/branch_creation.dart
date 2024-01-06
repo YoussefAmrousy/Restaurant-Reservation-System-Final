@@ -7,6 +7,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart' as maps;
 import 'package:provider/provider.dart';
 import 'package:reservy/Admin/Screens/admin_branches_list/branches_list.dart';
 import 'package:reservy/Maps/map_screen.dart';
+import 'package:reservy/Services/branch_service.dart';
+import 'package:reservy/models/branch.dart';
 import 'package:reservy/models/restaurant.dart';
 import 'package:reservy/providers/location_provider.dart';
 import 'package:reservy/shared/Widgets/form_error_widget.dart';
@@ -30,6 +32,7 @@ class _BranchCreationScreenState extends State<BranchCreationScreen> {
 
   CollectionReference branchesCollection =
       FirebaseFirestore.instance.collection('branches');
+  BranchService branchService = BranchService();
 
   bool showError = false;
 
@@ -57,20 +60,32 @@ class _BranchCreationScreenState extends State<BranchCreationScreen> {
 
   submitBranch() async {
     maps.LatLng? selectedLocation = locationProvider?.selectedLocation;
-    final branch = {
-      'restaurant': restaurantNameController.text.trim(),
-      'area': areaController.text.trim(),
-      'city': cityController.text.trim(),
-      'address': addressController.text.trim(),
-      'phone': phoneController.text.trim(),
-      'longitude': selectedLocation?.longitude,
-      'latitude': selectedLocation?.latitude,
-      'cuisine': widget.restaurant?.cuisine,
-    };
+    if (selectedLocation == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select a location'),
+        ),
+      );
+      setState(() {
+        showError = true;
+      });
+      return;
+    }
+    final Branch branch = Branch(
+        restaurantName: restaurantNameController.text.trim(),
+        area: areaController.text.trim(),
+        city: cityController.text.trim(),
+        address: addressController.text.trim(),
+        phone: phoneController.text.trim(),
+        longitude: selectedLocation.longitude,
+        latitude: selectedLocation.latitude,
+        cuisine: widget.restaurant?.cuisine);
 
     final exisitingBranch = await branchesCollection
-        .where('address', isEqualTo: branch['address'])
+        .where('restaurant', isEqualTo: branch.restaurantName)
+        .where('address', isEqualTo: branch.address)
         .get();
+
     if (exisitingBranch.docs.isNotEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -79,7 +94,9 @@ class _BranchCreationScreenState extends State<BranchCreationScreen> {
       );
       return;
     }
-    addBranch(branch);
+
+    formKey.currentState!.reset();
+    branchService.addBranch(branch);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Branch created successfully'),
@@ -92,11 +109,6 @@ class _BranchCreationScreenState extends State<BranchCreationScreen> {
             BranchesListScreen(restaurant: widget.restaurant!),
       ),
     );
-  }
-
-  addBranch(branch) {
-    branchesCollection.add(branch);
-    formKey.currentState!.reset();
   }
 
   @override

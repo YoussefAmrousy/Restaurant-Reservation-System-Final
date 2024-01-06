@@ -6,7 +6,7 @@ import 'package:reservy/Admin/Screens/admin_restaurant_details.dart';
 import 'package:reservy/Admin/Screens/restaurant_creation.dart';
 import 'package:reservy/Services/firebase_storage_service.dart';
 import 'package:reservy/Services/restaurant_service.dart';
-import 'package:reservy/Utils/util.dart';
+import 'package:reservy/shared/Utils/util.dart';
 import 'package:reservy/models/restaurant.dart';
 
 class RestaurantItem extends StatefulWidget {
@@ -29,10 +29,10 @@ class _RestaurantItemState extends State<RestaurantItem> {
     await restaurantService.getAllRestaurants();
   }
 
-  Future<void> deleteRestaurant(String name) async {
-    final restaurantDeleted = await restaurantService.deleteRestaurant(name);
+  Future<void> deleteRestaurantById(String id) async {
+    final restaurantDeleted = await restaurantService.deleteRestaurantById(id);
     deletedRestaurant =
-        Restaurant.fromMap(restaurantDeleted!.data() as Map<String, dynamic>);
+        Restaurant.fromMap(restaurantDeleted!.data() as Map<String, dynamic>, id);
     initializeData();
   }
 
@@ -59,7 +59,7 @@ class _RestaurantItemState extends State<RestaurantItem> {
     return Dismissible(
       key: Key(widget.restaurant.name!),
       onDismissed: (direction) {
-        deleteRestaurant(widget.restaurant.name!);
+        deleteRestaurantById(widget.restaurant.id!);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Restaurant deleted successfully'),

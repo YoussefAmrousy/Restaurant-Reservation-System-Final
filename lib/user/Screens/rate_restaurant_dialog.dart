@@ -5,11 +5,11 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:reservy/Services/reservations_service.dart';
 import 'package:reservy/Services/restaurant_service.dart';
-import 'package:reservy/Utils/util.dart';
+import 'package:reservy/shared/Utils/util.dart';
 import 'package:reservy/models/reservation.dart';
 
-class RateRestaurant extends StatefulWidget {
-  RateRestaurant({super.key, required this.reservation});
+class RateRestaurantDialog extends StatefulWidget {
+  RateRestaurantDialog({super.key, required this.reservation});
   Reservation reservation;
 
   @override
@@ -22,7 +22,7 @@ class RateRestaurant extends StatefulWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.white,
-          content: RateRestaurant(
+          content: RateRestaurantDialog(
             reservation: reservation,
           ),
         );
@@ -31,7 +31,7 @@ class RateRestaurant extends StatefulWidget {
   }
 }
 
-class _RateRestaurantState extends State<RateRestaurant> {
+class _RateRestaurantState extends State<RateRestaurantDialog> {
   double ratingBarValue = 0;
   ReservationsService reservationsService = ReservationsService();
   RestaurantService restaurantService = RestaurantService();

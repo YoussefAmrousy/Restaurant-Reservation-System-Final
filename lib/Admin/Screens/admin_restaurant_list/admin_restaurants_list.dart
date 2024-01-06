@@ -48,16 +48,6 @@ class _RestaurtantsListState extends State<RestaurtantsListScreen> {
     setState(() {});
   }
 
-  Future<void> deleteRestaurant(BuildContext context, String name) async {
-    final restaurantQuery =
-        await restaurantsCollection.where('name', isEqualTo: name).get();
-    if (restaurantQuery.docs.isNotEmpty) {
-      final restaurantFound = restaurantQuery.docs.first;
-      await restaurantFound.reference.delete();
-      initializeData();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     AuthService authService = AuthService();

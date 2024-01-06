@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:reservy/Utils/map_util.dart';
-import 'package:reservy/Utils/util.dart';
+import 'package:reservy/shared/Utils/map_util.dart';
+import 'package:reservy/shared/Utils/util.dart';
 import 'package:reservy/models/branch.dart';
 import 'package:reservy/models/restaurant.dart';
 import 'package:reservy/user/Screens/user_restaurant_details.dart';

@@ -39,10 +39,6 @@ class ReservationsService {
     await reservationsCollection.add(reservation.toJson());
   }
 
-  Future<void> deleteReservation(String id) async {
-    await reservationsCollection.doc(id).delete();
-  }
-
   Future<Reservation?> getPassedReservation() async {
     try {
       DateTime date = DateTime.now();

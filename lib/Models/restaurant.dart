@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Restaurant {
+  final String? id;
   String? name;
   String? cuisine;
   String? phone;
@@ -13,18 +14,20 @@ class Restaurant {
   String? popularFood;
   String? email;
 
-  Restaurant(
-      {this.name,
-      this.cuisine,
-      this.menuPath,
-      this.phone,
-      this.socialMedia,
-      this.website,
-      this.logoPath,
-      this.rating = 0,
-      this.ratingCount = 0,
-      this.popularFood,
-      this.email});
+  Restaurant({
+    this.id,
+    this.name,
+    this.cuisine,
+    this.menuPath,
+    this.phone,
+    this.socialMedia,
+    this.website,
+    this.logoPath,
+    this.rating = 0,
+    this.ratingCount = 0,
+    this.popularFood,
+    this.email,
+  });
 
   Map<String, dynamic> toJson() {
     return {
@@ -42,33 +45,24 @@ class Restaurant {
     };
   }
 
-  factory Restaurant.fromMap(Map<String, dynamic> map) {
+  factory Restaurant.fromMap(Map<String, dynamic> map, String id) {
     return Restaurant(
-        name: map['name'],
-        cuisine: map['cuisine'],
-        phone: map['phone'],
-        socialMedia: map['socialMedia'],
-        website: map['website'],
-        menuPath: map['menuPath'],
-        logoPath: map['logoPath'],
-        rating: map['rating'] ?? 0,
-        ratingCount: map['ratingCount'] ?? 0,
-        popularFood: map['popularFood'],
-        email: map['email']);
+      id: id,
+      name: map['name'],
+      cuisine: map['cuisine'],
+      phone: map['phone'],
+      socialMedia: map['socialMedia'],
+      website: map['website'],
+      menuPath: map['menuPath'],
+      logoPath: map['logoPath'],
+      rating: map['rating'] ?? 0,
+      ratingCount: map['ratingCount'] ?? 0,
+      popularFood: map['popularFood'],
+      email: map['email'],
+    );
   }
 
   factory Restaurant.fromSnapshot(DocumentSnapshot doc) {
-    return Restaurant(
-        name: doc['name'],
-        cuisine: doc['cuisine'],
-        phone: doc['phone'],
-        socialMedia: doc['socialMedia'],
-        website: doc['website'],
-        menuPath: doc['menuPath'],
-        logoPath: doc['logoPath'],
-        rating: doc['rating'] ?? 0,
-        ratingCount: doc['ratingCount'] ?? 0,
-        popularFood: doc['popularFood'],
-        email: doc['email']);
+    return Restaurant.fromMap(doc.data() as Map<String, dynamic>, doc.id);
   }
 }

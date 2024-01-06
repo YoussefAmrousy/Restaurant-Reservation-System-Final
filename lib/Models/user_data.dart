@@ -4,9 +4,10 @@ class UserData {
   final String? userId;
   final String? username;
   final String? role;
-  String? restaurant;
+  final String? restaurant;
+  final String? email;
 
-  UserData({this.restaurant, this.userId, this.username, this.role});
+  UserData({this.restaurant, this.userId, this.username, this.role, this.email});
 
   factory UserData.fromSnapshot(DocumentSnapshot doc) {
     return UserData(
@@ -14,6 +15,7 @@ class UserData {
       username: doc['username'],
       role: doc['role'],
       restaurant: doc['restaurant'],
+      email: doc['email'],
     );
   }
 }

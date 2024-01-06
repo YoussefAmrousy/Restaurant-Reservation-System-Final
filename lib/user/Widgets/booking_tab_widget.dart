@@ -6,7 +6,7 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reservy/models/branch.dart';
 import 'package:reservy/models/restaurant.dart';
-import 'package:reservy/user/Screens/user_restaurant_details.dart';
+import 'package:reservy/user/models/reservy_model.dart';
 
 class BookingTabWidget extends StatefulWidget {
   BookingTabWidget(
@@ -108,7 +108,7 @@ class _BookingTabWidgetState extends State<BookingTabWidget> {
               child: CupertinoButton(
                 child: Text(
                   widget.model.selectedDate == null
-                      ? 'No date chosen'
+                      ? 'Choose Date'
                       : '${DateFormat('EEEE').format(widget.model.selectedDate!)}, ${widget.model.selectedDate!.day}',
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                         fontFamily: 'Poppins',
@@ -123,9 +123,7 @@ class _BookingTabWidgetState extends State<BookingTabWidget> {
             ),
             CupertinoButton(
               child: Text(
-                widget.model.time == null
-                    ? 'No time chosen'
-                    : widget.model.time!,
+                widget.model.time == null ? 'Choose Time' : widget.model.time!,
                 style: FlutterFlowTheme.of(context).bodyMedium.override(
                       fontFamily: 'Poppins',
                       fontSize: 16,

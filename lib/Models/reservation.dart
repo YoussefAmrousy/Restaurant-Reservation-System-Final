@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Reservation {
-  String? id;
-  String? userId;
-  String? username;
-  String? restaurant;
-  DateTime? date;
-  String? time;
-  String? branch;
-  int? guests;
+  final String? id;
+  final String? userId;
+  final String? username;
+  final String? restaurant;
+  final DateTime? date;
+  final String? time;
+  final String? branch;
+  final int? guests;
   bool? rated;
 
   Reservation(

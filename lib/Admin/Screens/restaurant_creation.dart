@@ -4,9 +4,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:reservy/Admin/Screens/admin_restaurant_list/admin_restaurants_list.dart';
+import 'package:reservy/Admin/Widgets/restaurant_created_dialog.dart';
 import 'package:reservy/Enums/cuisine_enum.dart';
-import 'package:reservy/Services/firebase_storage_service.dart';
 import 'package:reservy/Services/restaurant_service.dart';
 import 'package:reservy/models/restaurant.dart';
 import 'package:reservy/shared/Widgets/form_error_widget.dart';
@@ -35,7 +34,6 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
   final picker = ImagePicker();
 
   RestaurantService restaurantService = RestaurantService();
-  FirebaseStorageService firebaseStorageService = FirebaseStorageService();
 
   @override
   void initState() {
@@ -82,41 +80,6 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Future<void> showMyDialog() async {
-      return showDialog<void>(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) => AlertDialog(
-          title: Text(widget.restaurant != null
-              ? 'Restaurant Updated'
-              : 'Restaurant Created'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text(widget.restaurant != null
-                    ? 'The restaurant has been updated successfully.'
-                    : 'The restaurant has been created successfully.'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => RestaurtantsListScreen(),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-      );
-    }
-
     bool validateForm() {
       if (logoPath == null ||
           menuPath == null ||
@@ -134,23 +97,7 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
     }
 
     Future<void> submitRestaurant() async {
-      if (phoneController.text.contains(RegExp(r'[a-zA-Z]'))) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Phone number must be digits only'),
-          ),
-        );
-        return;
-      }
-      if (phoneController.text.length != 11) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Phone number must be 11 digits'),
-          ),
-        );
-        return;
-      }
-      final restaurant = Restaurant(
+      final Restaurant restaurant = Restaurant(
           name: restaurantNameController.text,
           cuisine: selectedCuisine!.value,
           phone: phoneController.text,
@@ -173,7 +120,9 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
           );
           return;
         }
-        showMyDialog();
+        RestaurantCreatedDialog(
+          restaurant: restaurant,
+        );
         return;
       }
 
@@ -189,7 +138,8 @@ class _RestaurantCreationScreenState extends State<RestaurantCreationScreen> {
         return;
       }
 
-      showMyDialog();
+      showDialog(
+          context: context, builder: (context) => RestaurantCreatedDialog());
       formKey.currentState!.reset();
     }
 
