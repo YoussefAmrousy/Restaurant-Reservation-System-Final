@@ -15,15 +15,35 @@ class UserNavigationBar extends StatefulWidget {
 
 class _UserNavigationBarState extends State<UserNavigationBar> {
   int selectedIndex = 0;
-  final List<Widget> pages = [
-    UserRestaurantsList(),
-    UserReservationsWidget(),
-  ];
+  late PageController pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: pages[widget.selectedIndex],
+      body: PageView(
+        controller: pageController,
+        onPageChanged: (index) {
+          setState(() {
+            selectedIndex = index;
+          });
+        },
+        children: [
+          UserRestaurantsList(),
+          UserReservationsWidget(),
+        ],
+      ),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
         child: GNav(
@@ -48,6 +68,11 @@ class _UserNavigationBarState extends State<UserNavigationBar> {
             setState(() {
               widget.selectedIndex = index;
             });
+            pageController.animateToPage(
+              index,
+              duration: Duration(milliseconds: 500),
+              curve: Curves.ease,
+            );
           },
         ),
       ),
