@@ -23,6 +23,9 @@ class AuthService {
         sharedPreferenceService.saveStringToLocalStorage(
             'restaurant', restaurant);
       }
+      if (role != 'admin') {
+        sharedPreferenceService.saveStringToLocalStorage("loggedIn", "true");
+      }
       return user;
     } catch (error) {
       print('Error signing in: $error');
@@ -41,6 +44,7 @@ class AuthService {
 
       userData.userId = user!.uid;
       await addUserData(userData);
+
       return user;
     } catch (error) {
       print('Error registering: $error');
@@ -89,6 +93,7 @@ class AuthService {
   Future<void> signOut() async {
     try {
       await _auth.signOut();
+      sharedPreferenceService.saveStringToLocalStorage("loggedIn", "false");
     } catch (error) {
       print('Error signing out: $error');
       rethrow;
