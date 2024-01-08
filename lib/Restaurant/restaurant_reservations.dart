@@ -2,12 +2,11 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
-import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
+import 'package:reservy/Restaurant/Widgets/restaurant_reservation_card.dart';
 import 'package:reservy/Services/auth_service.dart';
 import 'package:reservy/Services/reservations_service.dart';
 import 'package:reservy/Services/shared_preference_service.dart';
-import 'package:reservy/shared/Utils/util.dart';
 
 class ReservationsWidget extends StatefulWidget {
   ReservationsWidget({super.key, this.restaurant});
@@ -91,117 +90,8 @@ class _ReservationsWidgetState extends State<ReservationsWidget> {
                     itemCount: reservationsService.reservations.length,
                     itemBuilder: (context, index) {
                       var reservation = reservationsService.reservations[index];
-                      String formattedDate =
-                          "${reservation.date?.day} ${Util.getMonthAbbreviation(reservation.date!.month)} ${reservation.date!.year}";
-                      return Align(
-                        alignment: AlignmentDirectional(0, 0),
-                        child: FlipCard(
-                          fill: Fill.fillBack,
-                          direction: FlipDirection.HORIZONTAL,
-                          speed: 400,
-                          front: Container(
-                            width: 379,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [Color(0xC1E7AF2F), Color(0x51E7AF2F)],
-                                stops: [0, 1],
-                                begin: AlignmentDirectional(0, -1),
-                                end: AlignmentDirectional(0, 1),
-                              ),
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(12),
-                                bottomRight: Radius.circular(12),
-                                topLeft: Radius.circular(12),
-                                topRight: Radius.circular(12),
-                              ),
-                            ),
-                            child: Align(
-                              alignment: AlignmentDirectional(1, 0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Align(
-                                    alignment: AlignmentDirectional(0, 1),
-                                    child: Padding(
-                                      padding: EdgeInsets.all(4),
-                                      child: Text(
-                                        reservation.username!,
-                                        style: FlutterFlowTheme.of(context)
-                                            .bodyMedium
-                                            .override(
-                                              fontFamily: 'Poppins',
-                                              color: Color(0xFFFCFAF9),
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          back: Container(
-                            width: 379,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [Color(0xC1E7AF2F), Color(0x51E7AF2F)],
-                                stops: [0, 1],
-                                begin: AlignmentDirectional(0, -1),
-                                end: AlignmentDirectional(0, 1),
-                              ),
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(12),
-                                bottomRight: Radius.circular(12),
-                                topLeft: Radius.circular(12),
-                                topRight: Radius.circular(12),
-                              ),
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Align(
-                                  alignment: AlignmentDirectional(0, 0),
-                                  child: Text(
-                                    formattedDate,
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'Poppins',
-                                          color: Color(0xFFFCFAF9),
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                  ),
-                                ),
-                                Text(
-                                  reservation.time!,
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'Poppins',
-                                        color: Color(0xFFFCFAF9),
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                ),
-                                Text(
-                                  '${reservation.guests} guests table',
-                                  style: FlutterFlowTheme.of(context)
-                                      .bodyMedium
-                                      .override(
-                                        fontFamily: 'Poppins',
-                                        color: Color(0xFFFCFAF9),
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
+                      return RestaurantReservationCard(
+                          reservation: reservation);
                     }),
               ),
             ],

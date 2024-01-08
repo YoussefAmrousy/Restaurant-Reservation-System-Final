@@ -39,13 +39,8 @@ class AuthService {
       );
       User? user = result.user;
 
-      UserData newUser = UserData(
-        userId: user!.uid,
-        username: userData.username,
-        role: userData.role,
-        email: email,
-      );
-      await addUserData(newUser);
+      userData.userId = user!.uid;
+      await addUserData(userData);
       return user;
     } catch (error) {
       print('Error registering: $error');

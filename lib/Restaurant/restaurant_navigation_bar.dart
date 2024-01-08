@@ -14,21 +14,28 @@ class RestaurantNavigationBar extends StatefulWidget {
 
 class _UserNavigationBarState extends State<RestaurantNavigationBar> {
   int selectedIndex = 0;
-
-  late List<Widget> pages;
+  late PageController pageController;
 
   @override
   void initState() {
     super.initState();
-    pages = [
-      ReservationsWidget(restaurant: widget.restaurant!),
-    ];
+    pageController = PageController();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: pages[selectedIndex],
+      body: PageView(
+        controller: pageController,
+        onPageChanged: (index) {
+          setState(() {
+            selectedIndex = index;
+          });
+        },
+        children: [
+          ReservationsWidget(restaurant: widget.restaurant!),
+        ],
+      ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
         child: GNav(
@@ -43,16 +50,30 @@ class _UserNavigationBarState extends State<RestaurantNavigationBar> {
               icon: Icons.home,
               text: 'Home',
             ),
-            // GButton(icon: Icons.person, text: 'Profile')
+            GButton(
+              icon: Icons.qr_code_scanner,
+              text: 'Scan QRCode',
+            ),
           ],
           selectedIndex: selectedIndex,
           onTabChange: (index) {
             setState(() {
               selectedIndex = index;
             });
+            pageController.animateToPage(
+              index,
+              duration: Duration(milliseconds: 500),
+              curve: Curves.ease,
+            );
           },
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
   }
 }
