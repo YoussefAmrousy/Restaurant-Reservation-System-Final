@@ -60,6 +60,6 @@ class ReservationsService {
   }
 
   updateReservation(Reservation reservation) {
-    reservationsCollection.doc(reservation.id).update(reservation.toJson());
+    reservationsCollection.doc(reservation.id).delete();
   }
 }
