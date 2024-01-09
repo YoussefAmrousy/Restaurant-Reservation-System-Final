@@ -11,6 +11,7 @@ import 'package:reservy/models/branch.dart';
 import 'package:reservy/models/restaurant.dart';
 import 'package:reservy/providers/location_provider.dart';
 import 'package:reservy/shared/Widgets/not_available.dart';
+import 'package:reservy/user/Widgets/change_theme_button.dart';
 import 'package:reservy/user/Widgets/restaurants_list_row.dart';
 
 class UserRestaurantsList extends StatefulWidget {
@@ -132,6 +133,9 @@ class _UserRestaurantsListState extends State<UserRestaurantsList> {
         automaticallyImplyLeading: false,
         backgroundColor: Color.fromRGBO(236, 235, 235, 0),
         elevation: 0,
+        actions: [
+          ChangeThemeButtonWidget(),
+        ],
       ),
       body: CustomScrollView(
         slivers: [
