@@ -8,9 +8,12 @@ import 'package:reservy/Admin/Screens/admin_restaurant_list/admin_restaurants_li
 import 'package:reservy/Restaurant/restaurant_reservations.dart';
 import 'package:reservy/Screens/login_screen.dart';
 import 'package:reservy/providers/location_provider.dart';
+import 'package:reservy/providers/theme_provider.dart';
 import 'package:reservy/shared/Utils/check_internet_connection.dart';
 import 'package:reservy/user/Screens/user_navigation_bar.dart';
 import 'firebase_options.dart';
+
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,7 +61,11 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => ChangeNotifierProvider(
+        create: (context) => ThemeProvider(),
+        builder: (context, _) {
+          final themeProvider = Provider.of<ThemeProvider>(context);
+
     return MaterialApp(
       routes: {
         '/reservations': (context) => ReservationsWidget(),
@@ -66,11 +73,15 @@ class _MyAppState extends State<MyApp> {
         '/login': (context) => LoginScreen(),
       },
       debugShowCheckedModeBanner: false,
+      themeMode: themeProvider.themeMode,
+      theme: MyThemes.lightTheme,
+      darkTheme: MyThemes.darkTheme,
       home: islogin && InternetConnection.isInternetConnected == false
           ? UserNavigationBar(
               selectedIndex: 1,
             )
           : LoginScreen(),
     );
-  }
+        },
+  );
 }
