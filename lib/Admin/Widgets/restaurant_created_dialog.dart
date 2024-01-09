@@ -13,15 +13,9 @@ class RestaurantCreatedDialog extends StatelessWidget {
     return AlertDialog(
       title: Text(
           restaurant != null ? 'Restaurant Updated' : 'Restaurant Created'),
-      content: SingleChildScrollView(
-        child: ListBody(
-          children: <Widget>[
-            Text(restaurant != null
-                ? 'The restaurant has been updated successfully.'
-                : 'The restaurant has been created successfully.'),
-          ],
-        ),
-      ),
+      content: Text(restaurant != null
+          ? 'The restaurant has been updated successfully.'
+          : 'The restaurant has been created successfully.'),
       actions: <Widget>[
         TextButton(
           child: Text('OK'),
