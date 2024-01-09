@@ -1,5 +1,4 @@
 class ReservationFields {
-  final String tableReservation = 'Reservations';
 
   static final List<String> values = [
     /// Add all fields

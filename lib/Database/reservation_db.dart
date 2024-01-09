@@ -1,10 +1,11 @@
 import 'package:path/path.dart';
+import 'package:reservy/Database/reservation_fields.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:reservy/Models/reservation.dart';
 
 class ReservationDB {
   ReservationDB();
   static final ReservationDB instance = ReservationDB._init();
+  final String tableReservation = 'Reservations';
 
   static Database? _database;
 
@@ -31,15 +32,15 @@ class ReservationDB {
 
     await db.execute('''
 CREATE TABLE $tableReservation ( 
-  ${reservationFields.id} $idType, 
-  ${reservationFields.userId} $idType,
-  ${reservationFields.username} $textType,
-  ${reservationFields.restaurant} $textType,
-  ${reservationFields.date} $textType,
-  ${reservationFields.time} $textType,
-  ${reservationFields.branch} $textType,
-  ${reservationFields.guests} $integerType,
-  ${reservationFields.rated} $textType,
+  ${ReservationFields.id} $idType, 
+  ${ReservationFields.userId} $idType,
+  ${ReservationFields.username} $textType,
+  ${ReservationFields.restaurant} $textType,
+  ${ReservationFields.date} $textType,
+  ${ReservationFields.time} $textType,
+  ${ReservationFields.branch} $textType,
+  ${ReservationFields.guests} $integerType,
+  ${ReservationFields.rated} $textType,
   )
 ''');
   }
