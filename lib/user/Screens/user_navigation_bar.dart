@@ -61,7 +61,7 @@ class _UserNavigationBarState extends State<UserNavigationBar> {
       bottomNavigationBar: Padding(
         padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
         child: GNav(
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).colorScheme.background,
           tabActiveBorder: Border.all(
             color: Color(0xFFF57C00),
             width: 2.0,
