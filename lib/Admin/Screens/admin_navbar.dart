@@ -36,7 +36,6 @@ class _AdminNavigationBarState extends State<AdminNavigationBar> {
               icon: Icons.home,
               text: 'Home',
             ),
-            GButton(icon: Icons.person, text: 'Profile')
           ],
           selectedIndex: selectedIndex,
           onTabChange: (index) {
