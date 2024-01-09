@@ -25,10 +25,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   void submit() async {
-    if (await CheckInternetConnection.checkInternetAndShowPopup(context) == false) {
+    bool interent = await InternetConnection.checkInternetConnection();
+    if (interent == false) {
+      InternetConnection.showUnavailableConnectionPopup(context);
       return;
     }
-    
+
     UserData userData = UserData(
       username: _usernameController.text,
       role: 'user',

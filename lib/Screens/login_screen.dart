@@ -38,9 +38,12 @@ class _LoginPageState extends State<LoginScreen> {
   }
 
   submit() async {
-    if (await CheckInternetConnection.checkInternetAndShowPopup(context) == false) {
+    bool internet = await InternetConnection.checkInternetConnection();
+    if (internet == false) {
+      InternetConnection.showUnavailableConnectionPopup(context);
       return;
     }
+
     final form = _formKey.currentState;
     if (form!.validate()) {
       form.save();
@@ -76,9 +79,6 @@ class _LoginPageState extends State<LoginScreen> {
   }
 
   navigateToReigsterScreen() async {
-    if (await CheckInternetConnection.checkInternetAndShowPopup(context) == false) {
-      return;
-    }
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -100,18 +100,20 @@ class _LoginPageState extends State<LoginScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (context) => RestaurantNavigationBar(
-                    restaurant: restaurant,
-                  )),
+            builder: (context) => RestaurantNavigationBar(
+              restaurant: restaurant,
+            ),
+          ),
         );
         break;
       default:
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (context) => UserNavigationBar(
-                    selectedIndex: 0,
-                  )),
+            builder: (context) => UserNavigationBar(
+              selectedIndex: 0,
+            ),
+          ),
         );
         break;
     }

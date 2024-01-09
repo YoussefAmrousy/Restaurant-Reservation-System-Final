@@ -3,28 +3,34 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 
-class CheckInternetConnection {
-  static Future<bool> checkInternetAndShowPopup(BuildContext context) async {
-    var connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('No Internet Connection'),
-          content: Text('Please check your network connection.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
+class InternetConnection {
+  static bool? isInternetConnected;
+
+  static Future<bool> checkInternetConnection() async {
+    if (await Connectivity().checkConnectivity() == ConnectivityResult.none) {
+      isInternetConnected = false;
       return false;
-    } else {
-      return true;
     }
+    isInternetConnected = true;
+    return true;
+  }
+
+  static showUnavailableConnectionPopup(
+      BuildContext context) async {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('No Internet Connection'),
+        content: Text('Please check your network connection.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 }
