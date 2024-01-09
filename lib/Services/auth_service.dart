@@ -2,10 +2,12 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:reservy/Services/shared_preference_service.dart';
 import 'package:reservy/models/user_data.dart';
 
 class AuthService {
+  late final BuildContext context;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   CollectionReference userDataCollection =
       FirebaseFirestore.instance.collection('userData');

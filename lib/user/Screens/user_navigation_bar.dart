@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:reservy/shared/Utils/check_internet_connection.dart';
 import 'package:reservy/user/Screens/user_reservations.dart';
 import 'package:reservy/user/Screens/user_restaurants_list.dart';
 
@@ -14,13 +15,26 @@ class UserNavigationBar extends StatefulWidget {
 }
 
 class _UserNavigationBarState extends State<UserNavigationBar> {
-  int selectedIndex = 0;
   late PageController pageController;
+  bool? isInternetConnected;
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    pageController = PageController();
+    pageController = PageController(initialPage: widget.selectedIndex);
+    init();
+  }
+
+  Future<void> checkInternetConnection() async {
+    isInternetConnected = await InternetConnection.checkInternetConnection();
+  }
+
+  Future<void> init() async {
+    await checkInternetConnection();
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -36,7 +50,7 @@ class _UserNavigationBarState extends State<UserNavigationBar> {
         controller: pageController,
         onPageChanged: (index) {
           setState(() {
-            selectedIndex = index;
+            widget.selectedIndex = index;
           });
         },
         children: [
@@ -65,14 +79,21 @@ class _UserNavigationBarState extends State<UserNavigationBar> {
           ],
           selectedIndex: widget.selectedIndex,
           onTabChange: (index) {
-            setState(() {
-              widget.selectedIndex = index;
-            });
-            pageController.animateToPage(
-              index,
-              duration: Duration(milliseconds: 500),
-              curve: Curves.ease,
+            if (isInternetConnected == false && index == 0) {
+              return;
+            }
+            setState(
+              () {
+                widget.selectedIndex = index;
+              },
             );
+            if (isInternetConnected == true) {
+              pageController.animateToPage(
+                widget.selectedIndex,
+                duration: Duration(milliseconds: 500),
+                curve: Curves.ease,
+              );
+            }
           },
         ),
       ),

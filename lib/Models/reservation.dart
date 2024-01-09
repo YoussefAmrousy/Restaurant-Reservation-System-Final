@@ -1,3 +1,5 @@
+// ignore_for_file: collection_methods_unrelated_type
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Reservation {
@@ -25,7 +27,7 @@ class Reservation {
   factory Reservation.fromSnapshot(QueryDocumentSnapshot<Object?> doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return Reservation(
-        id: doc.id,
+        id: data['id'],
         userId: data['userId'],
         username: data['username'],
         restaurant: data['restaurant'],

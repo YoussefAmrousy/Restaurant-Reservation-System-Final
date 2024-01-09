@@ -57,6 +57,15 @@ class _UserReservationsWidgetState extends State<UserReservationsWidget> {
           automaticallyImplyLeading: false,
           backgroundColor: Color.fromRGBO(236, 235, 235, 0),
           elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () async {
+              await authService.signOut();
+              if (mounted) {
+                Navigator.pushNamed(context, '/login');
+              }
+            },
+          ),
         ),
         body: SafeArea(
           top: true,
