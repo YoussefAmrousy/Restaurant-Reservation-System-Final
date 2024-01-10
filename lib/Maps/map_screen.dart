@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:reservy/shared/Utils/map_util.dart';
 import 'package:reservy/providers/location_provider.dart';
 
-class MapScreen extends StatefulWidget {
+class MapScreen extends StatefulWidget { // Incase someone wanted to test this widget, it won't work because I removed the API key is no longer valid.
   const MapScreen(
       {super.key, this.selectedLocation, required this.allowMarkerSelection});
   final LatLng? selectedLocation;
